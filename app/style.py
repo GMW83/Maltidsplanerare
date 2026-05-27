@@ -101,6 +101,22 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
     font-size: 0.95rem !important;
 }
 
+/* ── Formulärknapp (＋ lägg till vara) — matchar inmatningsfältets ljusa stil ── */
+[data-testid="stFormSubmitButton"] > button {
+    background-color: white !important;
+    color: #5B7028 !important;
+    border: 1.5px solid #C8D4A0 !important;
+    border-radius: 10px !important;
+    font-size: 1.1rem !important;
+    font-weight: 600 !important;
+    color-scheme: light !important;
+    width: 100% !important;
+}
+[data-testid="stFormSubmitButton"] > button:hover {
+    background-color: #EDF2E0 !important;
+    border-color: #5B7028 !important;
+}
+
 /* ── Selectbox ── */
 .stSelectbox > div > div {
     border-color: #C8D4A0 !important;
