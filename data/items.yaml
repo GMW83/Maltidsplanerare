@@ -1,13 +1,965 @@
 # Varudatabas — strukturerad efter Coops butiksavdelningar
-# Kategorier: frukt_och_gront | kott_och_chark | mejeri_och_agg |
-#             torrvaror | konserver | frysta_varor | brod_och_bakverk |
-#             drycker | kryddor_och_smaksattare | ovrigt
 #
-# Schema per vara:
-#   id:       snake_case, unikt och stabilt
-#   name_sv:  svenska namn
-#   category: en av kategorierna ovan
-#   unit:     g | ml | pcs
-#   synonyms: lista med alternativa namn (används vid AI-matchning)
+# role:
+#   ingredient      - ingår i recept, auto-ibockas vid veckoplaneringen
+#   pantry_staple   - ingår i recept men finns alltid hemma, auto-ibockas EJ
+#   regular_purchase - köps regelbundet oavsett meny (mjölk, ägg osv)
+#   household       - ej matvaror, hanteras manuellt
+#
+# unit: g | ml | pcs
+# synonyms: används av AI för att matcha ingrediensnamn i recept
 
-items: []
+items:
+
+  # ---------------------------------------------------------------------------
+  # FRUKT OCH GRÖNT
+  # ---------------------------------------------------------------------------
+
+  - id: yellow_onion
+    name_sv: gul lök
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [gullök, lök, gula lökar]
+
+  - id: red_onion
+    name_sv: rödlök
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [röd lök]
+
+  - id: shallot
+    name_sv: schalottenlök
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [schalotten, scharlottenlök]
+
+  - id: garlic
+    name_sv: vitlök
+    category: frukt_och_gront
+    unit: pcs
+    role: pantry_staple
+    synonyms: [vitlöksklyfta, vitlöksklyftor]
+
+  - id: carrot
+    name_sv: morot
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [morötter, moroten]
+
+  - id: potato
+    name_sv: potatis
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [potatisar, kokt potatis]
+
+  - id: sweet_potato
+    name_sv: sötpotatis
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [sweet potato]
+
+  - id: broccoli
+    name_sv: broccoli
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: []
+
+  - id: cauliflower
+    name_sv: blomkål
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [blomkålshuvud]
+
+  - id: leek
+    name_sv: purjolök
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [purjo]
+
+  - id: celery
+    name_sv: selleristjälkar
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [selleri, blekselleri]
+
+  - id: celeriac
+    name_sv: rotselleri
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [sellerirot]
+
+  - id: bell_pepper
+    name_sv: paprika
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [röd paprika, gul paprika, grön paprika]
+
+  - id: chili
+    name_sv: chilifrukt
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [röd chili, grön chili, färsk chili]
+
+  - id: tomato
+    name_sv: tomat
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [tomater, färska tomater]
+
+  - id: cherry_tomato
+    name_sv: körsbärstomat
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [körsbärstomater, cherrytomater]
+
+  - id: cucumber
+    name_sv: gurka
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: []
+
+  - id: zucchini
+    name_sv: zucchini
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [squash]
+
+  - id: eggplant
+    name_sv: aubergine
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: []
+
+  - id: spinach
+    name_sv: spenat
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [färsk spenat, spenatblad]
+
+  - id: kale
+    name_sv: grönkål
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [svartkål, grönkål/svartkål]
+
+  - id: avocado
+    name_sv: avokado
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [avocado]
+
+  - id: lemon
+    name_sv: citron
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [citroner]
+
+  - id: lime
+    name_sv: lime
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: []
+
+  - id: ginger_fresh
+    name_sv: ingefära
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [färsk ingefära, ingefärsrot]
+
+  - id: fresh_coriander
+    name_sv: koriander
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [färsk koriander, korianderblad]
+
+  - id: fresh_parsley
+    name_sv: bladpersilja
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [persilja, färsk persilja]
+
+  - id: fresh_basil
+    name_sv: basilika
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [färsk basilika]
+
+  - id: green_beans
+    name_sv: haricots verts
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [haricot vert, bönharicots]
+
+  - id: pak_choi
+    name_sv: pak choi
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [bok choy, pak choy]
+
+  - id: mushroom
+    name_sv: champinjoner
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [svamp, champinjon]
+
+  - id: lemongrass
+    name_sv: citrongräs
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [lemon grass]
+
+  # ---------------------------------------------------------------------------
+  # KÖTT OCH CHARK
+  # ---------------------------------------------------------------------------
+
+  - id: chicken_fillet
+    name_sv: kycklingfilé
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [kyckling, kycklingbröst, kycklingfilé]
+
+  - id: chicken_thigh_fillet
+    name_sv: kycklinglårfilé
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [kycklinglår, lårfilé]
+
+  - id: ground_beef
+    name_sv: nötfärs
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [köttfärs, köttfärs nöt, nötköttsfärs]
+
+  - id: pork_fillet
+    name_sv: fläskfilé
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [fläskfilé]
+
+  - id: pork_neck
+    name_sv: fläskkarré
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [karré, fläsk karré]
+
+  - id: beef_entrecote
+    name_sv: entrecôte
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [entrecote]
+
+  - id: flank_steak
+    name_sv: flankstek
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [flap steak, flankstek]
+
+  - id: bacon
+    name_sv: bacon
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: []
+
+  - id: salsiccia
+    name_sv: salsiccafärs
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [salsiccia, salsiccakorv]
+
+  - id: lamb_fillet
+    name_sv: lammytterfilé
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [lamm, lammfilé]
+
+  # ---------------------------------------------------------------------------
+  # MEJERI OCH ÄGG
+  # ---------------------------------------------------------------------------
+
+  - id: egg
+    name_sv: ägg
+    category: mejeri_och_agg
+    unit: pcs
+    role: regular_purchase
+    synonyms: [ägg, ett ägg, två ägg]
+
+  - id: butter
+    name_sv: smör
+    category: mejeri_och_agg
+    unit: g
+    role: pantry_staple
+    synonyms: [smör, bregott]
+
+  - id: cream
+    name_sv: grädde
+    category: mejeri_och_agg
+    unit: ml
+    role: ingredient
+    synonyms: [vispgrädde, matlagningsgrädde]
+
+  - id: creme_fraiche
+    name_sv: crème fraîche
+    category: mejeri_och_agg
+    unit: ml
+    role: ingredient
+    synonyms: [creme fraiche, crème fraiche]
+
+  - id: sour_cream
+    name_sv: gräddfil
+    category: mejeri_och_agg
+    unit: ml
+    role: ingredient
+    synonyms: [gräddfil]
+
+  - id: milk
+    name_sv: mjölk
+    category: mejeri_och_agg
+    unit: ml
+    role: regular_purchase
+    synonyms: []
+
+  - id: parmesan
+    name_sv: parmesan
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [parmesanost, parmesan riven]
+
+  - id: feta
+    name_sv: fetaost
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [feta, fetaost]
+
+  - id: mozzarella
+    name_sv: mozzarella
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: []
+
+  - id: halloumi
+    name_sv: halloumi
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: []
+
+  - id: cream_cheese
+    name_sv: färskost
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [philadelphiaost, philadelphia, cream cheese]
+
+  - id: mascarpone
+    name_sv: mascarpone
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: []
+
+  - id: coconut_milk
+    name_sv: kokosmjölk
+    category: mejeri_och_agg
+    unit: ml
+    role: ingredient
+    synonyms: [kokosmjölk, coconut milk]
+
+  # ---------------------------------------------------------------------------
+  # TORRVAROR
+  # ---------------------------------------------------------------------------
+
+  - id: pasta_spaghetti
+    name_sv: spaghetti
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [spagetti]
+
+  - id: pasta_fusilli
+    name_sv: fusilli
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [pasta fusilli, fusili]
+
+  - id: pasta_tagliatelle
+    name_sv: tagliatelle
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: []
+
+  - id: pasta_penne
+    name_sv: penne
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [idealmakaroner, makaroner]
+
+  - id: basmati_rice
+    name_sv: basmatiris
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [basmati, ris basmati]
+
+  - id: jasmine_rice
+    name_sv: jasminris
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [jasmin ris]
+
+  - id: risotto_rice
+    name_sv: risottoris
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [risotto ris, arborio]
+
+  - id: egg_noodles
+    name_sv: äggnudlar
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [nudlar, ägg nudlar]
+
+  - id: rice_noodles
+    name_sv: risnudlar
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [ris nudlar, tunna risnudlar]
+
+  - id: quinoa
+    name_sv: quinoa
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: []
+
+  - id: red_lentils_dry
+    name_sv: röda linser
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [röda linser torkade]
+
+  - id: green_lentils_dry
+    name_sv: gröna linser
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [gröna linser torkade]
+
+  - id: chickpeas_dry
+    name_sv: kikärter torkade
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [torkade kikärter]
+
+  - id: all_purpose_flour
+    name_sv: vetemjöl
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [mjöl, vetemjöl special]
+
+  - id: breadcrumbs
+    name_sv: ströbröd
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: []
+
+  # ---------------------------------------------------------------------------
+  # KONSERVER
+  # ---------------------------------------------------------------------------
+
+  - id: crushed_tomatoes
+    name_sv: krossade tomater
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [krossade tomater på burk, hackade tomater]
+
+  - id: strained_tomatoes
+    name_sv: passerade tomater
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [passerad tomat, tomatkross]
+
+  - id: tomato_paste
+    name_sv: tomatpuré
+    category: konserver
+    unit: g
+    role: pantry_staple
+    synonyms: [tomatpure, tomato paste]
+
+  - id: coconut_milk_can
+    name_sv: kokosmjölk på burk
+    category: konserver
+    unit: ml
+    role: ingredient
+    synonyms: [kokosmjölk burk, coconut milk]
+
+  - id: chickpeas_can
+    name_sv: kikärter
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [kikärter på burk, konserverade kikärter]
+
+  - id: kidney_beans_can
+    name_sv: kidneybönor
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [kidney bönor]
+
+  - id: black_beans_can
+    name_sv: svarta bönor
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [svarta bönor på burk]
+
+  - id: white_beans_can
+    name_sv: vita bönor
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [stora vita bönor, butter beans, cannellini]
+
+  - id: chicken_stock
+    name_sv: kycklingfond
+    category: konserver
+    unit: ml
+    role: pantry_staple
+    synonyms: [kycklingbuljong, hönsbuljong, kycklingfond]
+
+  - id: vegetable_stock
+    name_sv: grönsaksbuljong
+    category: konserver
+    unit: ml
+    role: pantry_staple
+    synonyms: [grönsaksfond, vegetarisk buljong]
+
+  - id: beef_stock
+    name_sv: köttbuljong
+    category: konserver
+    unit: ml
+    role: pantry_staple
+    synonyms: [köttfond, nötbuljong]
+
+  - id: sun_dried_tomatoes
+    name_sv: soltorkade tomater
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [soltorkad tomat]
+
+  - id: roasted_pepper_jar
+    name_sv: grillad paprika
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [inlagd paprika, grillad paprika på burk]
+
+  - id: pesto
+    name_sv: pesto
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [grön pesto, röd pesto]
+
+  - id: anchovy
+    name_sv: sardeller
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [ansjovis, sardellkräm]
+
+  # ---------------------------------------------------------------------------
+  # FRYSTA VAROR
+  # ---------------------------------------------------------------------------
+
+  - id: frozen_peas
+    name_sv: frysta ärtor
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [ärtor, gröna ärtor]
+
+  - id: frozen_spinach
+    name_sv: fryst spenat
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [fryst hackad spenat, spenat fryst]
+
+  - id: frozen_broccoli
+    name_sv: fryst broccoli
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: []
+
+  - id: frozen_corn
+    name_sv: fryst majskorn
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [majs, majskorn]
+
+  - id: frozen_green_beans
+    name_sv: frysta haricots verts
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [frysta bönor, haricot verts fryst]
+
+  - id: frozen_prawns
+    name_sv: frysta räkor
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [räkor frysta, tigerräkor, jätteräkor]
+
+  - id: frozen_cod
+    name_sv: fryst torsk
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [torskfilé fryst, fryst fisk]
+
+  - id: frozen_chicken_thigh
+    name_sv: fryst kycklinglårfilé
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [fryst kycklinglår, kycklinglårfilé fryst]
+
+  - id: frozen_mango
+    name_sv: fryst mango
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [mango fryst]
+
+  # ---------------------------------------------------------------------------
+  # KRYDDOR OCH SMAKSÄTTARE
+  # ---------------------------------------------------------------------------
+
+  - id: olive_oil
+    name_sv: olivolja
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [olja, olivolja extra virgin]
+
+  - id: rapeseed_oil
+    name_sv: rapsolja
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [neutral olja, matolja]
+
+  - id: soy_sauce
+    name_sv: soja
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [sojasås, kinesisk soja, japansk soja]
+
+  - id: fish_sauce
+    name_sv: fisksås
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [fish sauce]
+
+  - id: sesame_oil
+    name_sv: sesamolja
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: []
+
+  - id: tahini
+    name_sv: tahini
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [sesampasta]
+
+  - id: dijon_mustard
+    name_sv: dijonsenap
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [senap, dijon]
+
+  - id: red_curry_paste
+    name_sv: röd currypasta
+    category: kryddor_och_smaksattare
+    unit: g
+    role: ingredient
+    synonyms: [röd curry pasta, red curry paste]
+
+  - id: green_curry_paste
+    name_sv: grön currypasta
+    category: kryddor_och_smaksattare
+    unit: g
+    role: ingredient
+    synonyms: [grön curry pasta, green curry paste]
+
+  - id: sambal_oelek
+    name_sv: sambal oelek
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [sambal olek, sambalolek]
+
+  - id: hoisin_sauce
+    name_sv: hoisinsås
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [hoisin]
+
+  - id: teriyaki_sauce
+    name_sv: teriyakisås
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [teriyaki]
+
+  - id: white_wine_vinegar
+    name_sv: vitvinsvinäger
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [vit vinäger]
+
+  - id: balsamic_vinegar
+    name_sv: balsamvinäger
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [balsamico]
+
+  - id: salt
+    name_sv: salt
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [flingsalt, grovsalt]
+
+  - id: black_pepper
+    name_sv: svartpeppar
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [peppar, svart peppar, malen peppar]
+
+  - id: cumin
+    name_sv: spiskummin
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [kummin, spiskummin malen]
+
+  - id: coriander_powder
+    name_sv: korianderpulver
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [malen koriander]
+
+  - id: turmeric
+    name_sv: gurkmeja
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [kurkuma]
+
+  - id: paprika_powder
+    name_sv: paprikapulver
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [rökt paprika, paprikapulver delikatess]
+
+  - id: smoked_paprika
+    name_sv: rökt paprika
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [paprikapulver rökt, smoked paprika]
+
+  - id: cayenne
+    name_sv: cayennepeppar
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [cayenne pepper]
+
+  - id: chili_flakes
+    name_sv: chiliflakes
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [torkad chili, chiliflingor]
+
+  - id: cinnamon
+    name_sv: kanel
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [malen kanel, kanel malen]
+
+  - id: garam_masala
+    name_sv: garam masala
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: []
+
+  - id: tikka_masala_spice
+    name_sv: tikka masala
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [tikka masala krydda]
+
+  - id: dried_oregano
+    name_sv: oregano
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [torkad oregano]
+
+  - id: dried_thyme
+    name_sv: timjan
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [torkad timjan]
+
+  - id: bay_leaf
+    name_sv: lagerblad
+    category: kryddor_och_smaksattare
+    unit: pcs
+    role: pantry_staple
+    synonyms: [lagerbad]
+
+  - id: cardamom
+    name_sv: kardemumma
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [kardemummakorn]
+
+  - id: lemon_juice_bottle
+    name_sv: pressad citron
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [citronjuice på flaska, pressad citron flaska]
+
+  # ---------------------------------------------------------------------------
+  # BRÖD OCH BAKVERK
+  # ---------------------------------------------------------------------------
+
+  - id: pita_bread
+    name_sv: pitabröd
+    category: brod_och_bakverk
+    unit: pcs
+    role: ingredient
+    synonyms: [pita]
+
+  - id: tortilla_medium
+    name_sv: tortillas
+    category: brod_och_bakverk
+    unit: pcs
+    role: ingredient
+    synonyms: [tortilla, wraps]
+
+  - id: naan_bread
+    name_sv: naan
+    category: brod_och_bakverk
+    unit: pcs
+    role: ingredient
+    synonyms: [naanbröd, naan bröd]
+
+  # ---------------------------------------------------------------------------
+  # FISK (del av kött och chark eller separat)
+  # ---------------------------------------------------------------------------
+
+  - id: salmon_fresh
+    name_sv: lax
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [laxfilé, färsk lax]
+
+  - id: cod_fresh
+    name_sv: torsk
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [torskfilé, färsk torsk]
+
+  - id: smoked_salmon
+    name_sv: rökt lax
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [kallrökt lax, varmrökt lax, gravad lax]

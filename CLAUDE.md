@@ -130,10 +130,10 @@ metadata:
 
 ## Byggplan — var vi är
 
-### Fas 1 — Datafundament ← VI BÖRJAR HÄR
-- [ ] Steg 1.1: Mappstruktur och grundfiler
-- [ ] Steg 1.2: `items.yaml` med vanliga råvaror per butiksavdelning
-- [ ] Steg 1.3: Receptschema + 5 exempelrecept manuellt inmatade
+### Fas 1 — Datafundament
+- [x] Steg 1.1: Mappstruktur och grundfiler
+- [x] Steg 1.2: `items.yaml` med vanliga råvaror per butiksavdelning
+- [ ] Steg 1.3: Receptschema + 5 exempelrecept manuellt inmatade ← NÄSTA STEG
 
 ### Fas 2 — AI-planering
 - [ ] Steg 2.1: Claude API-integration (Python-modul)
