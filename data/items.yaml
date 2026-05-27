@@ -1,0 +1,13 @@
+# Varudatabas — strukturerad efter Coops butiksavdelningar
+# Kategorier: frukt_och_gront | kott_och_chark | mejeri_och_agg |
+#             torrvaror | konserver | frysta_varor | brod_och_bakverk |
+#             drycker | kryddor_och_smaksattare | ovrigt
+#
+# Schema per vara:
+#   id:       snake_case, unikt och stabilt
+#   name_sv:  svenska namn
+#   category: en av kategorierna ovan
+#   unit:     g | ml | pcs
+#   synonyms: lista med alternativa namn (används vid AI-matchning)
+
+items: []
