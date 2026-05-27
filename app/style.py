@@ -4,9 +4,12 @@ import streamlit as st
 
 CSS = """
 <style>
-/* ── Dölj Streamlit-sidebar och hamburgarmeny ── */
-section[data-testid="stSidebar"]   { display: none !important; }
-[data-testid="collapsedControl"]    { display: none !important; }
+/* ── Dölj Streamlit toolbar och hamburgarmeny ── */
+[data-testid="stHeader"]      { display: none !important; }
+[data-testid="stToolbar"]     { display: none !important; }
+[data-testid="stDecoration"]  { display: none !important; }
+#MainMenu                     { display: none !important; }
+.stDeployButton               { display: none !important; }
 
 /* ── Bakgrund och layout ── */
 .stApp { background: #FAFAF4 !important; }
@@ -112,8 +115,31 @@ hr { border-color: #D4DABC !important; margin: 0.8rem 0 !important; }
     text-transform: uppercase;
 }
 
-/* ── option_menu navigation ── */
-nav-link { font-size: 0.85rem !important; }
+/* ── Flikar (st.tabs) ── */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 0;
+    background-color: #ffffff;
+    border-bottom: 2px solid #D4DABC;
+    padding: 0;
+}
+.stTabs [data-baseweb="tab"] {
+    font-size: 1rem !important;
+    padding: 10px 8px !important;
+    color: #7A7A6A !important;
+    background: transparent !important;
+    border-bottom: 2px solid transparent !important;
+    flex: 1;
+    justify-content: center;
+}
+.stTabs [aria-selected="true"] {
+    color: #3D5016 !important;
+    border-bottom: 2px solid #3D5016 !important;
+    font-weight: 700 !important;
+    background: transparent !important;
+}
+.stTabs [data-baseweb="tab-panel"] {
+    padding: 12px 0 0 0 !important;
+}
 </style>
 """
 
