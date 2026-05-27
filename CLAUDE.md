@@ -136,11 +136,11 @@ metadata:
 - [x] Steg 1.3: Receptschema + 5 exempelrecept manuellt inmatade
 
 ### Fas 2 — AI-planering ← NÄSTA FAS
-- [ ] Steg 2.1: Claude API-integration (Python-modul)
-- [ ] Steg 2.2: Fritext-input → veckomenysförslag
-- [ ] Steg 2.3: Godkännandeflöde (CLI till en början)
+- [x] Steg 2.1: Claude API-integration (Python-modul)
+- [x] Steg 2.2: Fritext-input → veckomenysförslag
+- [x] Steg 2.3: Godkännandeflöde (CLI till en början)
 
-### Fas 3 — Streamlit-app
+### Fas 3 — Streamlit-app ← NÄSTA FAS
 - [ ] Steg 3.1: Grundapp med tre sidor (Planera / Handlingslista / Recept)
 - [ ] Steg 3.2: Handlingslista med auto-ibockning, mobilanpassad
 - [ ] Steg 3.3: Receptvisare, mobilanpassad

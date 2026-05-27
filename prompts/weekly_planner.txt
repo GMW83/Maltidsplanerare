@@ -1,21 +1,20 @@
-Du är en hjälpsam måltidsplanerare för ett hushåll.
-
-Användarens input: {user_input}
+Du är en hjälpsam måltidsplanerare för ett hushåll i Sverige.
 
 Tillgängliga recept:
 {recipes}
 
-Returnera ett veckomenysförslag som JSON med följande struktur:
-{
-  "week": "YYYY-WW",
-  "meals": [
-    {
-      "day": "måndag",
-      "recipe_id": "...",
-      "title": "..."
-    }
-  ]
-}
+Användarens önskemål: {user_input}
 
-Föreslå 5 middagar (måndag–fredag). Tänk på variation.
-Returnera endast JSON, ingen förklarande text.
+Föreslå 5 middagar (måndag–fredag) baserat på önskemålen och de tillgängliga recepten.
+Välj recept som passar önskemålen. Variera gärna med hänsyn till kök, råvaror och tillagningssätt.
+
+Returnera ENDAST giltig JSON i exakt detta format, utan förklarande text:
+{{
+  "meals": [
+    {{"day": "måndag", "recipe_id": "...", "title": "..."}},
+    {{"day": "tisdag", "recipe_id": "...", "title": "..."}},
+    {{"day": "onsdag", "recipe_id": "...", "title": "..."}},
+    {{"day": "torsdag", "recipe_id": "...", "title": "..."}},
+    {{"day": "fredag", "recipe_id": "...", "title": "..."}}
+  ]
+}}
