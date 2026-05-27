@@ -72,5 +72,11 @@ def render():
     st.markdown(steps_html, unsafe_allow_html=True)
 
     if recipe.get("tags"):
-        st.divider()
-        st.caption("Taggar: " + " · ".join(recipe["tags"]))
+        tags_str = " · ".join(recipe["tags"])
+        st.markdown(
+            f"<div style='height:10px'></div>"
+            f"<hr style='border-color:#D4DABC; margin:0 0 8px 0'>"
+            f"<p style='font-size:0.8rem; color:#5B7028; margin:0; "
+            f"visibility:visible; opacity:1'>{tags_str}</p>",
+            unsafe_allow_html=True,
+        )

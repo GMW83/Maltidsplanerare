@@ -79,30 +79,11 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
     overflow: visible !important;
 }
 
-/* Checkbox-rutan: tunn olivgrön ram */
-[data-testid="stCheckbox"] [role="checkbox"] {
-    width: 17px !important;
-    height: 17px !important;
-    min-width: 17px !important;
-    border: 1.5px solid #8FA040 !important;
-    border-radius: 3px !important;
-    background: white !important;
-    flex-shrink: 0 !important;
-}
-
-/* Ikryssad: fylld olivgrön med vit bock */
-[data-testid="stCheckbox"] [role="checkbox"][aria-checked="true"] {
-    background-color: #5B7028 !important;
-    border-color: #5B7028 !important;
-}
-[data-testid="stCheckbox"] [role="checkbox"][aria-checked="true"] svg path {
-    fill: white !important;
-    stroke: white !important;
-}
-
-/* Fallback: accent-color för webbläsare som ej stöder ovan */
+/* Olivgrön bock — accent-color fungerar på alla moderna webbläsare */
 [data-testid="stCheckbox"] input[type="checkbox"] {
     accent-color: #5B7028 !important;
+    width: 16px !important;
+    height: 16px !important;
 }
 
 /* ── Textinput och textarea ── */
