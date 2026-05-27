@@ -58,9 +58,9 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
     display: flex !important;
     align-items: center !important;
     gap: 8px !important;
-    padding: 3px 0 !important;
+    padding: 1px 0 !important;
     cursor: pointer !important;
-    min-height: 26px !important;
+    min-height: 22px !important;
 }
 
 /* Texten i labeln — explicit synlig */
@@ -124,6 +124,29 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
     background: #EDF2E0 !important;
     border-radius: 10px !important;
     padding: 8px 10px !important;
+}
+
+/* ── Tät layout — minska gap mellan element ── */
+.stVerticalBlock { gap: 0 !important; }
+div[data-testid="element-container"] {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+/* ── Markdown-text — explicit synlig (fixar mobil) ── */
+[data-testid="stMarkdownContainer"] p,
+[data-testid="stMarkdownContainer"] li,
+[data-testid="stMarkdownContainer"] ul li,
+[data-testid="stMarkdownContainer"] ol li {
+    color: #2A2A22 !important;
+    font-size: 0.9rem !important;
+    line-height: 1.4 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin-bottom: 0.15rem !important;
+}
+[data-testid="stMarkdownContainer"] strong {
+    color: #2A2A22 !important;
 }
 
 /* ── Divider ── */
