@@ -46,11 +46,15 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
    CHECKBOXAR — tunn olivgrön border, fungerar på mobil
    ═══════════════════════════════════════════════════ */
 
-/* Nollställ marginaler för tät lista */
+/* Nollställ marginaler + ta bort eventuella listpunkter */
 [data-testid="stCheckbox"] {
     margin: 0 !important;
     padding: 0 !important;
     min-height: 0 !important;
+    list-style: none !important;
+}
+[data-testid="stCheckbox"] * {
+    list-style: none !important;
 }
 
 /* Label-raden */
@@ -79,32 +83,38 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
     overflow: visible !important;
 }
 
-/* Native input: ta bort OS-styling och gör synlig.
-   Behåll position:absolute (BaseWeb) så den ligger ovanpå BaseWeb:s
-   svarta visuella box och täcker den. */
-[data-testid="stCheckbox"] input[type="checkbox"] {
-    -webkit-appearance: none !important;
-    -moz-appearance: none !important;
-    appearance: none !important;
-    opacity: 1 !important;
+/* BaseWeb visuell checkbox-ruta — vit med tunn olivgrön ram */
+[data-testid="stCheckbox"] [data-baseweb="checkbox"] {
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+    min-height: 16px !important;
     border: 1.5px solid #9AA07A !important;
     border-radius: 3px !important;
     background-color: white !important;
-    cursor: pointer !important;
+    box-shadow: none !important;
+    flex-shrink: 0 !important;
+    box-sizing: border-box !important;
 }
 
-[data-testid="stCheckbox"] input[type="checkbox"]:checked {
+/* Inbockad: olivgrön fyllning */
+[data-testid="stCheckbox"] [aria-checked="true"] [data-baseweb="checkbox"] {
     background-color: #5B7028 !important;
     border-color: #5B7028 !important;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpolyline points='1.5%2C5 4%2C7.5 8.5%2C2.5' stroke='white' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
-    background-size: 65% !important;
-    background-repeat: no-repeat !important;
-    background-position: center !important;
 }
 
-/* ── Textinput och textarea ── */
+/* Fallback accent-color för webbläsare med native checkbox */
+[data-testid="stCheckbox"] input[type="checkbox"] {
+    accent-color: #5B7028 !important;
+}
+
+/* ── Textinput och textarea — ljus bakgrund, synlig text på mobil ── */
 .stTextInput > div > div > input,
 .stTextArea textarea {
+    background-color: white !important;
+    color: #2A2A22 !important;
+    -webkit-text-fill-color: #2A2A22 !important;
+    color-scheme: light !important;
     border-color: #C8D4A0 !important;
     border-radius: 10px !important;
     font-size: 0.95rem !important;
@@ -177,7 +187,7 @@ hr { border-color: #D4DABC !important; margin: 0.6rem 0 !important; }
     font-weight: 700;
     font-style: italic;
     color: #5B7028;
-    margin: 14px 0 16px 0;
+    margin: 14px 0 6px 0;
     padding-bottom: 3px;
     border-bottom: 1px solid #D4DABC;
 }

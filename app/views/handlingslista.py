@@ -48,11 +48,12 @@ def render():
 
     # ── Varor per kategori ──────────────────────────────────────────────────
     for category in full_list:
+        # Header + spacer i samma element-container — undviker kollaps av separat spacer
         st.markdown(
-            f"<p class='cat-header'>{category['category_name']}</p>",
+            f"<p class='cat-header'>{category['category_name']}</p>"
+            f"<div style='height:18px'></div>",
             unsafe_allow_html=True,
         )
-        st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
         for item in category["items"]:
             iid = item["id"]
             key = f"cb_{iid}"
@@ -67,10 +68,10 @@ def render():
 
     # ── Extraposter ─────────────────────────────────────────────────────────
     st.markdown(
-        "<p class='cat-header'>Extra denna vecka</p>",
+        "<p class='cat-header'>Extra denna vecka</p>"
+        "<div style='height:18px'></div>",
         unsafe_allow_html=True,
     )
-    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     # Visa befintliga extras
     to_remove = None
     for idx, extra in enumerate(extras):
