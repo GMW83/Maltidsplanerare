@@ -77,7 +77,7 @@ def render():
         st.markdown(
             f"<div style='height:10px'></div>"
             f"<hr style='border-color:#D4DABC; margin:0 0 8px 0'>"
-            f"<p style='font-size:0.8rem; color:#9AA07A; margin:0; "
+            f"<p style='font-size:0.8rem; color:#AAAAAA; margin:0; "
             f"visibility:visible; opacity:1'>{tags_str}</p>",
             unsafe_allow_html=True,
         )

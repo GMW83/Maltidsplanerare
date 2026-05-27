@@ -79,42 +79,27 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
     overflow: visible !important;
 }
 
-/* BaseWeb wrapper — transparent bakgrund */
-[data-testid="stCheckbox"] [role="checkbox"] {
-    background-color: transparent !important;
-}
-
-/* Visuell ruta — tunn olivgrön border, vit bakgrund.
-   Selektorer täcker de vanligaste BaseWeb/Streamlit DOM-varianterna. */
-[data-testid="stCheckbox"] [role="checkbox"] > span:first-child,
-[data-testid="stCheckbox"] [role="checkbox"] > div:first-child,
-[data-testid="stCheckbox"] input[type="checkbox"] + span,
-[data-testid="stCheckbox"] input[type="checkbox"] + div {
-    width: 16px !important;
-    height: 16px !important;
-    min-width: 16px !important;
-    min-height: 16px !important;
-    max-width: 16px !important;
-    max-height: 16px !important;
+/* Native input: ta bort OS-styling och gör synlig.
+   Behåll position:absolute (BaseWeb) så den ligger ovanpå BaseWeb:s
+   svarta visuella box och täcker den. */
+[data-testid="stCheckbox"] input[type="checkbox"] {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    opacity: 1 !important;
     border: 1.5px solid #9AA07A !important;
     border-radius: 3px !important;
     background-color: white !important;
-    box-sizing: border-box !important;
-    flex-shrink: 0 !important;
+    cursor: pointer !important;
 }
 
-/* Inbockad: olivgrön fyllning */
-[data-testid="stCheckbox"] [role="checkbox"][aria-checked="true"] > span:first-child,
-[data-testid="stCheckbox"] [role="checkbox"][aria-checked="true"] > div:first-child {
+[data-testid="stCheckbox"] input[type="checkbox"]:checked {
     background-color: #5B7028 !important;
     border-color: #5B7028 !important;
-}
-
-/* Fallback: native accent-color + rätt storlek */
-[data-testid="stCheckbox"] input[type="checkbox"] {
-    accent-color: #5B7028 !important;
-    width: 16px !important;
-    height: 16px !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpolyline points='1.5%2C5 4%2C7.5 8.5%2C2.5' stroke='white' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    background-size: 65% !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
 }
 
 /* ── Textinput och textarea ── */
