@@ -6,9 +6,11 @@ from pathlib import Path
 
 import anthropic
 import yaml
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 
-load_dotenv(Path(__file__).parent.parent / ".env")
+_env_path = Path(__file__).parent.parent / ".env"
+_env = dotenv_values(_env_path)
+os.environ.update({k: v for k, v in _env.items() if v is not None})
 
 RECIPES_DIR = Path(__file__).parent.parent / "data" / "recipes"
 PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
@@ -45,7 +47,13 @@ def generate_weekly_plan(user_input: str) -> dict:
         recipes=_recipe_summary(recipes),
     )
 
-    client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if not api_key:
+        raise ValueError(
+            f"ANTHROPIC_API_KEY saknas. Kontrollera att .env finns i {_env_path.parent} "
+            f"och innehåller ANTHROPIC_API_KEY=din-nyckel"
+        )
+    client = anthropic.Anthropic(api_key=api_key)
     message = client.messages.create(
         model="claude-sonnet-4-6",
         max_tokens=1024,
