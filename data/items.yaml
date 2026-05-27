@@ -914,19 +914,26 @@ items:
     role: pantry_staple
     synonyms: [kardemummakorn]
 
-  - id: lemon_juice_bottle
-    name_sv: pressad citron
-    category: kryddor_och_smaksattare
-    unit: ml
-    role: pantry_staple
-    synonyms: [citronjuice på flaska, pressad citron flaska]
-
-  - id: remoulade
-    name_sv: remouladsås
+  - id: mayonnaise
+    name_sv: majonäs
     category: kryddor_och_smaksattare
     unit: g
-    role: ingredient
-    synonyms: [remoulade, remoulad]
+    role: pantry_staple
+    synonyms: [majonnäs, mayo]
+
+  - id: capers
+    name_sv: kapris
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [kapris]
+
+  - id: cornichons
+    name_sv: cornichoner
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [cornichoner, inlagd gurka, smörgåsgurka]
 
   # ---------------------------------------------------------------------------
   # BRÖD OCH BAKVERK

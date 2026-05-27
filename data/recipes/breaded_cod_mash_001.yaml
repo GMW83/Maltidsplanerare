@@ -33,8 +33,23 @@ ingredients:
   - ingredient_id: lemon
     amount: 1
     unit: pcs
-  - ingredient_id: remoulade
-    amount: 150
+  - ingredient_id: mayonnaise
+    amount: 100
+    unit: g
+  - ingredient_id: creme_fraiche
+    amount: 50
+    unit: ml
+  - ingredient_id: capers
+    amount: 20
+    unit: g
+  - ingredient_id: cornichons
+    amount: 30
+    unit: g
+  - ingredient_id: dijon_mustard
+    amount: 10
+    unit: g
+  - ingredient_id: fresh_parsley
+    amount: 10
     unit: g
   - ingredient_id: rapeseed_oil
     amount: 40
@@ -60,6 +75,8 @@ instructions:
   - step: 6
     text: Häll av potatisen. Mosa med smör och mjölk. Salta och peppra.
   - step: 7
+    text: Blanda majonäs, crème fraîche, dijonsenap, finhackade cornichoner, kapris och persilja till remouladsås. Smaka av med salt och peppar.
+  - step: 8
     text: Servera torsk med potatismos, grönsaker, remouladsås och citronklyftor.
 
 tags:
