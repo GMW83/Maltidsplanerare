@@ -24,7 +24,6 @@ def render():
 
     today = date.today()
     week_nr = today.isocalendar()[1]
-    date_str = today.strftime("%-d %B %Y").lower() if hasattr(today, "strftime") else str(today)
 
     if meals:
         hero_text = f"Vecka {week_nr} · {today.strftime('%d/%m')}"
