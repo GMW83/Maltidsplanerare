@@ -64,8 +64,12 @@ def render():
         st.markdown(f"- {name} — **{amt_str}**")
 
     st.subheader("Tillagning")
-    for step in recipe.get("instructions", []):
-        st.markdown(f"**{step['step']}.** {step['text']}")
+    steps_html = "".join(
+        f"<p style='margin:0 0 7px 0; line-height:1.35; font-size:0.9rem; color:#2A2A22'>"
+        f"<strong style='color:#2A2A22'>{s['step']}.</strong> {s['text']}</p>"
+        for s in recipe.get("instructions", [])
+    )
+    st.markdown(steps_html, unsafe_allow_html=True)
 
     if recipe.get("tags"):
         st.divider()

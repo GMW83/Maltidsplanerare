@@ -180,10 +180,9 @@ hr { border-color: #D4DABC !important; margin: 0.6rem 0 !important; }
     font-weight: 700;
     font-style: italic;
     color: #5B7028;
-    margin: 12px 0 1px 0;
-    padding: 0;
+    margin: 14px 0 7px 0;
+    padding-bottom: 3px;
     border-bottom: 1px solid #D4DABC;
-    padding-bottom: 2px;
 }
 
 /* ── Flikar (st.tabs) ── */
