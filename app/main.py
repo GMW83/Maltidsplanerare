@@ -18,59 +18,42 @@ st.set_page_config(
 
 style.apply()
 
-# ── Routing ──────────────────────────────────────────────────────────────────
-
 PAGES = {
-    "Hem":          hem.render,
-    "Planera":      planera.render,
+    "Hem":            hem.render,
+    "Planera":        planera.render,
     "Handlingslista": handlingslista.render,
-    "Recept":       recept.render,
+    "Recept":         recept.render,
 }
 
 if "page" not in st.session_state:
     st.session_state.page = "Hem"
 
-# ── Innehåll ─────────────────────────────────────────────────────────────────
-
-PAGES[st.session_state.page]()
-
-# ── Bottenmeny (fast längst ned) ─────────────────────────────────────────────
-
-st.markdown("<div style='height:60px'></div>", unsafe_allow_html=True)
+# ── Navigation (topp) ─────────────────────────────────────────────────────────
 
 selected = option_menu(
     menu_title=None,
-    options=["Hem", "Planera", "Handlingslista", "Recept"],
+    options=list(PAGES.keys()),
     icons=["house-fill", "calendar-week-fill", "cart-fill", "book-fill"],
     orientation="horizontal",
     default_index=list(PAGES.keys()).index(st.session_state.page),
     styles={
         "container": {
-            "position": "fixed",
-            "bottom": "0",
-            "left": "0",
-            "right": "0",
-            "z-index": "9999",
-            "padding": "8px 0 12px 0",
+            "padding": "4px 0",
             "background-color": "#ffffff",
-            "border-top": "1px solid #D4DABC",
-            "max-width": "100%",
+            "border-bottom": "1px solid #D4DABC",
+            "margin-bottom": "12px",
         },
-        "icon":      {"color": "#7A9040", "font-size": "20px"},
-        "nav-link":  {
-            "font-size": "0.7rem",
-            "color": "#7A7A6A",
-            "padding": "4px 8px",
-        },
-        "nav-link-selected": {
-            "background-color": "transparent",
-            "color": "#3D5016",
-            "font-weight": "700",
-        },
-        "icon--selected": {"color": "#3D5016"},
+        "icon":            {"color": "#8FA040", "font-size": "18px"},
+        "nav-link":        {"font-size": "0.72rem", "color": "#7A7A6A", "padding": "4px 6px"},
+        "nav-link-selected": {"background-color": "#EDF2E0", "color": "#3D5016", "font-weight": "700", "border-radius": "8px"},
+        "icon--selected":  {"color": "#3D5016"},
     },
 )
 
 if selected != st.session_state.page:
     st.session_state.page = selected
     st.rerun()
+
+# ── Innehåll ──────────────────────────────────────────────────────────────────
+
+PAGES[st.session_state.page]()
