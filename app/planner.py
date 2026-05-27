@@ -8,7 +8,7 @@ import anthropic
 import yaml
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(Path(__file__).parent.parent / ".env")
 
 RECIPES_DIR = Path(__file__).parent.parent / "data" / "recipes"
 PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
