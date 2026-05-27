@@ -49,7 +49,8 @@ def render():
     # ── Varor per kategori ──────────────────────────────────────────────────
     for category in full_list:
         st.markdown(
-            f"<p class='cat-header'>{category['category_name']}</p>",
+            f"<p class='cat-header'>{category['category_name']}</p>"
+            f"<div style='height:5px'></div>",
             unsafe_allow_html=True,
         )
         for item in category["items"]:
