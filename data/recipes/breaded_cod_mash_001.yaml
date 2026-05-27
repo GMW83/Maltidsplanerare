@@ -1,0 +1,76 @@
+recipe_id: breaded_cod_mash_001
+title: Panerad torsk med potatismos och remouladsås
+servings: 4
+
+ingredients:
+  - ingredient_id: cod_fresh
+    amount: 700
+    unit: g
+  - ingredient_id: potato
+    amount: 900
+    unit: g
+  - ingredient_id: egg
+    amount: 2
+    unit: pcs
+  - ingredient_id: all_purpose_flour
+    amount: 60
+    unit: g
+  - ingredient_id: breadcrumbs
+    amount: 100
+    unit: g
+  - ingredient_id: butter
+    amount: 60
+    unit: g
+  - ingredient_id: milk
+    amount: 100
+    unit: ml
+  - ingredient_id: frozen_peas
+    amount: 200
+    unit: g
+  - ingredient_id: carrot
+    amount: 200
+    unit: g
+  - ingredient_id: lemon
+    amount: 1
+    unit: pcs
+  - ingredient_id: remoulade
+    amount: 150
+    unit: g
+  - ingredient_id: rapeseed_oil
+    amount: 40
+    unit: ml
+  - ingredient_id: salt
+    amount: 5
+    unit: g
+  - ingredient_id: black_pepper
+    amount: 2
+    unit: g
+
+instructions:
+  - step: 1
+    text: Skala och koka potatis i saltat vatten tills mjuk, ca 20 minuter.
+  - step: 2
+    text: Skär morötterna i skivor och koka eller ångkoka tills mjuka, ca 10 minuter. Tina ärtor.
+  - step: 3
+    text: Dela torsken i portionsbitar. Salta och peppra.
+  - step: 4
+    text: Panera fisken i mjöl, sedan uppvispat ägg, sedan ströbröd.
+  - step: 5
+    text: Stek fisken i olja på medelhög värme, ca 3–4 minuter per sida tills gyllenbrun och genomkokt.
+  - step: 6
+    text: Häll av potatisen. Mosa med smör och mjölk. Salta och peppra.
+  - step: 7
+    text: Servera torsk med potatismos, grönsaker, remouladsås och citronklyftor.
+
+tags:
+  - fisk
+  - svenskt
+  - vardag
+  - barnvänligt
+
+metadata:
+  cook_time_minutes: 35
+  difficulty: 1
+  spice_level: 1
+  freezer_friendly: false
+  kid_friendly: true

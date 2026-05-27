@@ -1,0 +1,88 @@
+recipe_id: black_bean_tacos_001
+title: Svarta bönor-tacos
+servings: 4
+
+ingredients:
+  - ingredient_id: black_beans_can
+    amount: 800
+    unit: g
+  - ingredient_id: tortilla_medium
+    amount: 8
+    unit: pcs
+  - ingredient_id: yellow_onion
+    amount: 150
+    unit: g
+  - ingredient_id: red_onion
+    amount: 100
+    unit: g
+  - ingredient_id: garlic
+    amount: 3
+    unit: pcs
+  - ingredient_id: bell_pepper
+    amount: 2
+    unit: pcs
+  - ingredient_id: tomato
+    amount: 200
+    unit: g
+  - ingredient_id: avocado
+    amount: 2
+    unit: pcs
+  - ingredient_id: sour_cream
+    amount: 200
+    unit: ml
+  - ingredient_id: shredded_cheese
+    amount: 150
+    unit: g
+  - ingredient_id: fresh_coriander
+    amount: 20
+    unit: g
+  - ingredient_id: lime
+    amount: 1
+    unit: pcs
+  - ingredient_id: cumin
+    amount: 5
+    unit: g
+  - ingredient_id: smoked_paprika
+    amount: 3
+    unit: g
+  - ingredient_id: chili_flakes
+    amount: 2
+    unit: g
+  - ingredient_id: rapeseed_oil
+    amount: 20
+    unit: ml
+  - ingredient_id: salt
+    amount: 4
+    unit: g
+
+instructions:
+  - step: 1
+    text: Hacka gul lök och vitlök fint. Skär paprika i bitar.
+  - step: 2
+    text: Fräs lök och paprika i olja på medelvärme ca 5 minuter.
+  - step: 3
+    text: Tillsätt vitlök, spiskummin, rökt paprika och chiliflakes. Fräs 1 minut.
+  - step: 4
+    text: Skölj och häll i de svarta bönorna. Blanda väl och låt sjuda 5 minuter. Smaka av med salt.
+  - step: 5
+    text: Hacka tomater och rödlök fint till salsa. Pressa över lite lime.
+  - step: 6
+    text: Mosa avokadon grovt med lite limejuice och salt.
+  - step: 7
+    text: Värm tortillabröden i torr panna eller ugn.
+  - step: 8
+    text: Servera med bönfyll, salsa, avokado, gräddfil, riven ost och koriander.
+
+tags:
+  - mexikanskt
+  - vegetariskt
+  - tacos
+  - vardag
+  - barnvänligt
+
+metadata:
+  cook_time_minutes: 25
+  difficulty: 1
+  spice_level: 2
+  freezer_friendly: false
+  kid_friendly: true

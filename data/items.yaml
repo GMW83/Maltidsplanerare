@@ -401,6 +401,13 @@ items:
     role: ingredient
     synonyms: []
 
+  - id: shredded_cheese
+    name_sv: riven ost
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [riven ost, strimlad ost, gratängost]
+
   - id: coconut_milk
     name_sv: kokosmjölk
     category: mejeri_och_agg
@@ -913,6 +920,13 @@ items:
     unit: ml
     role: pantry_staple
     synonyms: [citronjuice på flaska, pressad citron flaska]
+
+  - id: remoulade
+    name_sv: remouladsås
+    category: kryddor_och_smaksattare
+    unit: g
+    role: ingredient
+    synonyms: [remoulade, remoulad]
 
   # ---------------------------------------------------------------------------
   # BRÖD OCH BAKVERK
