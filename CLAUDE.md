@@ -141,9 +141,9 @@ metadata:
 - [x] Steg 2.3: Godkännandeflöde (CLI till en början)
 
 ### Fas 3 — Streamlit-app ← NÄSTA FAS
-- [ ] Steg 3.1: Grundapp med tre sidor (Planera / Handlingslista / Recept)
-- [ ] Steg 3.2: Handlingslista med auto-ibockning, mobilanpassad
-- [ ] Steg 3.3: Receptvisare, mobilanpassad
+- [x] Steg 3.1: Grundapp med tre sidor (Planera / Handlingslista / Recept)
+- [x] Steg 3.2: Handlingslista med auto-ibockning, mobilanpassad
+- [x] Steg 3.3: Receptvisare, mobilanpassad
 
 ### Fas 4 — URL-import
 - [ ] Steg 4.1: URL-parser via Claude API
