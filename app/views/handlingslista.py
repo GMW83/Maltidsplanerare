@@ -52,7 +52,7 @@ def render():
             f"<p class='cat-header'>{category['category_name']}</p>",
             unsafe_allow_html=True,
         )
-        st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
         for item in category["items"]:
             iid = item["id"]
             key = f"cb_{iid}"
@@ -70,7 +70,7 @@ def render():
         "<p class='cat-header'>Extra denna vecka</p>",
         unsafe_allow_html=True,
     )
-    st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     # Visa befintliga extras
     to_remove = None
     for idx, extra in enumerate(extras):

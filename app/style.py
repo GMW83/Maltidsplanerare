@@ -43,7 +43,7 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
 }
 
 /* ═══════════════════════════════════════════════════
-   CHECKBOXAR — kompakta, tydlig bock, synlig text
+   CHECKBOXAR — tunn olivgrön border, fungerar på mobil
    ═══════════════════════════════════════════════════ */
 
 /* Nollställ marginaler för tät lista */
@@ -79,7 +79,38 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
     overflow: visible !important;
 }
 
-/* Olivgrön bock — accent-color fungerar på alla moderna webbläsare */
+/* BaseWeb wrapper — transparent bakgrund */
+[data-testid="stCheckbox"] [role="checkbox"] {
+    background-color: transparent !important;
+}
+
+/* Visuell ruta — tunn olivgrön border, vit bakgrund.
+   Selektorer täcker de vanligaste BaseWeb/Streamlit DOM-varianterna. */
+[data-testid="stCheckbox"] [role="checkbox"] > span:first-child,
+[data-testid="stCheckbox"] [role="checkbox"] > div:first-child,
+[data-testid="stCheckbox"] input[type="checkbox"] + span,
+[data-testid="stCheckbox"] input[type="checkbox"] + div {
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+    min-height: 16px !important;
+    max-width: 16px !important;
+    max-height: 16px !important;
+    border: 1.5px solid #9AA07A !important;
+    border-radius: 3px !important;
+    background-color: white !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+}
+
+/* Inbockad: olivgrön fyllning */
+[data-testid="stCheckbox"] [role="checkbox"][aria-checked="true"] > span:first-child,
+[data-testid="stCheckbox"] [role="checkbox"][aria-checked="true"] > div:first-child {
+    background-color: #5B7028 !important;
+    border-color: #5B7028 !important;
+}
+
+/* Fallback: native accent-color + rätt storlek */
 [data-testid="stCheckbox"] input[type="checkbox"] {
     accent-color: #5B7028 !important;
     width: 16px !important;
@@ -161,7 +192,7 @@ hr { border-color: #D4DABC !important; margin: 0.6rem 0 !important; }
     font-weight: 700;
     font-style: italic;
     color: #5B7028;
-    margin: 14px 0 7px 0;
+    margin: 14px 0 16px 0;
     padding-bottom: 3px;
     border-bottom: 1px solid #D4DABC;
 }

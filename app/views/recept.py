@@ -65,7 +65,8 @@ def render():
 
     st.subheader("Tillagning")
     steps_html = "".join(
-        f"<p style='margin:0 0 7px 0; line-height:1.35; font-size:0.9rem; color:#2A2A22'>"
+        f"<p style='padding-left:1.6em; text-indent:-1.6em; margin:0 0 7px 0; "
+        f"line-height:1.35; font-size:0.9rem; color:#2A2A22'>"
         f"<strong style='color:#2A2A22'>{s['step']}.</strong> {s['text']}</p>"
         for s in recipe.get("instructions", [])
     )
@@ -76,7 +77,7 @@ def render():
         st.markdown(
             f"<div style='height:10px'></div>"
             f"<hr style='border-color:#D4DABC; margin:0 0 8px 0'>"
-            f"<p style='font-size:0.8rem; color:#5B7028; margin:0; "
+            f"<p style='font-size:0.8rem; color:#9AA07A; margin:0; "
             f"visibility:visible; opacity:1'>{tags_str}</p>",
             unsafe_allow_html=True,
         )
