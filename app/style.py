@@ -12,7 +12,7 @@ CSS = """
 .stDeployButton               { display: none !important; }
 
 /* ── Bakgrund och layout ── */
-.stApp { background: #FAFAF4 !important; }
+.stApp { background: #FAFAF4 !important; color-scheme: light !important; }
 div.block-container {
     padding: 0.5rem 0.8rem 2rem 0.8rem !important;
     max-width: 540px !important;
@@ -83,29 +83,10 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
     overflow: visible !important;
 }
 
-/* BaseWeb visuell checkbox-ruta — vit med tunn olivgrön ram */
-[data-testid="stCheckbox"] [data-baseweb="checkbox"] {
-    width: 16px !important;
-    height: 16px !important;
-    min-width: 16px !important;
-    min-height: 16px !important;
-    border: 1.5px solid #9AA07A !important;
-    border-radius: 3px !important;
-    background-color: white !important;
-    box-shadow: none !important;
-    flex-shrink: 0 !important;
-    box-sizing: border-box !important;
-}
-
-/* Inbockad: olivgrön fyllning */
-[data-testid="stCheckbox"] [aria-checked="true"] [data-baseweb="checkbox"] {
-    background-color: #5B7028 !important;
-    border-color: #5B7028 !important;
-}
-
-/* Fallback accent-color för webbläsare med native checkbox */
+/* Olivgrön bock + tvinga ljust läge så mörkt OS-tema ej ger svarta rutor */
 [data-testid="stCheckbox"] input[type="checkbox"] {
     accent-color: #5B7028 !important;
+    color-scheme: light !important;
 }
 
 /* ── Textinput och textarea — ljus bakgrund, synlig text på mobil ── */
