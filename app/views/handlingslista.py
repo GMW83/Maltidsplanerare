@@ -49,7 +49,7 @@ def render():
     # ── Varor per kategori ──────────────────────────────────────────────────
     for category in full_list:
         st.markdown(
-            f"<div class='category-header'>{category['category_name']}</div>",
+            f"<p class='cat-header'>{category['category_name']}</p>",
             unsafe_allow_html=True,
         )
         for item in category["items"]:
@@ -66,7 +66,7 @@ def render():
 
     # ── Extraposter ─────────────────────────────────────────────────────────
     st.markdown(
-        "<div class='category-header'>Extra denna vecka</div>",
+        "<p class='cat-header'>Extra denna vecka</p>",
         unsafe_allow_html=True,
     )
     # Visa befintliga extras

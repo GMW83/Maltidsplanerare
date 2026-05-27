@@ -14,7 +14,7 @@ CSS = """
 /* ── Bakgrund och layout ── */
 .stApp { background: #FAFAF4 !important; }
 div.block-container {
-    padding: 0.5rem 1rem 4rem 1rem !important;
+    padding: 0.5rem 0.8rem 2rem 0.8rem !important;
     max-width: 540px !important;
     margin: 0 auto !important;
 }
@@ -36,21 +36,73 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
 }
 .stButton > button:hover  { background-color: #3D5016 !important; }
 .stButton > button:active { background-color: #3D5016 !important; }
-
-/* ── Primärknapp (type=primary) ── */
 .stButton > button[kind="primary"] {
     background-color: #5B7028 !important;
     font-size: 1.05rem !important;
     padding: 0.7rem 1.4rem !important;
 }
 
-/* ── Checkboxar — större för mobil ── */
-.stCheckbox { margin: 0 !important; }
-.stCheckbox > label {
-    font-size: 1.05rem !important;
-    padding: 5px 0 !important;
-    line-height: 1.5 !important;
+/* ═══════════════════════════════════════════════════
+   CHECKBOXAR — kompakta, tydlig bock, synlig text
+   ═══════════════════════════════════════════════════ */
+
+/* Nollställ marginaler för tät lista */
+[data-testid="stCheckbox"] {
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+}
+
+/* Label-raden */
+[data-testid="stCheckbox"] label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 3px 0 !important;
     cursor: pointer !important;
+    min-height: 26px !important;
+}
+
+/* Texten i labeln — explicit synlig */
+[data-testid="stCheckbox"] label p,
+[data-testid="stCheckbox"] label span,
+[data-testid="stWidgetLabel"] p,
+[data-testid="stWidgetLabel"] {
+    font-size: 0.88rem !important;
+    color: #2A2A22 !important;
+    line-height: 1.3 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+}
+
+/* Checkbox-rutan: tunn olivgrön ram */
+[data-testid="stCheckbox"] [role="checkbox"] {
+    width: 17px !important;
+    height: 17px !important;
+    min-width: 17px !important;
+    border: 1.5px solid #8FA040 !important;
+    border-radius: 3px !important;
+    background: white !important;
+    flex-shrink: 0 !important;
+}
+
+/* Ikryssad: fylld olivgrön med vit bock */
+[data-testid="stCheckbox"] [role="checkbox"][aria-checked="true"] {
+    background-color: #5B7028 !important;
+    border-color: #5B7028 !important;
+}
+[data-testid="stCheckbox"] [role="checkbox"][aria-checked="true"] svg path {
+    fill: white !important;
+    stroke: white !important;
+}
+
+/* Fallback: accent-color för webbläsare som ej stöder ovan */
+[data-testid="stCheckbox"] input[type="checkbox"] {
+    accent-color: #5B7028 !important;
 }
 
 /* ── Textinput och textarea ── */
@@ -58,7 +110,7 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
 .stTextArea textarea {
     border-color: #C8D4A0 !important;
     border-radius: 10px !important;
-    font-size: 1rem !important;
+    font-size: 0.95rem !important;
 }
 
 /* ── Selectbox ── */
@@ -75,7 +127,7 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
 }
 
 /* ── Divider ── */
-hr { border-color: #D4DABC !important; margin: 0.8rem 0 !important; }
+hr { border-color: #D4DABC !important; margin: 0.6rem 0 !important; }
 
 /* ── Hero-sektion (startsida) ── */
 .hero-box {
@@ -96,23 +148,19 @@ hr { border-color: #D4DABC !important; margin: 0.8rem 0 !important; }
     padding: 12px 16px;
     margin-bottom: 8px;
 }
-.meal-day  { font-size: 0.85rem; color: #7A7A6A; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-.meal-name { font-size: 1.05rem; color: #2A2A22; font-weight: 500; }
-
-/* ── Handlingslista — förbockad vara ── */
-.checked-item label { color: #3D5016 !important; font-weight: 600 !important; }
+.meal-day  { font-size: 0.8rem; color: #7A7A6A; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.meal-name { font-size: 1rem; color: #2A2A22; font-weight: 500; }
 
 /* ── Kategorirubriker i handlingslista ── */
-.category-header {
-    background: #EDF2E0;
-    border-radius: 8px;
-    padding: 6px 12px;
-    margin: 14px 0 4px 0;
-    font-size: 0.9rem;
+.cat-header {
+    font-size: 0.8rem;
     font-weight: 700;
-    color: #3D5016;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-style: italic;
+    color: #5B7028;
+    margin: 12px 0 1px 0;
+    padding: 0;
+    border-bottom: 1px solid #D4DABC;
+    padding-bottom: 2px;
 }
 
 /* ── Flikar (st.tabs) ── */
@@ -138,7 +186,7 @@ hr { border-color: #D4DABC !important; margin: 0.8rem 0 !important; }
     background: transparent !important;
 }
 .stTabs [data-baseweb="tab-panel"] {
-    padding: 12px 0 0 0 !important;
+    padding: 8px 0 0 0 !important;
 }
 </style>
 """
