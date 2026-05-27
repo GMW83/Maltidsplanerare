@@ -140,10 +140,12 @@ metadata:
 - [x] Steg 2.2: Fritext-input → veckomenysförslag
 - [x] Steg 2.3: Godkännandeflöde (CLI till en början)
 
-### Fas 3 — Streamlit-app ← NÄSTA FAS
+### Fas 3 — Streamlit-app
 - [x] Steg 3.1: Grundapp med tre sidor (Planera / Handlingslista / Recept)
 - [x] Steg 3.2: Handlingslista med auto-ibockning, mobilanpassad
 - [x] Steg 3.3: Receptvisare, mobilanpassad
+- [x] Steg 3.4: Olivgrönt tema, bottenmeny, single-page-arkitektur
+- [x] Steg 3.5: Persistent handlingslista (shopping_state.yaml) — full lista, förbockad-modell
 
 ### Fas 4 — URL-import
 - [ ] Steg 4.1: URL-parser via Claude API
