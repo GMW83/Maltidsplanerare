@@ -1,0 +1,18 @@
+active_profile: standard
+
+profiles:
+  standard:
+    name: Standard
+    category_order:
+      - frukt_och_gront
+      - kott_och_chark
+      - mejeri_och_agg
+      - torrvaror
+      - konserver
+      - frysta_varor
+      - brod_och_bakverk
+      - drycker
+      - kryddor_och_smaksattare
+      - hushall
+      - ovrigt
+    item_overrides: {}

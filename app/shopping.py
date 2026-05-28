@@ -95,17 +95,29 @@ def apply_meal_plan(plan: dict) -> None:
 
 # ── Fullständig lista ─────────────────────────────────────────────────────────
 
-def get_full_list() -> list[dict]:
-    """Returnera alla varor grupperade per kategori med bockningsstatus."""
+def get_full_list(profile: dict = None) -> list[dict]:
+    """Returnera alla varor grupperade per kategori med bockningsstatus.
+
+    Om profile är angiven används profilens category_order och item_overrides.
+    """
     items_db = load_items()
     state = load_state()
     checked_set = set(state["checked"])
+
+    # Bestäm kategoriordning och overrides från profil eller standardvärden
+    if profile is not None:
+        cat_order = profile.get("category_order", CATEGORY_ORDER)
+        item_overrides = profile.get("item_overrides", {})
+    else:
+        cat_order = CATEGORY_ORDER
+        item_overrides = {}
 
     by_category: dict[str, list] = {}
     for item_id, item in items_db.items():
         if item.get("role") not in INCLUDED_ROLES:
             continue
-        cat = item.get("category", "ovrigt")
+        # Använd override-kategori om den finns, annars items.yaml-kategorin
+        cat = item_overrides.get(item_id) or item.get("category", "ovrigt")
         by_category.setdefault(cat, []).append({
             "id":      item_id,
             "name_sv": item["name_sv"],
@@ -122,7 +134,7 @@ def get_full_list() -> list[dict]:
             "category_name": CATEGORY_NAMES.get(cat_id, cat_id),
             "items":         by_category[cat_id],
         }
-        for cat_id in CATEGORY_ORDER
+        for cat_id in cat_order
         if cat_id in by_category
     ]
 

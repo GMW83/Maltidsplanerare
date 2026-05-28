@@ -2,7 +2,8 @@
 
 import streamlit as st
 
-from app import shopping
+from app import shopping, store_profiles
+from app.views import layout_editor
 
 
 def _init_session_state():
@@ -27,12 +28,52 @@ def _on_extra_change(idx: int):
     shopping.set_extra_checked(idx, st.session_state[f"cb_extra_{idx}"])
 
 
+def _render_profile_selector():
+    """Rendera kompakt profilväljare med knapp för att öppna layout-editorn."""
+    profiles = store_profiles.all_profiles()
+    current_id = store_profiles.active_id()
+
+    profile_ids = list(profiles.keys())
+    profile_names = [profiles[pid]["name"] for pid in profile_ids]
+    current_index = profile_ids.index(current_id) if current_id in profile_ids else 0
+
+    sel_col, btn_col = st.columns([4, 1])
+
+    selected_index = sel_col.selectbox(
+        "Butiksprofil",
+        options=range(len(profile_ids)),
+        format_func=lambda i: profile_names[i],
+        index=current_index,
+        key="profile_selector",
+        label_visibility="collapsed",
+    )
+
+    selected_id = profile_ids[selected_index]
+    if selected_id != current_id:
+        store_profiles.set_active(selected_id)
+        st.rerun()
+
+    if btn_col.button("Redigera layout", key="btn_edit_layout"):
+        st.session_state.edit_layout = True
+        st.rerun()
+
+
 def render():
     _init_session_state()
 
     st.title("Handlingslista")
 
-    full_list = shopping.get_full_list()
+    # Visa layout-editor om edit-läge är aktivt
+    if st.session_state.get("edit_layout"):
+        items_db = shopping.load_items()
+        layout_editor.render(items_db)
+        return
+
+    # Profilväljare
+    _render_profile_selector()
+
+    active_profile = store_profiles.active()
+    full_list = shopping.get_full_list(profile=active_profile)
     state = shopping.load_state()
     extras = state.get("extras", [])
 
