@@ -149,7 +149,7 @@ def render(items_db: dict):
 
     # ── Kategoriordning ───────────────────────────────────────────────────────
     st.markdown("**Kategoriordning** — dra för att ändra ordning")
-    st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:40px'></div>", unsafe_allow_html=True)
 
     cat_order = current_profile.get("category_order", shopping.CATEGORY_ORDER)
     # Visa kategorier som visningsnamn
@@ -165,6 +165,7 @@ def render(items_db: dict):
 
     sorted_cat_ids = [header_to_id.get(h, h) for h in sorted_cat_display]
 
+    st.markdown("<div style='height:40px'></div>", unsafe_allow_html=True)
     st.divider()
 
     # ── Varor per kategori ────────────────────────────────────────────────────
