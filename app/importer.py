@@ -1,7 +1,154 @@
 """URL-import av recept via Claude API."""
 
+import json
+import os
+import re
+import unicodedata
+from pathlib import Path
 
-def import_from_url(url: str, items: list) -> dict:
-    """Hämta recept från URL, tolka med Claude och returnera strukturerat recept."""
-    # Implementeras i Fas 4
-    raise NotImplementedError
+import requests
+from dotenv import dotenv_values
+
+_env_path = Path(__file__).parent.parent / ".env"
+_env = dotenv_values(_env_path)
+os.environ.update({k: v for k, v in _env.items() if v is not None})
+
+import anthropic
+
+RECIPES_DIR = Path(__file__).parent.parent / "data" / "recipes"
+
+_SYSTEM = """Du är ett recept-extraheringsverktyg. Extrahera receptet från given HTML och returnera ENBART JSON (inga kodblock, ingen förklarande text):
+
+{
+  "title": "Receptnamn",
+  "servings": 4,
+  "ingredients": [
+    {"name": "kycklingfilé", "amount": 500, "unit": "g"},
+    {"name": "gul lök", "amount": 1, "unit": "st"}
+  ],
+  "instructions": [
+    {"step": 1, "text": "Hacka löken fint."},
+    {"step": 2, "text": "Stek löken mjuk i olja på medelvärme."}
+  ],
+  "tags": ["vardag", "kyckling"],
+  "cook_time_minutes": 30,
+  "difficulty": 2
+}
+
+Regler:
+- amount är alltid ett tal (heltal eller decimal, aldrig sträng)
+- difficulty: 1 = lätt, 2 = medel, 3 = svår
+- Ingrediensnamn och instruktioner på svenska — översätt om originalet är på annat språk
+- tags: 2–5 korta beskrivande ord"""
+
+
+def _client():
+    key = os.environ.get("ANTHROPIC_API_KEY")
+    if not key:
+        raise ValueError("ANTHROPIC_API_KEY saknas i .env")
+    return anthropic.Anthropic(api_key=key)
+
+
+def fetch_url(url: str) -> str:
+    headers = {"User-Agent": "Mozilla/5.0 (compatible; RecipeImporter/1.0)"}
+    r = requests.get(url, headers=headers, timeout=15)
+    r.raise_for_status()
+    return r.text
+
+
+def extract_recipe(html: str, url: str) -> dict:
+    """Extrahera receptdata från HTML via Claude API."""
+    html_trimmed = html[:50000]
+    msg = _client().messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=2048,
+        system=_SYSTEM,
+        messages=[{"role": "user", "content": f"URL: {url}\n\nHTML:\n{html_trimmed}"}],
+    )
+    raw = msg.content[0].text.strip()
+    raw = re.sub(r"^```(?:json)?\s*\n?", "", raw)
+    raw = re.sub(r"\n?```\s*$", "", raw)
+    return json.loads(raw)
+
+
+def match_ingredients(ingredients: list[dict], items_db: dict) -> list[dict]:
+    """
+    Matcha extraherade ingredienser mot items_db {id: item}.
+    Returnerar listan utökt med 'matched_id' (str|None) per post.
+    """
+    results = []
+    for ing in ingredients:
+        name_lower = ing["name"].lower().strip()
+        matched_id = None
+
+        for item_id, item in items_db.items():
+            if item["name_sv"].lower() == name_lower:
+                matched_id = item_id
+                break
+            if name_lower in item["name_sv"].lower() or item["name_sv"].lower() in name_lower:
+                matched_id = item_id
+                break
+            for syn in item.get("synonyms", []):
+                if syn.lower() == name_lower or name_lower in syn.lower():
+                    matched_id = item_id
+                    break
+            if matched_id:
+                break
+
+        results.append({**ing, "matched_id": matched_id})
+    return results
+
+
+def build_recipe_id(title: str) -> str:
+    """Generera unikt recipe_id från titel."""
+    nfd = unicodedata.normalize("NFD", title.lower())
+    ascii_t = "".join(c for c in nfd if unicodedata.category(c) != "Mn")
+    slug = re.sub(r"[^a-z0-9]+", "_", ascii_t).strip("_")
+    for i in range(1, 100):
+        rid = f"{slug}_{i:03d}"
+        if not (RECIPES_DIR / f"{rid}.yaml").exists():
+            return rid
+    return f"{slug}_xxx"
+
+
+def _name_to_id(name: str) -> str:
+    nfd = unicodedata.normalize("NFD", name.lower())
+    ascii_n = "".join(c for c in nfd if unicodedata.category(c) != "Mn")
+    return re.sub(r"[^a-z0-9]+", "_", ascii_n).strip("_")
+
+
+def _safe_amount(v):
+    try:
+        f = float(v)
+        return int(f) if f == int(f) else round(f, 2)
+    except (ValueError, TypeError):
+        return v
+
+
+def build_recipe_dict(raw: dict, matches: list[dict], overrides: dict, url: str) -> dict:
+    """
+    Bygg en komplett receptdict redo att sparas.
+    overrides: {idx: item_id} för ingredienser där användaren valt annan koppling.
+    """
+    ingredients = []
+    for i, m in enumerate(matches):
+        ingredient_id = overrides.get(i) or m["matched_id"] or _name_to_id(m["name"])
+        ingredients.append({
+            "ingredient_id": ingredient_id,
+            "amount": _safe_amount(m["amount"]),
+            "unit": m["unit"],
+        })
+
+    return {
+        "recipe_id": build_recipe_id(raw["title"]),
+        "title": raw["title"],
+        "servings": raw.get("servings", 4),
+        "ingredients": ingredients,
+        "instructions": raw.get("instructions", []),
+        "tags": raw.get("tags", []),
+        "metadata": {
+            "cook_time_minutes": raw.get("cook_time_minutes", 30),
+            "difficulty": raw.get("difficulty", 2),
+            "source_url": url,
+        },
+    }

@@ -1,14 +1,16 @@
-"""Receptvisare — mobilanpassad, med svenska ingrediensnamn."""
+"""Receptvisare och URL-import — mobilanpassad."""
 
 from pathlib import Path
 
 import streamlit as st
 import yaml
 
-from app.recipes import load_all_recipes, load_recipe
-from app import shopping
+from app.recipes import load_all_recipes, load_recipe, save_recipe
+from app import shopping, importer
 
 PLAN_PATH = Path(__file__).parent.parent.parent / "data" / "weekly_plan.yaml"
+
+_NO_LINK = "(ingen koppling)"
 
 
 def _load_plan() -> dict:
@@ -18,11 +20,127 @@ def _load_plan() -> dict:
     return {}
 
 
+def _clear_import():
+    for key in ("import_recipe", "import_matches", "import_url"):
+        st.session_state.pop(key, None)
+    # Rensa selectbox-nycklar
+    for k in list(st.session_state.keys()):
+        if k.startswith("ing_sel_"):
+            del st.session_state[k]
+
+
+def _render_import(items_db: dict):
+    """Importflöde: URL → extraktion → granskning → spara."""
+
+    has_pending = bool(st.session_state.get("import_recipe"))
+
+    with st.expander("➕ Importera recept från URL", expanded=has_pending):
+
+        # ── Steg 1: URL-inmatning ──────────────────────────────────────────
+        if not has_pending:
+            url = st.text_input(
+                "Receptlänk",
+                placeholder="https://www.koket.se/...",
+                label_visibility="collapsed",
+            )
+            if st.button("Hämta recept", use_container_width=True):
+                if not url.strip():
+                    st.warning("Klistra in en URL först.")
+                else:
+                    with st.spinner("Hämtar och analyserar receptet…"):
+                        try:
+                            html = importer.fetch_url(url.strip())
+                            raw = importer.extract_recipe(html, url.strip())
+                            matches = importer.match_ingredients(
+                                raw["ingredients"], items_db
+                            )
+                            st.session_state.import_recipe = raw
+                            st.session_state.import_matches = matches
+                            st.session_state.import_url = url.strip()
+                        except Exception as e:
+                            st.error(f"Kunde inte hämta receptet: {e}")
+                    st.rerun()
+            return
+
+        # ── Steg 2: Granska och godkänn ───────────────────────────────────
+        raw = st.session_state.import_recipe
+        matches = st.session_state.import_matches
+        url = st.session_state.import_url
+
+        st.markdown(f"**{raw['title']}**")
+        meta = (
+            f"{raw.get('servings', '?')} port · "
+            f"{raw.get('cook_time_minutes', '?')} min · "
+            f"Svårighet {raw.get('difficulty', '?')}/3"
+        )
+        st.caption(meta)
+
+        # Ingredienser med matchningsstatus
+        st.markdown("**Ingredienser**")
+        item_options = [_NO_LINK] + sorted(items_db.keys())
+
+        unmatched_count = sum(1 for m in matches if not m["matched_id"])
+        if unmatched_count:
+            st.caption(
+                f"{unmatched_count} ingrediens(er) utan koppling — välj vara eller lämna utan."
+            )
+
+        for i, m in enumerate(matches):
+            amt = m["amount"]
+            amt_str = f"{int(amt) if isinstance(amt, float) and amt == int(amt) else amt} {m['unit']}"
+
+            if m["matched_id"]:
+                st.markdown(
+                    f"<p style='margin:2px 0;font-size:0.88rem;color:#2A2A22'>"
+                    f"✓ {m['name']} — <em>{amt_str}</em> "
+                    f"<span style='color:#9AA07A'>→ {m['matched_id']}</span></p>",
+                    unsafe_allow_html=True,
+                )
+            else:
+                col1, col2 = st.columns([5, 4])
+                col1.markdown(
+                    f"<p style='margin:4px 0;font-size:0.88rem;color:#2A2A22'>"
+                    f"⚠ {m['name']} — <em>{amt_str}</em></p>",
+                    unsafe_allow_html=True,
+                )
+                col2.selectbox(
+                    "",
+                    item_options,
+                    key=f"ing_sel_{i}",
+                    label_visibility="collapsed",
+                )
+
+        st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+
+        col_save, col_cancel = st.columns(2)
+        if col_save.button("✓ Spara recept", use_container_width=True):
+            overrides = {
+                i: st.session_state.get(f"ing_sel_{i}")
+                for i in range(len(matches))
+                if st.session_state.get(f"ing_sel_{i}") not in (None, _NO_LINK)
+            }
+            recipe_dict = importer.build_recipe_dict(raw, matches, overrides, url)
+            save_recipe(recipe_dict)
+            st.success(f"Receptet '{recipe_dict['title']}' sparat!")
+            _clear_import()
+            st.rerun()
+
+        if col_cancel.button("✕ Avbryt", use_container_width=True):
+            _clear_import()
+            st.rerun()
+
+
 def render():
     st.title("Recept")
 
-    plan = _load_plan()
     items_db = shopping.load_items()
+
+    _render_import(items_db)
+
+    st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+
+    # ── Receptvisare ──────────────────────────────────────────────────────
+    plan = _load_plan()
 
     if plan.get("meals"):
         recipe_options = {m["title"]: m["recipe_id"] for m in plan["meals"]}
@@ -79,5 +197,12 @@ def render():
             f"<hr style='border-color:#D4DABC; margin:0 0 8px 0'>"
             f"<div style='font-size:0.8rem; color:#AAAAAA; margin:0; "
             f"visibility:visible; opacity:1'>{tags_str}</div>",
+            unsafe_allow_html=True,
+        )
+
+    if meta.get("source_url"):
+        st.markdown(
+            f"<div style='font-size:0.75rem; color:#AAAAAA; margin-top:4px'>"
+            f"Källa: {meta['source_url']}</div>",
             unsafe_allow_html=True,
         )
