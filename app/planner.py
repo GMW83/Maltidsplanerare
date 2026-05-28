@@ -2,6 +2,7 @@
 
 import json
 import os
+from datetime import date, timedelta
 from pathlib import Path
 
 import anthropic
@@ -12,8 +13,55 @@ _env_path = Path(__file__).parent.parent / ".env"
 _env = dotenv_values(_env_path)
 os.environ.update({k: v for k, v in _env.items() if v is not None})
 
-RECIPES_DIR = Path(__file__).parent.parent / "data" / "recipes"
+DATA_DIR    = Path(__file__).parent.parent / "data"
+PLAN_PATH   = DATA_DIR / "weekly_plan.yaml"
+RECIPES_DIR = DATA_DIR / "recipes"
 PROMPTS_DIR = Path(__file__).parent.parent / "prompts"
+
+
+# ── Veckodatum-helpers ────────────────────────────────────────────────────────
+
+def current_week_start() -> date:
+    """Returnera måndagen i innevarande vecka."""
+    today = date.today()
+    return today - timedelta(days=today.weekday())
+
+
+def week_start_for_offset(offset: int = 0) -> date:
+    """Returnera måndagen för vecka +offset (0=denna, 1=nästa)."""
+    return current_week_start() + timedelta(weeks=offset)
+
+
+# ── Plan I/O ──────────────────────────────────────────────────────────────────
+
+def load_plan() -> dict:
+    """Ladda weekly_plan.yaml. Returnerar dict med week_start och meals."""
+    if not PLAN_PATH.exists():
+        return {"week_start": None, "meals": []}
+    with open(PLAN_PATH, encoding="utf-8") as f:
+        data = yaml.safe_load(f) or {}
+    return {"week_start": data.get("week_start"), "meals": list(data.get("meals") or [])}
+
+
+def save_plan(plan: dict) -> None:
+    """Spara plan till weekly_plan.yaml."""
+    with open(PLAN_PATH, "w", encoding="utf-8") as f:
+        yaml.dump(plan, f, allow_unicode=True, sort_keys=False)
+
+
+def clear_plan() -> None:
+    """Nollställ veckoplanen."""
+    save_plan({"week_start": None, "meals": []})
+
+
+def is_plan_current(plan: dict) -> bool:
+    """Returnera True om planen gäller innevarande vecka."""
+    ws = plan.get("week_start")
+    if not ws:
+        return False
+    if isinstance(ws, str):
+        ws = date.fromisoformat(ws)
+    return ws == current_week_start()
 
 
 def _get_client() -> anthropic.Anthropic:
@@ -52,13 +100,14 @@ def _parse_json(raw: str) -> dict:
     return json.loads(raw.strip())
 
 
-def generate_weekly_plan(user_input: str) -> dict:
-    """Ta fritext-input och returnera ett veckomenysförslag som dict."""
+def generate_weekly_plan(user_input: str, days: list[str]) -> dict:
+    """Ta fritext-input och valda dagar, returnera ett veckomenysförslag som dict."""
     recipes = _load_recipes()
     prompt_template = (PROMPTS_DIR / "weekly_planner.txt").read_text(encoding="utf-8")
     prompt = prompt_template.format(
         user_input=user_input,
         recipes=_recipe_summary(recipes),
+        days=", ".join(days),
     )
     message = _get_client().messages.create(
         model="claude-sonnet-4-6",

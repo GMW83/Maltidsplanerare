@@ -1,5 +1,2 @@
-# Aktuell veckomeny — skrivs över varje vecka
-# Genereras av AI och godkänns av användaren innan den sparas
-
-week: null
+week_start: null
 meals: []

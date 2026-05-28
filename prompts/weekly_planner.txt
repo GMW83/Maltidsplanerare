@@ -5,16 +5,17 @@ Tillgängliga recept:
 
 Användarens önskemål: {user_input}
 
-Föreslå 5 middagar (måndag–fredag) baserat på önskemålen och de tillgängliga recepten.
+Planera middagar för dessa dagar: {days}
+
+Föreslå EN middagsrätt per dag baserat på önskemålen och de tillgängliga recepten.
 Välj recept som passar önskemålen. Variera gärna med hänsyn till kök, råvaror och tillagningssätt.
 
 Returnera ENDAST giltig JSON i exakt detta format, utan förklarande text:
 {{
   "meals": [
     {{"day": "måndag", "recipe_id": "...", "title": "..."}},
-    {{"day": "tisdag", "recipe_id": "...", "title": "..."}},
-    {{"day": "onsdag", "recipe_id": "...", "title": "..."}},
-    {{"day": "torsdag", "recipe_id": "...", "title": "..."}},
-    {{"day": "fredag", "recipe_id": "...", "title": "..."}}
+    {{"day": "tisdag", "recipe_id": "...", "title": "..."}}
   ]
 }}
+
+Inkludera ENBART de dagar som angetts i listan ovan.

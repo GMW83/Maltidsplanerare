@@ -1,36 +1,40 @@
 """Startsida — hero med veckans meny."""
 
 from datetime import date
-from pathlib import Path
 
 import streamlit as st
-import yaml
 
-PLAN_PATH = Path(__file__).parent.parent.parent / "data" / "weekly_plan.yaml"
-
-DAYS_SV = ["måndag", "tisdag", "onsdag", "torsdag", "fredag", "lördag", "söndag"]
-
-
-def _load_plan() -> dict:
-    if PLAN_PATH.exists():
-        with open(PLAN_PATH, encoding="utf-8") as f:
-            return yaml.safe_load(f) or {}
-    return {}
+from app.planner import load_plan, is_plan_current, clear_plan, current_week_start
 
 
 def render():
-    plan = _load_plan()
-    meals = plan.get("meals", [])
+    plan = load_plan()
 
+    # Auto-expire: nollställ om planen tillhör en passerad vecka
+    ws = plan.get("week_start")
+    if ws and not is_plan_current(plan):
+        clear_plan()
+        plan = {"week_start": None, "meals": []}
+
+    meals = plan.get("meals", [])
     today = date.today()
     week_nr = today.isocalendar()[1]
 
     if meals:
+        # Visa vilken vecka planen gäller (kan vara nästa vecka)
+        plan_ws = plan.get("week_start")
+        if isinstance(plan_ws, str):
+            from datetime import date as d
+            plan_ws = d.fromisoformat(plan_ws)
+        plan_week_nr = plan_ws.isocalendar()[1] if plan_ws else week_nr
+        if plan_week_nr != week_nr:
+            hero_sub = f"Meny planerad för vecka {plan_week_nr}"
+        else:
+            hero_sub = "Veckans middagar är planerade"
         hero_text = f"Vecka {week_nr} · {today.strftime('%d/%m')}"
-        hero_sub = "Veckans middagar är planerade"
     else:
         hero_text = f"Vecka {week_nr}"
-        hero_sub = "Ingen meny planerad ännu"
+        hero_sub = "Ingen meny planerad"
 
     st.markdown(
         f"""
@@ -53,5 +57,3 @@ def render():
                 """,
                 unsafe_allow_html=True,
             )
-    else:
-        st.info("Gå till Planera-fliken för att skapa veckans meny.")

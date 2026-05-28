@@ -1,26 +1,59 @@
-"""Planera veckan — AI-förslag, byt ut dagar, godkänn."""
+"""Planera veckan — välj vecka och dagar, AI-förslag, godkänn."""
 
-from pathlib import Path
+from datetime import date, timedelta
 
 import streamlit as st
-import yaml
 
-from app.planner import generate_weekly_plan, suggest_replacement
 from app import shopping
+from app.planner import (
+    current_week_start,
+    generate_weekly_plan,
+    is_plan_current,
+    load_plan,
+    save_plan,
+    suggest_replacement,
+    week_start_for_offset,
+)
 
-PLAN_PATH = Path(__file__).parent.parent.parent / "data" / "weekly_plan.yaml"
+DAYS_SV  = ["måndag", "tisdag", "onsdag", "torsdag", "fredag", "lördag", "söndag"]
+DAYS_ABB = ["Mån", "Tis", "Ons", "Tor", "Fre", "Lör", "Sön"]
 
 
-def _load_plan() -> dict:
-    if PLAN_PATH.exists():
-        with open(PLAN_PATH, encoding="utf-8") as f:
-            return yaml.safe_load(f) or {}
-    return {}
+def _week_label(ws: date) -> str:
+    nr = ws.isocalendar()[1]
+    today = date.today()
+    cws = current_week_start()
+    if ws == cws:
+        return f"Denna vecka (v. {nr})"
+    return f"Nästa vecka (v. {nr})"
 
 
-def _save_plan(plan: dict) -> None:
-    with open(PLAN_PATH, "w", encoding="utf-8") as f:
-        yaml.dump(plan, f, allow_unicode=True, sort_keys=False)
+def _day_selector(selected_week_start: date) -> list[str]:
+    """Rendera dagväljare och returnera lista med valda dagnamn (sv)."""
+    today = date.today()
+    is_current_week = selected_week_start == current_week_start()
+
+    st.markdown("**Välj dagar:**")
+    cols = st.columns(7)
+    selected = []
+
+    for i, (day, abb) in enumerate(zip(DAYS_SV, DAYS_ABB)):
+        day_date = selected_week_start + timedelta(days=i)
+        disabled = is_current_week and day_date <= today
+
+        with cols[i]:
+            if disabled:
+                st.markdown(
+                    f"<div style='text-align:center;color:#bbb;font-size:0.78rem;"
+                    f"padding-top:6px'>{abb}</div>",
+                    unsafe_allow_html=True,
+                )
+            else:
+                checked = st.checkbox(abb, key=f"day_sel_{i}", value=True)
+                if checked:
+                    selected.append(day)
+
+    return selected
 
 
 def render():
@@ -28,28 +61,66 @@ def render():
 
     if "plan_draft" not in st.session_state:
         st.session_state.plan_draft = {}
+    if "draft_week_start" not in st.session_state:
+        st.session_state.draft_week_start = None
 
+    # ── Veckoväljare ──────────────────────────────────────────────────────────
+    this_week = current_week_start()
+    next_week = week_start_for_offset(1)
+
+    week_options = [this_week, next_week]
+    week_index = st.radio(
+        "Planera för:",
+        options=[0, 1],
+        format_func=lambda i: _week_label(week_options[i]),
+        horizontal=True,
+        key="week_radio",
+    )
+    selected_week = week_options[week_index]
+
+    # Varna om en plan redan finns för vald vecka
+    existing = load_plan()
+    existing_ws = existing.get("week_start")
+    if isinstance(existing_ws, str):
+        existing_ws = date.fromisoformat(existing_ws)
+    if existing_ws == selected_week and existing.get("meals"):
+        st.warning(
+            f"En plan finns redan för v. {selected_week.isocalendar()[1]}. "
+            "Om du godkänner ett nytt förslag skrivs den befintliga över."
+        )
+
+    # ── Dagväljare ────────────────────────────────────────────────────────────
+    selected_days = _day_selector(selected_week)
+
+    st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+
+    # ── Fritext-input ─────────────────────────────────────────────────────────
     user_input = st.text_area(
-        "Vad vill ni äta den här veckan?",
+        "Vad vill ni äta?",
         placeholder="t.ex. 'något asiatiskt, lite enklare på fredagen, vi har bönar hemma'",
-        height=110,
+        height=100,
         label_visibility="visible",
     )
 
     if st.button("Generera förslag", type="primary", use_container_width=True):
-        if user_input.strip():
+        if not selected_days:
+            st.warning("Välj minst en dag att planera för.")
+        elif not user_input.strip():
+            st.warning("Skriv vad ni är sugna på så hjälper AI:n till.")
+        else:
             with st.spinner("Genererar förslag..."):
                 try:
-                    st.session_state.plan_draft = generate_weekly_plan(user_input)
+                    draft = generate_weekly_plan(user_input, selected_days)
+                    st.session_state.plan_draft = draft
+                    st.session_state.draft_week_start = selected_week.isoformat()
                 except Exception as e:
                     st.error(f"Kunde inte generera förslag: {e}")
-        else:
-            st.warning("Skriv vad ni är sugna på så hjälper AI:n till.")
 
     draft = st.session_state.plan_draft
     if not draft.get("meals"):
         return
 
+    # ── Förslag ───────────────────────────────────────────────────────────────
     st.divider()
     st.subheader("Förslag")
 
@@ -73,11 +144,18 @@ def render():
 
     st.divider()
     if st.button("✓  Godkänn och spara veckoplan", type="primary", use_container_width=True):
-        _save_plan(draft)
+        week_start_str = st.session_state.get("draft_week_start") or this_week.isoformat()
+        plan_to_save = {
+            "week_start": date.fromisoformat(week_start_str),
+            "meals": draft["meals"],
+        }
+        save_plan(plan_to_save)
         shopping.apply_meal_plan(draft)
-        # Återställ shopping session state så listan laddas om
+        # Återställ shopping session state
         for key in list(st.session_state.keys()):
             if key.startswith("cb_"):
                 del st.session_state[key]
         st.session_state.shopping_loaded = False
+        st.session_state.plan_draft = {}
         st.success("Veckoplan sparad och handlingslista uppdaterad!")
+        st.rerun()
