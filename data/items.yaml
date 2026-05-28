@@ -823,6 +823,13 @@ items:
     role: pantry_staple
     synonyms: [peppar, svart peppar, malen peppar]
 
+  - id: white_pepper
+    name_sv: vitpeppar
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [vit peppar, malen vitpeppar]
+
   - id: cumin
     name_sv: spiskummin
     category: kryddor_och_smaksattare

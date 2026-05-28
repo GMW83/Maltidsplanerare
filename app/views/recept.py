@@ -73,13 +73,11 @@ def _render_import(items_db: dict):
             f"Svårighet {raw.get('difficulty', '?')}/3"
         )
         st.markdown(
-            f"<p style='margin:0 0 4px 0;font-size:1rem;font-weight:700;color:#2A2A22'>{raw['title']}</p>"
-            f"<p style='margin:0 0 8px 0;font-size:0.8rem;color:#7A7A6A'>{meta}</p>",
+            f"<p style='margin:0 0 3px 0;font-size:1rem;font-weight:700;color:#2A2A22'>{raw['title']}</p>"
+            f"<p style='margin:0 0 6px 0;font-size:0.8rem;color:#7A7A6A'>{meta}</p>"
+            f"<p style='margin:0 0 3px 0;font-size:0.88rem;font-weight:700;color:#2A2A22'>Ingredienser</p>",
             unsafe_allow_html=True,
         )
-
-        # Ingredienser med matchningsstatus
-        st.markdown("**Ingredienser**")
 
         # Svenska namn i selectboxen: {name_sv → item_id}
         sv_to_id = {item["name_sv"]: iid for iid, item in items_db.items()}
