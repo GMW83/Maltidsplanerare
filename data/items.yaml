@@ -718,12 +718,19 @@ items:
     role: pantry_staple
     synonyms: [neutral olja, matolja]
 
-  - id: soy_sauce
-    name_sv: soja
+  - id: chinese_soy_sauce
+    name_sv: kinesisk soja
     category: kryddor_och_smaksattare
     unit: ml
     role: pantry_staple
-    synonyms: [sojasås, kinesisk soja, japansk soja]
+    synonyms: [soja, sojasås, kinesisk sojasås, ljus soja, mörk soja]
+
+  - id: japanese_soy_sauce
+    name_sv: japansk soja
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [tamari, shoyu, japansk sojasås]
 
   - id: fish_sauce
     name_sv: fisksås
@@ -933,7 +940,21 @@ items:
     category: kryddor_och_smaksattare
     unit: g
     role: pantry_staple
-    synonyms: [cornichoner, inlagd gurka, smörgåsgurka]
+    synonyms: [inlagd gurka]
+
+  - id: smorgasgurka
+    name_sv: smörgåsgurka
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [söt inlagd gurka, sötsur gurka]
+
+  - id: saltgurka
+    name_sv: saltgurka
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [dillgurka, fermenterad gurka, surkål gurka]
 
   # ---------------------------------------------------------------------------
   # BRÖD OCH BAKVERK

@@ -67,13 +67,16 @@ def _render_import(items_db: dict):
         matches = st.session_state.import_matches
         url = st.session_state.import_url
 
-        st.markdown(f"**{raw['title']}**")
         meta = (
             f"{raw.get('servings', '?')} port · "
             f"{raw.get('cook_time_minutes', '?')} min · "
             f"Svårighet {raw.get('difficulty', '?')}/3"
         )
-        st.caption(meta)
+        st.markdown(
+            f"<p style='margin:0 0 4px 0;font-size:1rem;font-weight:700;color:#2A2A22'>{raw['title']}</p>"
+            f"<p style='margin:0 0 8px 0;font-size:0.8rem;color:#7A7A6A'>{meta}</p>",
+            unsafe_allow_html=True,
+        )
 
         # Ingredienser med matchningsstatus
         st.markdown("**Ingredienser**")
