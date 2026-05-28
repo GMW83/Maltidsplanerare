@@ -73,9 +73,9 @@ def _render_import(items_db: dict):
             f"Svårighet {raw.get('difficulty', '?')}/3"
         )
         st.markdown(
-            f"<p style='margin:0 0 3px 0;font-size:1rem;font-weight:700;color:#2A2A22'>{raw['title']}</p>"
-            f"<p style='margin:0 0 6px 0;font-size:0.8rem;color:#7A7A6A'>{meta}</p>"
-            f"<p style='margin:0 0 3px 0;font-size:0.88rem;font-weight:700;color:#2A2A22'>Ingredienser</p>",
+            f"<div style='margin:0 0 2px 0;font-size:1rem;font-weight:700;color:#2A2A22'>{raw['title']}</div>"
+            f"<div style='margin:0 0 6px 0;font-size:0.8rem;color:#7A7A6A'>{meta}</div>"
+            f"<div style='margin:0;font-size:0.88rem;font-weight:700;color:#2A2A22'>Ingredienser</div>",
             unsafe_allow_html=True,
         )
 
@@ -85,8 +85,10 @@ def _render_import(items_db: dict):
 
         unmatched_count = sum(1 for m in matches if not m["matched_id"])
         if unmatched_count:
-            st.caption(
-                f"{unmatched_count} ingrediens(er) utan koppling — välj vara i höger kolumn."
+            st.markdown(
+                f"<div style='margin:5px 0 2px 0;font-size:0.8rem;color:#7A7A6A'>"
+                f"{unmatched_count} ingrediens(er) utan koppling — välj vara i höger kolumn.</div>",
+                unsafe_allow_html=True,
             )
 
         for i, m in enumerate(matches):
