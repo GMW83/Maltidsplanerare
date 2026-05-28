@@ -401,12 +401,12 @@ items:
     role: ingredient
     synonyms: []
 
-  - id: shredded_cheese
-    name_sv: riven ost
+  - id: hard_cheese
+    name_sv: ost
     category: mejeri_och_agg
     unit: g
     role: ingredient
-    synonyms: [riven ost, strimlad ost, gratängost]
+    synonyms: [riven ost, gratängost, strimlad ost, lagrad ost, cheddar, gouda, prästost, grevé]
 
   - id: coconut_milk
     name_sv: kokosmjölk

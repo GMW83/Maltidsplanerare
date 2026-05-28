@@ -7,7 +7,6 @@ CSS = """
 /* Tvinga ljust läge — förhindrar att OS dark mode styr form-controls */
 :root {
     color-scheme: light !important;
-    --primary-color: #5B7028 !important;
 }
 
 /* ── Dölj Streamlit toolbar och hamburgarmeny ── */

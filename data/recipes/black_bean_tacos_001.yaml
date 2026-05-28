@@ -30,7 +30,7 @@ ingredients:
   - ingredient_id: sour_cream
     amount: 200
     unit: ml
-  - ingredient_id: shredded_cheese
+  - ingredient_id: hard_cheese
     amount: 150
     unit: g
   - ingredient_id: fresh_coriander
