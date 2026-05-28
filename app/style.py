@@ -4,6 +4,12 @@ import streamlit as st
 
 CSS = """
 <style>
+/* Tvinga ljust läge — förhindrar att OS dark mode styr form-controls */
+:root {
+    color-scheme: light !important;
+    --primary-color: #5B7028 !important;
+}
+
 /* ── Dölj Streamlit toolbar och hamburgarmeny ── */
 [data-testid="stHeader"]      { display: none !important; }
 [data-testid="stToolbar"]     { display: none !important; }
@@ -87,6 +93,17 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
 [data-testid="stCheckbox"] input[type="checkbox"] {
     accent-color: #5B7028 !important;
     color-scheme: light !important;
+}
+
+/* Dark-mode override: visual box-span utan att sätta dimensioner (ingen layout-påverkan) */
+@media (prefers-color-scheme: dark) {
+    [data-testid="stCheckbox"] [data-baseweb="checkbox"] > span {
+        background-color: white !important;
+        border-color: #9AA07A !important;
+        border-width: 1.5px !important;
+        border-style: solid !important;
+        border-radius: 3px !important;
+    }
 }
 
 /* ── Textinput och textarea — ljus bakgrund, synlig text på mobil ── */
