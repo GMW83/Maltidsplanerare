@@ -2402,3 +2402,280 @@ items:
     unit: ml
     role: ingredient
     synonyms: [fläder saft, fläderdryck]
+
+  # ---------------------------------------------------------------------------
+  # HUSHÅLL OCH ÖVRIGT
+  # ---------------------------------------------------------------------------
+
+  - id: baking_paper
+    name_sv: bakplåtspapper
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [ugnsplåtspapper]
+
+  - id: plastic_wrap
+    name_sv: plastfolie
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [ninjaplast, plastfilm]
+
+  - id: aluminum_foil
+    name_sv: aluminiumfolie
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [grillfolie, aluminiumfolie]
+
+  - id: aluminum_tray
+    name_sv: aluminiumformar
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [engångsformar, grillformar]
+
+  - id: muffin_cups
+    name_sv: muffinsformar
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [muffinskapselsormar, pappersformar]
+
+  - id: freezer_bag_1l
+    name_sv: fryspåsar 1L
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [plastpåsar 1L, zip-påsar 1L]
+
+  - id: freezer_bag_2l
+    name_sv: fryspåsar 2L
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [plastpåsar 2L, zip-påsar 2L]
+
+  - id: freezer_bag_3l
+    name_sv: fryspåsar 3L
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [plastpåsar 3L]
+
+  - id: freezer_bag_6l
+    name_sv: fryspåsar 6L
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [plastpåsar 6L, stora fryspåsar]
+
+  - id: piping_bags
+    name_sv: spritspåsar
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [sprits påsar]
+
+  - id: trash_bags
+    name_sv: avfallspåsar
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [sopkassar, soppåsar]
+
+  - id: garbage_bags
+    name_sv: soppåsar
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [stora soppåsar, tunnsäckar]
+
+  - id: bbq_skewers
+    name_sv: grillpinnar
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [träspett, grillspett]
+
+  - id: napkins
+    name_sv: servetter
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [pappersservetter]
+
+  - id: dishwasher_tablets
+    name_sv: diskmedel maskin
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [disktabletter, diskpulver, maskindisk]
+
+  - id: dish_soap
+    name_sv: diskmedel
+    category: hushall
+    unit: ml
+    role: regular_purchase
+    synonyms: [yes diskmedel, handdisk]
+
+  - id: dishwasher_salt
+    name_sv: disksalt
+    category: hushall
+    unit: g
+    role: regular_purchase
+    synonyms: [salt till diskmaskin, maskinsalt]
+
+  - id: dish_sponge
+    name_sv: disksvamp
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [svamp, kökssvamp]
+
+  - id: dish_brush
+    name_sv: diskborste
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [borste]
+
+  - id: dish_cloth
+    name_sv: disktrasor
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [kökshanddukar, wettex]
+
+  - id: laundry_detergent
+    name_sv: tvättmedel
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [tvättmedel kulör, tvättmedel vit, tvättmedel sport]
+
+  - id: toilet_cleaner
+    name_sv: WC-rengöring
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [wc anka, toalettrengöring]
+
+  - id: bathroom_cleaner
+    name_sv: badrumrengöring
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [badrumsrengöring, grumme bad]
+
+  - id: stove_cleaner
+    name_sv: spishällsrengöring
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [rengöring spishäll, glaskeramikrengöring]
+
+  - id: liquid_soap
+    name_sv: såpa
+    category: hushall
+    unit: ml
+    role: regular_purchase
+    synonyms: [grön såpa, allrengöring]
+
+  - id: toilet_paper
+    name_sv: toapapper
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [toalettpapper, wc-papper]
+
+  - id: kitchen_roll
+    name_sv: hushållspapper
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [torky, köksrulle]
+
+  - id: toothpaste
+    name_sv: tandkräm
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [colgate, sensodyne]
+
+  - id: toothbrush
+    name_sv: tandborste
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [eltandborste, oral-b]
+
+  - id: shampoo
+    name_sv: schampo
+    category: hushall
+    unit: ml
+    role: regular_purchase
+    synonyms: [hårschampo]
+
+  - id: conditioner
+    name_sv: balsam
+    category: hushall
+    unit: ml
+    role: regular_purchase
+    synonyms: [hårbalsam, inpackning]
+
+  - id: shaving_gel
+    name_sv: rakgel
+    category: hushall
+    unit: ml
+    role: regular_purchase
+    synonyms: [raktvål, rakskum]
+
+  - id: sanitary_pads
+    name_sv: bindor
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [always, mensskydd]
+
+  - id: panty_liners
+    name_sv: trosskydd
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [innerskydd, pantyliner]
+
+  - id: cotton_pads
+    name_sv: bomullspads
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [sminkrondeller, tops]
+
+  - id: tissues
+    name_sv: näsdukar
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [pappersnäsdukar, kleenex]
+
+  - id: plasters
+    name_sv: plåster
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [band aid, självhäftande förband]
+
+  - id: matches
+    name_sv: tändstickor
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [säkerhetständstickor]
+
+  - id: soda_cartridge
+    name_sv: kolsyrepatron
+    category: hushall
+    unit: pcs
+    role: regular_purchase
+    synonyms: [sodastream patron, co2 patron]

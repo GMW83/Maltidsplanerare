@@ -17,6 +17,7 @@ CATEGORY_ORDER = [
     "brod_och_bakverk",
     "drycker",
     "kryddor_och_smaksattare",
+    "hushall",
     "ovrigt",
 ]
 
@@ -30,6 +31,7 @@ CATEGORY_NAMES = {
     "brod_och_bakverk":       "Bröd och bakverk",
     "drycker":                "Drycker",
     "kryddor_och_smaksattare":"Kryddor och smaksättare",
+    "hushall":                "Hushåll och övrigt",
     "ovrigt":                 "Övrigt",
 }
 
