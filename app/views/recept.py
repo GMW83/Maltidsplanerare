@@ -77,7 +77,10 @@ def _render_import(items_db: dict):
 
         # Ingredienser med matchningsstatus
         st.markdown("**Ingredienser**")
-        item_options = [_NO_LINK] + sorted(items_db.keys())
+
+        # Svenska namn i selectboxen: {name_sv → item_id}
+        sv_to_id = {item["name_sv"]: iid for iid, item in items_db.items()}
+        sv_options = [_NO_LINK] + sorted(sv_to_id.keys())
 
         unmatched_count = sum(1 for m in matches if not m["matched_id"])
         if unmatched_count:
@@ -89,23 +92,28 @@ def _render_import(items_db: dict):
             amt = m["amount"]
             amt_str = f"{int(amt) if isinstance(amt, float) and amt == int(amt) else amt} {m['unit']}"
 
+            col1, col2 = st.columns([5, 4])
             if m["matched_id"]:
-                st.markdown(
-                    f"<p style='margin:2px 0;font-size:0.88rem;color:#2A2A22'>"
-                    f"✓ {m['name']} — <em>{amt_str}</em> "
-                    f"<span style='color:#9AA07A'>→ {m['matched_id']}</span></p>",
+                matched_sv = items_db[m["matched_id"]]["name_sv"]
+                col1.markdown(
+                    f"<p style='margin:0;padding:6px 0;font-size:0.88rem;color:#2A2A22'>"
+                    f"✓ {m['name']} — <em>{amt_str}</em></p>",
+                    unsafe_allow_html=True,
+                )
+                col2.markdown(
+                    f"<p style='margin:0;padding:6px 0;font-size:0.88rem;"
+                    f"color:#9AA07A;font-style:italic'>→ {matched_sv}</p>",
                     unsafe_allow_html=True,
                 )
             else:
-                col1, col2 = st.columns([5, 4])
                 col1.markdown(
-                    f"<p style='margin:4px 0;font-size:0.88rem;color:#2A2A22'>"
+                    f"<p style='margin:0;padding:6px 0;font-size:0.88rem;color:#2A2A22'>"
                     f"⚠ {m['name']} — <em>{amt_str}</em></p>",
                     unsafe_allow_html=True,
                 )
                 col2.selectbox(
                     "",
-                    item_options,
+                    sv_options,
                     key=f"ing_sel_{i}",
                     label_visibility="collapsed",
                 )
@@ -114,11 +122,14 @@ def _render_import(items_db: dict):
 
         col_save, col_cancel = st.columns(2)
         if col_save.button("✓ Spara recept", use_container_width=True):
-            overrides = {
-                i: st.session_state.get(f"ing_sel_{i}")
-                for i in range(len(matches))
-                if st.session_state.get(f"ing_sel_{i}") not in (None, _NO_LINK)
-            }
+            # Reverse-lookup: svenska namn → item_id
+            overrides = {}
+            for i in range(len(matches)):
+                sel = st.session_state.get(f"ing_sel_{i}")
+                if sel and sel != _NO_LINK:
+                    iid = sv_to_id.get(sel)
+                    if iid:
+                        overrides[i] = iid
             recipe_dict = importer.build_recipe_dict(raw, matches, overrides, url)
             save_recipe(recipe_dict)
             st.success(f"Receptet '{recipe_dict['title']}' sparat!")
