@@ -31,7 +31,7 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
 
 /* ── Knappar ── */
 .stButton > button {
-    background-color: #5B7028 !important;
+    background-color: #7BAF35 !important;
     color: white !important;
     border: none !important;
     border-radius: 10px !important;
@@ -39,10 +39,10 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
     font-size: 1rem !important;
     font-weight: 500 !important;
 }
-.stButton > button:hover  { background-color: #3D5016 !important; }
-.stButton > button:active { background-color: #3D5016 !important; }
+.stButton > button:hover  { background-color: #5B8A22 !important; }
+.stButton > button:active { background-color: #5B8A22 !important; }
 .stButton > button[kind="primary"] {
-    background-color: #5B7028 !important;
+    background-color: #7BAF35 !important;
     font-size: 1.05rem !important;
     padding: 0.7rem 1.4rem !important;
 }
