@@ -239,6 +239,300 @@ items:
     role: ingredient
     synonyms: [lemon grass]
 
+  - id: apple
+    name_sv: äpple
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [äpplen]
+
+  - id: orange
+    name_sv: apelsin
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [appelsin]
+
+  - id: banana
+    name_sv: banan
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [bananer]
+
+  - id: clementines
+    name_sv: clementiner
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [clementin, mandariner]
+
+  - id: grapefruit
+    name_sv: grapefrukt
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [röd grapefrukt, grape]
+
+  - id: kiwi
+    name_sv: kiwi
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [kiwifrukt]
+
+  - id: mango
+    name_sv: mango
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [färsk mango]
+
+  - id: nectarine
+    name_sv: nektarin
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: []
+
+  - id: grapes
+    name_sv: vindruvor
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [druvor, vita vindruvor, röda vindruvor]
+
+  - id: strawberries
+    name_sv: jordgubbar
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [jordgubbe]
+
+  - id: dates
+    name_sv: dadlar
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [färska dadlar, dadel]
+
+  - id: pomegranate
+    name_sv: granatäpple
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: []
+
+  - id: passion_fruit
+    name_sv: passionsfrukt
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [passion fruit]
+
+  - id: physalis
+    name_sv: physalis
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [guldkörsbär, cape gooseberry]
+
+  - id: pineapple
+    name_sv: ananas
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [färsk ananas]
+
+  - id: watermelon
+    name_sv: vattenmelon
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [melon vatten]
+
+  - id: brussels_sprouts
+    name_sv: brysselkål
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [brysselkålssprouts]
+
+  - id: fennel
+    name_sv: fänkål
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [fänkålsknöl]
+
+  - id: parsnip
+    name_sv: palsternacka
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: []
+
+  - id: horseradish
+    name_sv: pepparrot
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [färsk pepparrot]
+
+  - id: portobello
+    name_sv: portabello
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [portobello, portabellosvamp]
+
+  - id: radishes
+    name_sv: rädisor
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [rädisa]
+
+  - id: oyster_mushroom
+    name_sv: ostronskivling
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [ostronsvamp, oyster mushroom]
+
+  - id: beetroot
+    name_sv: rödbetor
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [rödbeta, färska rödbetor]
+
+  - id: red_cabbage
+    name_sv: rödkål
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [rödkålshuvud]
+
+  - id: romaine_lettuce
+    name_sv: romansallad
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [romaine, romainsallad]
+
+  - id: arugula
+    name_sv: ruccola
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [rucola, raket sallad]
+
+  - id: iceberg_lettuce
+    name_sv: isbergssallad
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [sallad, isbergssallat]
+
+  - id: napa_cabbage
+    name_sv: salladskål
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [kinakål, kinesisk kål]
+
+  - id: spring_onion
+    name_sv: salladslök
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [grönlök, vårlök]
+
+  - id: pearl_onion
+    name_sv: silverlök
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [päronlök, steklök]
+
+  - id: butterhead_lettuce
+    name_sv: hjärtsallad
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [smörsallad, hjärtsallat]
+
+  - id: snow_peas
+    name_sv: sockerärter
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [sockerärt, snap peas]
+
+  - id: asparagus
+    name_sv: sparris
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [grön sparris, vit sparris]
+
+  - id: pointed_cabbage
+    name_sv: spetskål
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [sommarkål]
+
+  - id: white_cabbage
+    name_sv: vitkål
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [vitkålshuvud, kål]
+
+  - id: sugar_snap_peas
+    name_sv: sugar snaps
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [sockerärtor, knastriga ärtor]
+
+  - id: baking_potato
+    name_sv: bakpotatis
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [stor potatis, ugnspotatis]
+
+  - id: small_potato
+    name_sv: delikasspotatis
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [primörpotatis, färskpotatis, liten potatis]
+
+  - id: jerusalem_artichoke
+    name_sv: jordärtskocka
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [jordärtskockor]
+
+  - id: long_pepper
+    name_sv: långa paprikor
+    category: frukt_och_gront
+    unit: pcs
+    role: ingredient
+    synonyms: [spetspaprika, lång paprika, romano paprika]
+
+  - id: padron_pepper
+    name_sv: pimiento de padron
+    category: frukt_och_gront
+    unit: g
+    role: ingredient
+    synonyms: [padronpeppar, padrón]
+
   # ---------------------------------------------------------------------------
   # KÖTT OCH CHARK
   # ---------------------------------------------------------------------------
