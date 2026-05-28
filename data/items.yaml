@@ -1324,7 +1324,168 @@ items:
     category: konserver
     unit: g
     role: ingredient
-    synonyms: [ansjovis, sardellkräm]
+    synonyms: [sardellkräm, salt ansjovis]
+
+  - id: swedish_ansjovis
+    name_sv: ansjovis
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [abba ansjovis, kryddansjovis, inlagd ansjovis]
+
+  - id: pickled_herring
+    name_sv: inlagd sill
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [sill, kladdsill, glasmästarsill, senapssill, matjessill]
+
+  - id: kaviar
+    name_sv: kaviar
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [kalles kaviar, röd kaviar]
+
+  - id: mackerel_tomato
+    name_sv: makrill i tomatsås
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [makrill, makrill på burk]
+
+  - id: mussels
+    name_sv: musslor
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [musslor i spad, blåmusslor]
+
+  - id: smoked_mussels
+    name_sv: rökta musslor
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [musslor rökta]
+
+  - id: lumpfish_roe
+    name_sv: stenbitsrom
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [rom, löjrom]
+
+  - id: borlotti_beans
+    name_sv: berlottibönor
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [borlotti, bruna bönor]
+
+  - id: mixed_beans
+    name_sv: mixade bönor
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [blandade bönor]
+
+  - id: bean_sprouts
+    name_sv: böngroddar
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [groddar, sojagroddar]
+
+  - id: artichoke_cream
+    name_sv: kronärtskockskräm
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [kräm av kronärtskocka]
+
+  - id: artichoke_hearts
+    name_sv: kronärtskocka
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [kronärtskockshjärtan, artichoke]
+
+  - id: tapenade
+    name_sv: tapenad
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [olivtapenad, svart tapenad]
+
+  - id: olives
+    name_sv: oliver
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [svarta oliver, gröna oliver, oliver på burk]
+
+  - id: canned_pineapple
+    name_sv: ananas på burk
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [ananasskivor, ananasringar]
+
+  - id: bamboo_shoots
+    name_sv: bambuskott
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [bambuskott på burk]
+
+  - id: baby_corn
+    name_sv: minimajs
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [mini majs, miniatyrmajs]
+
+  - id: pickled_onions
+    name_sv: syltlök
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [inlagd lök, cocktaillök]
+
+  - id: pickled_beets
+    name_sv: inlagda rödbetor
+    category: konserver
+    unit: g
+    role: ingredient
+    synonyms: [rödbetor på burk, skivade rödbetor]
+
+  - id: ketchup
+    name_sv: ketchup
+    category: konserver
+    unit: ml
+    role: pantry_staple
+    synonyms: [tomatoketchup, heinz]
+
+  - id: mustard
+    name_sv: senap
+    category: konserver
+    unit: g
+    role: pantry_staple
+    synonyms: [vanlig senap, mild senap, grov senap, senapsgrov]
+
+  - id: sweet_mustard
+    name_sv: sötstark senap
+    category: konserver
+    unit: g
+    role: pantry_staple
+    synonyms: [sweet strong mustard, slottessenap]
+
+  - id: burger_dressing
+    name_sv: hamburgerdressing
+    category: konserver
+    unit: ml
+    role: pantry_staple
+    synonyms: [burgardressing, thousand island]
 
   # ---------------------------------------------------------------------------
   # FRYSTA VAROR
