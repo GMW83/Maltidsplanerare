@@ -1817,6 +1817,153 @@ items:
     role: pantry_staple
     synonyms: [dillgurka, fermenterad gurka, surkål gurka]
 
+  - id: red_wine_vinegar
+    name_sv: rödvinsvinäger
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [rödvins vinäger]
+
+  - id: apple_cider_vinegar
+    name_sv: äppelcidervinäger
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [äppelvinäger, cidervinäger]
+
+  - id: rice_vinegar
+    name_sv: risvinäger
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [ris vinäger, sushi vinäger]
+
+  - id: vinegar
+    name_sv: ättika
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [ättikssprit, 12% ättika, 24% ättika]
+
+  - id: white_cooking_wine
+    name_sv: vitt matlagningsvin
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [vitt vin, torrt vitt vin]
+
+  - id: red_cooking_wine
+    name_sv: rött matlagningsvin
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [rött vin, torrt rött vin]
+
+  - id: lemon_juice_bottle
+    name_sv: pressad citron
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [citronsaft, pressad citron på flaska]
+
+  - id: lime_juice_bottle
+    name_sv: pressad lime
+    category: kryddor_och_smaksattare
+    unit: ml
+    role: pantry_staple
+    synonyms: [limesaft, pressad lime på flaska]
+
+  - id: tarragon
+    name_sv: dragon
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [estragon]
+
+  - id: anise
+    name_sv: anis
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [anis frön, anisfrö]
+
+  - id: herbes_de_provence
+    name_sv: franska örter
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [herbes de provence, provencalska örter]
+
+  - id: nutmeg
+    name_sv: muskot
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [malen muskot, muskotblomma]
+
+  - id: saffron
+    name_sv: saffran
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [saffranstrådar]
+
+  - id: mustard_seeds
+    name_sv: senapsfrön
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [gula senapsfrön, bruna senapsfrön]
+
+  - id: onion_powder
+    name_sv: lökpulver
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [lök pulver, torkad lök]
+
+  - id: sage
+    name_sv: salvia
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [färsk salvia, torkad salvia]
+
+  - id: caraway_seeds
+    name_sv: kumminfrö
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [kummin, hel kummin, brödkummin]
+
+  - id: cinnamon_sticks
+    name_sv: kanelstänger
+    category: kryddor_och_smaksattare
+    unit: pcs
+    role: pantry_staple
+    synonyms: [hel kanel, kanelstång]
+
+  - id: nori
+    name_sv: noriark
+    category: kryddor_och_smaksattare
+    unit: pcs
+    role: ingredient
+    synonyms: [nori, torkad tång, sushitång]
+
+  - id: wasabi
+    name_sv: wasabi
+    category: kryddor_och_smaksattare
+    unit: g
+    role: ingredient
+    synonyms: [wasabipasta, wasabipulver]
+
+  - id: crispy_onion
+    name_sv: rostad lök
+    category: kryddor_och_smaksattare
+    unit: g
+    role: pantry_staple
+    synonyms: [friterad lök, stekt lök, rostad lök på burk]
+
   # ---------------------------------------------------------------------------
   # BRÖD OCH BAKVERK
   # ---------------------------------------------------------------------------
