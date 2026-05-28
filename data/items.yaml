@@ -1666,6 +1666,90 @@ items:
     role: ingredient
     synonyms: [mango fryst]
 
+  - id: frozen_dill
+    name_sv: fryst dill
+    category: frysta_varor
+    unit: g
+    role: pantry_staple
+    synonyms: [dill fryst]
+
+  - id: frozen_parsley
+    name_sv: fryst persilja
+    category: frysta_varor
+    unit: g
+    role: pantry_staple
+    synonyms: [persilja fryst]
+
+  - id: frozen_basil
+    name_sv: fryst basilika
+    category: frysta_varor
+    unit: g
+    role: pantry_staple
+    synonyms: [basilika fryst]
+
+  - id: frozen_chives
+    name_sv: fryst gräslök
+    category: frysta_varor
+    unit: g
+    role: pantry_staple
+    synonyms: [gräslök fryst]
+
+  - id: frozen_avocado
+    name_sv: fryst avocado
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [avocado fryst]
+
+  - id: frozen_pineapple
+    name_sv: fryst ananas
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [ananas fryst]
+
+  - id: frozen_raspberries
+    name_sv: frysta hallon
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [hallon frysta]
+
+  - id: frozen_lingonberries
+    name_sv: frysta lingon
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [lingon frysta]
+
+  - id: frozen_berries
+    name_sv: frysta bär
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [blandade frysta bär, bär frysta]
+
+  - id: frozen_falafel
+    name_sv: fryst falafel
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [falafel fryst, zeinas kitchen]
+
+  - id: frozen_onion_rings
+    name_sv: frysta lökringar
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [lökringar frysta]
+
+  - id: frozen_spring_rolls
+    name_sv: frysta vårrullar
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [vårrullar frysta, spring rolls]
+
   # ---------------------------------------------------------------------------
   # KRYDDOR OCH SMAKSÄTTARE
   # ---------------------------------------------------------------------------
