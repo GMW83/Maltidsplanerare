@@ -1450,6 +1450,90 @@ items:
     role: ingredient
     synonyms: [naanbröd, naan bröd]
 
+  - id: crispbread
+    name_sv: knäckebröd
+    category: brod_och_bakverk
+    unit: pcs
+    role: ingredient
+    synonyms: [knäcke, rågknäcke, delikatessknäcke, wasaknäcke]
+
+  - id: seed_crispbread
+    name_sv: fröknäcke
+    category: brod_och_bakverk
+    unit: pcs
+    role: ingredient
+    synonyms: [frökex, fröknäckebröd]
+
+  - id: baguette
+    name_sv: baguette
+    category: brod_och_bakverk
+    unit: pcs
+    role: ingredient
+    synonyms: [franskbröd]
+
+  - id: ciabatta
+    name_sv: ciabatta
+    category: brod_och_bakverk
+    unit: pcs
+    role: ingredient
+    synonyms: [ciabattabröd]
+
+  - id: burger_bun
+    name_sv: hamburgerbröd
+    category: brod_och_bakverk
+    unit: pcs
+    role: ingredient
+    synonyms: [burgarebröd, briochebröd]
+
+  - id: hot_dog_bun
+    name_sv: korvbröd
+    category: brod_och_bakverk
+    unit: pcs
+    role: ingredient
+    synonyms: [varmkorvsbröd]
+
+  - id: polar_bread
+    name_sv: polarbröd
+    category: brod_och_bakverk
+    unit: pcs
+    role: ingredient
+    synonyms: [polar, mjukt tunnbröd]
+
+  - id: thin_flatbread
+    name_sv: tunnbröd
+    category: brod_och_bakverk
+    unit: pcs
+    role: ingredient
+    synonyms: [hårt tunnbröd, mjukt tunnbröd]
+
+  - id: vort_bread
+    name_sv: vörtbröd
+    category: brod_och_bakverk
+    unit: pcs
+    role: ingredient
+    synonyms: [vört, vörtbröd med russin]
+
+  - id: finncrisp
+    name_sv: finncrisp
+    category: brod_och_bakverk
+    unit: pcs
+    role: ingredient
+    synonyms: [finn crisp, rågkex]
+
+  - id: krustader
+    name_sv: krustader
+    category: brod_och_bakverk
+    unit: pcs
+    role: ingredient
+    synonyms: [krustade, pastaskal]
+
+  - id: frozen_puff_pastry
+    name_sv: fryst smördeg
+    category: frysta_varor
+    unit: pcs
+    role: ingredient
+    synonyms: [smördeg fryst, smördegsplattor]
+
   # ---------------------------------------------------------------------------
   # FISK (del av kött och chark eller separat)
   # ---------------------------------------------------------------------------
