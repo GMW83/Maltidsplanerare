@@ -628,6 +628,118 @@ items:
     role: ingredient
     synonyms: [lamm, lammfilé]
 
+  - id: beef_minute_steak
+    name_sv: lövbiff
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [tunnbiff, minutbiff]
+
+  - id: sirloin
+    name_sv: ryggbiff
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [biff, nötbiff]
+
+  - id: pork_tenderloin
+    name_sv: fläskytterfilé
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [fläsk ytterfilé, picanha fläsk]
+
+  - id: chicken_legs
+    name_sv: kycklinglår
+    category: kott_och_chark
+    unit: pcs
+    role: ingredient
+    synonyms: [kycklingklubba, kyckling lår]
+
+  - id: rotisserie_chicken
+    name_sv: grillad kyckling
+    category: kott_och_chark
+    unit: pcs
+    role: ingredient
+    synonyms: [hel kyckling, färdiggrillad kyckling]
+
+  - id: beer_sausage
+    name_sv: ölkorv
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [kokt korv, varmkorv]
+
+  - id: falu_sausage
+    name_sv: falukorv
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [falukorv liten, falu]
+
+  - id: meatballs
+    name_sv: köttbullar
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [frysta köttbullar, delikatessköttbullar]
+
+  - id: grill_sausage
+    name_sv: grillkorv
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [tunnkorv, bratwurst, chorizo grillkorv]
+
+  - id: cocktail_sausage
+    name_sv: prinskorv
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [lilla prinskorv, minikorv]
+
+  - id: salami
+    name_sv: salami
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [salami skiva, italiensk salami]
+
+  - id: cured_ham
+    name_sv: lufttorkad skinka
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [parma, prosciutto, serranoskinka]
+
+  - id: pulled_meat
+    name_sv: pulled beef
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [pulled pork, pulled beef, pulled chicken]
+
+  - id: tofu
+    name_sv: tofu
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [fast tofu, silkestofu]
+
+  - id: liver_pate
+    name_sv: leverpastej
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [leverpastej skärbar, leverpaté]
+
+  - id: veggie_kebab
+    name_sv: vegetarisk kebab
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [vegankebab, quorn kebab]
+
   # ---------------------------------------------------------------------------
   # MEJERI OCH ÄGG
   # ---------------------------------------------------------------------------
