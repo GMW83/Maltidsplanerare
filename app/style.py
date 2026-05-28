@@ -205,6 +205,19 @@ hr { border-color: #D4DABC !important; margin: 0.6rem 0 !important; }
     border-bottom: 1px solid #D4DABC;
 }
 
+/* ── Dölj "Redigera layout"-knapp på mobil ── */
+@media (max-width: 640px) {
+    [data-testid="stHorizontalBlock"]:has([data-testid="stSelectbox"])
+        [data-testid="column"]:last-child {
+        display: none !important;
+    }
+    [data-testid="stHorizontalBlock"]:has([data-testid="stSelectbox"])
+        [data-testid="column"]:first-child {
+        flex: 1 !important;
+        max-width: 100% !important;
+    }
+}
+
 /* ── Flikar (st.tabs) ── */
 .stTabs [data-baseweb="tab-list"] {
     gap: 0;
