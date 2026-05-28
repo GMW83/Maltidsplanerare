@@ -965,6 +965,237 @@ items:
     role: pantry_staple
     synonyms: []
 
+  - id: oats
+    name_sv: havregryn
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [havreflingor, krav havregryn]
+
+  - id: porridge_rice
+    name_sv: grötris
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [risgryn, rundkornigt ris]
+
+  - id: plain_rice
+    name_sv: ris
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [vanligt ris, långkornigt ris]
+
+  - id: buckwheat
+    name_sv: bovete
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [bovetegryn]
+
+  - id: rye_flour
+    name_sv: rågmjöl
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [rågsikt, grovt rågmjöl]
+
+  - id: graham_flour
+    name_sv: grahamsmjöl
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [grahamsvetemjöl]
+
+  - id: almond_flour
+    name_sv: mandelmjöl
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [mandelmel, malda mandlar]
+
+  - id: corn_flour
+    name_sv: majsmjöl
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [polenta, majsgryn]
+
+  - id: sesame_seeds
+    name_sv: sesamfrön
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [sesam]
+
+  - id: chia_seeds
+    name_sv: chiafrön
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [chia]
+
+  - id: flaxseed
+    name_sv: linfrö
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [linfröer, hela linfrön]
+
+  - id: muesli
+    name_sv: müsli
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [müsli neutral, frukostflingor]
+
+  - id: granola
+    name_sv: granola
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: []
+
+  - id: corn_flakes
+    name_sv: corn flakes
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [cornflakes, majsflingor]
+
+  - id: potato_flour
+    name_sv: potatismjöl
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [potatisstärkelse]
+
+  - id: sunflower_seeds
+    name_sv: solroskärnor
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [solrosfrön]
+
+  - id: pumpkin_seeds
+    name_sv: pumpakärnor
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [pumpafrön]
+
+  - id: hazelnuts
+    name_sv: hasselnötter
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [hasselnöt]
+
+  - id: walnuts
+    name_sv: valnötter
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [valnöt]
+
+  - id: pine_nuts
+    name_sv: pinjenötter
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [pinjekärnor, tallfrön]
+
+  - id: raisins
+    name_sv: russin
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: []
+
+  - id: dried_apricots
+    name_sv: torkade aprikoser
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [aprikoser torkade]
+
+  - id: cocoa_powder
+    name_sv: kakao
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [kakaopulver, osötat kakao]
+
+  - id: dark_chocolate
+    name_sv: mörk choklad
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [choklad mörk, bakschoklad]
+
+  - id: sugar
+    name_sv: socker
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [strösocker, vitt socker]
+
+  - id: brown_sugar
+    name_sv: farinsocker
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [ljust farinsocker, mörkt farinsocker, muscovadosocker]
+
+  - id: icing_sugar
+    name_sv: florsocker
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [puddersocker]
+
+  - id: baking_powder
+    name_sv: bakpulver
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: []
+
+  - id: baking_soda
+    name_sv: bikarbonat
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [natron, natriumbikarbonat]
+
+  - id: vanilla_sugar
+    name_sv: vaniljsocker
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [äkta vaniljsocker, bourbon vaniljsocker]
+
+  - id: vanilla_pod
+    name_sv: vaniljstång
+    category: torrvaror
+    unit: pcs
+    role: ingredient
+    synonyms: [vanilj, vaniljstänger]
+
+  - id: marzipan
+    name_sv: mandelmassa
+    category: torrvaror
+    unit: g
+    role: ingredient
+    synonyms: [marsipan, marsipanlock]
+
+  - id: cornstarch
+    name_sv: maizena
+    category: torrvaror
+    unit: g
+    role: pantry_staple
+    synonyms: [majsstärkelse, maizenamjöl, redning]
+
   # ---------------------------------------------------------------------------
   # KONSERVER
   # ---------------------------------------------------------------------------
