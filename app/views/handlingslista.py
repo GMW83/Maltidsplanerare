@@ -114,8 +114,13 @@ def render():
             key = f"cb_{iid}"
             if key not in st.session_state:
                 st.session_state[key] = item["checked"]
+            qty = item.get("quantity")
+            label = (
+                f"{item['name_sv']}  —  {shopping.format_quantity(qty['amount'], qty['unit'])}"
+                if qty else item["name_sv"]
+            )
             st.checkbox(
-                item["name_sv"],
+                label,
                 key=key,
                 on_change=_on_item_change,
                 args=(iid,),

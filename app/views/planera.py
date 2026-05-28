@@ -4,6 +4,7 @@ from datetime import date, timedelta
 
 import streamlit as st
 
+from app import settings as app_settings
 from app import shopping
 from app.planner import (
     current_week_start,
@@ -94,6 +95,19 @@ def render():
 
     st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
 
+    # ── Antal personer ────────────────────────────────────────────────────────
+    saved_size = app_settings.get("household_size")
+    household_size = st.number_input(
+        "Antal personer",
+        min_value=1,
+        max_value=12,
+        value=saved_size,
+        step=1,
+        key="household_size_input",
+    )
+    if int(household_size) != saved_size:
+        app_settings.set_value("household_size", int(household_size))
+
     # ── Fritext-input ─────────────────────────────────────────────────────────
     user_input = st.text_area(
         "Vad vill ni äta?",
@@ -150,7 +164,7 @@ def render():
             "meals": draft["meals"],
         }
         save_plan(plan_to_save)
-        shopping.apply_meal_plan(draft)
+        shopping.apply_meal_plan(draft, household_size=int(household_size))
         # Återställ shopping session state
         for key in list(st.session_state.keys()):
             if key.startswith("cb_"):

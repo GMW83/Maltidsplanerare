@@ -4,6 +4,45 @@ from pathlib import Path
 
 import yaml
 
+# ── Enhetskonvertering ────────────────────────────────────────────────────────
+
+_UNIT_BASE: dict[str, tuple[str, float]] = {
+    "g":   ("g",  1),
+    "kg":  ("g",  1000),
+    "ml":  ("ml", 1),
+    "cl":  ("ml", 10),
+    "dl":  ("ml", 100),
+    "l":   ("ml", 1000),
+    "st":  ("st", 1),
+    "msk": ("msk", 1),
+    "tsk": ("tsk", 1),
+    "krm": ("krm", 1),
+}
+
+
+def _normalize_unit(amount: float, unit: str) -> tuple[float, str]:
+    base_unit, factor = _UNIT_BASE.get(unit.lower().strip(), (unit, 1))
+    return amount * factor, base_unit
+
+
+def format_quantity(amount: float, unit: str) -> str:
+    """Formatera mängd för visning i handlingslistan."""
+    u = unit.lower().strip()
+    if u == "g":
+        if amount >= 1000:
+            return f"{amount / 1000:g} kg"
+        return f"{round(amount)} g"
+    if u == "ml":
+        if amount >= 1000:
+            return f"{amount / 1000:g} L"
+        if amount >= 100:
+            return f"{amount / 100:g} dl"
+        return f"{round(amount)} ml"
+    if u == "st":
+        return f"{round(amount)} st"
+    n = int(amount) if amount == int(amount) else round(amount, 1)
+    return f"{n} {unit}"
+
 DATA_DIR = Path(__file__).parent.parent / "data"
 STATE_PATH = DATA_DIR / "shopping_state.yaml"
 
@@ -42,12 +81,13 @@ INCLUDED_ROLES = {"ingredient", "pantry_staple", "regular_purchase"}
 
 def load_state() -> dict:
     if not STATE_PATH.exists():
-        return {"checked": [], "extras": []}
+        return {"checked": [], "extras": [], "quantities": {}}
     with open(STATE_PATH, encoding="utf-8") as f:
         state = yaml.safe_load(f) or {}
     return {
-        "checked": list(state.get("checked") or []),
-        "extras":  list(state.get("extras")  or []),
+        "checked":    list(state.get("checked")    or []),
+        "extras":     list(state.get("extras")     or []),
+        "quantities": dict(state.get("quantities") or {}),
     }
 
 
@@ -74,22 +114,38 @@ def _load_recipe(recipe_id: str) -> dict | None:
 
 # ── Menyplanering → handlingslista ───────────────────────────────────────────
 
-def apply_meal_plan(plan: dict) -> None:
-    """Bocka i ingredienser från godkänd meny. Befintliga bockar rörs inte."""
+def apply_meal_plan(plan: dict, household_size: int = 4) -> None:
+    """Bocka i ingredienser från godkänd meny och beräkna inköpsmängder."""
     state = load_state()
     checked_set = set(state["checked"])
+    quantities: dict[str, dict] = {}   # räknas om från noll vid varje ny plan
     items_db = load_items()
 
     for meal in plan.get("meals", []):
         recipe = _load_recipe(meal["recipe_id"])
         if not recipe:
             continue
-        for ing in recipe.get("ingredients", []):
-            item = items_db.get(ing["ingredient_id"])
-            if item and item.get("role") == "ingredient":
-                checked_set.add(ing["ingredient_id"])
+        recipe_servings = max(1, recipe.get("servings", 4))
+        scale = household_size / recipe_servings
 
-    state["checked"] = list(checked_set)
+        for ing in recipe.get("ingredients", []):
+            item_id = ing["ingredient_id"]
+            item = items_db.get(item_id)
+            if not (item and item.get("role") == "ingredient"):
+                continue
+            checked_set.add(item_id)
+
+            raw_amount = ing.get("amount")
+            raw_unit   = ing.get("unit", "")
+            if raw_amount and raw_unit:
+                norm_amount, norm_unit = _normalize_unit(raw_amount * scale, raw_unit)
+                if item_id in quantities and quantities[item_id]["unit"] == norm_unit:
+                    quantities[item_id]["amount"] += norm_amount
+                else:
+                    quantities[item_id] = {"amount": norm_amount, "unit": norm_unit}
+
+    state["checked"]    = list(checked_set)
+    state["quantities"] = quantities
     save_state(state)
 
 
@@ -112,6 +168,8 @@ def get_full_list(profile: dict = None) -> list[dict]:
         cat_order = CATEGORY_ORDER
         item_overrides = {}
 
+    quantities = state.get("quantities", {})
+
     by_category: dict[str, list] = {}
     for item_id, item in items_db.items():
         if item.get("role") not in INCLUDED_ROLES:
@@ -119,10 +177,11 @@ def get_full_list(profile: dict = None) -> list[dict]:
         # Använd override-kategori om den finns, annars items.yaml-kategorin
         cat = item_overrides.get(item_id) or item.get("category", "ovrigt")
         by_category.setdefault(cat, []).append({
-            "id":      item_id,
-            "name_sv": item["name_sv"],
-            "role":    item.get("role"),
-            "checked": item_id in checked_set,
+            "id":       item_id,
+            "name_sv":  item["name_sv"],
+            "role":     item.get("role"),
+            "checked":  item_id in checked_set,
+            "quantity": quantities.get(item_id),
         })
 
     for cat in by_category:
