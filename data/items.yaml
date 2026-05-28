@@ -2330,18 +2330,18 @@ items:
     synonyms: [strömming, färsk sill]
 
   - id: scallops
-    name_sv: pilgrimsmusslor
+    name_sv: frysta pilgrimsmusslor
     category: frysta_varor
     unit: g
     role: ingredient
-    synonyms: [pilgrimsmussla, frysta pilgrimsmusslor]
+    synonyms: [pilgrimsmussla, pilgrimsmusslor]
 
   - id: frozen_king_prawns
-    name_sv: jätteräkor
+    name_sv: frysta jätteräkor
     category: frysta_varor
     unit: g
     role: ingredient
-    synonyms: [frysta jätteräkor, tigerräkor, räkor frysta]
+    synonyms: [jätteräkor, tigerräkor, räkor frysta]
 
   - id: bearnaise_sauce
     name_sv: hovmästarsås
