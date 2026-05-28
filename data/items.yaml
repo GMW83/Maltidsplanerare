@@ -730,6 +730,132 @@ items:
     role: ingredient
     synonyms: [kokosmjölk, coconut milk]
 
+  - id: plain_yogurt
+    name_sv: yoghurt naturell
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [naturell yoghurt, yoghurt, matyoghurt]
+
+  - id: greek_yogurt
+    name_sv: grekisk yoghurt
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [grekisk youghurt, 10% yoghurt]
+
+  - id: fil
+    name_sv: fil
+    category: mejeri_och_agg
+    unit: ml
+    role: ingredient
+    synonyms: [lättfil, mellanmjölksfil, långfil, A-fil]
+
+  - id: quark
+    name_sv: kvarg
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [kvarg naturell, kvarg hallon]
+
+  - id: cottage_cheese
+    name_sv: keso
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [cottage cheese]
+
+  - id: smetana
+    name_sv: smetana
+    category: mejeri_och_agg
+    unit: ml
+    role: ingredient
+    synonyms: []
+
+  - id: bregott
+    name_sv: bregott
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [margarin, smör och rapsolja]
+
+  - id: yeast
+    name_sv: jäst
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [färsk jäst, torrjäst, jäst söta degar]
+
+  - id: oat_milk
+    name_sv: havremjölk
+    category: mejeri_och_agg
+    unit: ml
+    role: ingredient
+    synonyms: [havredryck, oatly]
+
+  - id: chevre
+    name_sv: chèvre
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [getost, chevre]
+
+  - id: vasterbotten_cheese
+    name_sv: västerbottenost
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [västerbotten]
+
+  - id: brie
+    name_sv: brieost
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [brie, vitmögelost]
+
+  - id: blue_cheese
+    name_sv: mögelost
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [blåmögelost, ädelost, gorgonzola, roquefort, danish blue]
+
+  - id: household_cheese
+    name_sv: hushållsost
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [mild ost, snabbost]
+
+  - id: burrata
+    name_sv: burrata
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: []
+
+  - id: sliced_cheese
+    name_sv: hamburgerost
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [skivad ost, smältost]
+
+  - id: soft_cheese_spread
+    name_sv: mjukost
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [mjukost skinka, mjukost räkor, mjukost ädel, kavli, laughing cow]
+
+  - id: messmor
+    name_sv: messmör
+    category: mejeri_och_agg
+    unit: g
+    role: ingredient
+    synonyms: [mesost, brunost]
+
   # ---------------------------------------------------------------------------
   # TORRVAROR
   # ---------------------------------------------------------------------------
