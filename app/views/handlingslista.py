@@ -28,6 +28,15 @@ def _on_extra_change(idx: int):
     shopping.set_extra_checked(idx, st.session_state[f"cb_extra_{idx}"])
 
 
+def _is_mobile() -> bool:
+    """Returnera True om klienten verkar vara en mobil/surfplatta."""
+    try:
+        ua = st.context.headers.get("user-agent", "").lower()
+        return any(kw in ua for kw in ("mobile", "android", "iphone", "ipad", "ipod"))
+    except Exception:
+        return False
+
+
 def _render_profile_selector():
     """Rendera kompakt profilväljare med knapp för att öppna layout-editorn."""
     profiles = store_profiles.all_profiles()
@@ -37,7 +46,12 @@ def _render_profile_selector():
     profile_names = [profiles[pid]["name"] for pid in profile_ids]
     current_index = profile_ids.index(current_id) if current_id in profile_ids else 0
 
-    sel_col, btn_col = st.columns([4, 1])
+    mobile = _is_mobile()
+
+    if mobile:
+        sel_col = st.columns([1])[0]
+    else:
+        sel_col, btn_col = st.columns([4, 1])
 
     selected_index = sel_col.selectbox(
         "Butiksprofil",
@@ -53,7 +67,7 @@ def _render_profile_selector():
         store_profiles.set_active(selected_id)
         st.rerun()
 
-    if btn_col.button("Redigera layout", key="btn_edit_layout"):
+    if not mobile and btn_col.button("Redigera layout", key="btn_edit_layout"):
         st.session_state.edit_layout = True
         st.rerun()
 
