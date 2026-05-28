@@ -264,6 +264,27 @@ items:
     role: ingredient
     synonyms: [köttfärs, köttfärs nöt, nötköttsfärs]
 
+  - id: pork_mince
+    name_sv: fläskfärs
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [köttfärs gris, grisgärs]
+
+  - id: mixed_mince
+    name_sv: blandfärs
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [köttfärs bland, blandad färs]
+
+  - id: chicken_mince
+    name_sv: kycklingfärs
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [hackat kyckling, kyckling färs]
+
   - id: pork_fillet
     name_sv: fläskfilé
     category: kott_och_chark
@@ -589,21 +610,42 @@ items:
     category: konserver
     unit: ml
     role: pantry_staple
-    synonyms: [kycklingbuljong, hönsbuljong, kycklingfond]
+    synonyms: [kycklingbuljong, hönsbuljong, kycklingbuljongtärning, kycklingfond]
 
   - id: vegetable_stock
     name_sv: grönsaksbuljong
     category: konserver
     unit: ml
     role: pantry_staple
-    synonyms: [grönsaksfond, vegetarisk buljong]
+    synonyms: [grönsaksfond, vegetarisk buljong, grönsaksbuljongtärning]
 
   - id: beef_stock
     name_sv: köttbuljong
     category: konserver
     unit: ml
     role: pantry_staple
-    synonyms: [köttfond, nötbuljong]
+    synonyms: [köttfond, nötbuljong, köttbuljongtärning]
+
+  - id: beef_fond
+    name_sv: oxfond
+    category: konserver
+    unit: ml
+    role: pantry_staple
+    synonyms: [oxbuljong, nötfond, kalvfond koncentrat]
+
+  - id: veal_stock
+    name_sv: kalvfond
+    category: konserver
+    unit: ml
+    role: pantry_staple
+    synonyms: [kalvbuljong, fond de veau]
+
+  - id: fish_stock
+    name_sv: fiskbuljong
+    category: konserver
+    unit: ml
+    role: pantry_staple
+    synonyms: [fiskfond, fiskbuljongtärning]
 
   - id: sun_dried_tomatoes
     name_sv: soltorkade tomater
