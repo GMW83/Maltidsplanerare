@@ -200,7 +200,7 @@ hr { border-color: #D4DABC !important; margin: 0.6rem 0 !important; }
     font-weight: 700;
     font-style: italic;
     color: #5B7028;
-    margin: 14px 0 6px 0;
+    margin: 10px 0 4px 0;
     padding-bottom: 3px;
     border-bottom: 1px solid #D4DABC;
 }

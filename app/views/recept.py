@@ -85,7 +85,7 @@ def _render_import(items_db: dict):
         unmatched_count = sum(1 for m in matches if not m["matched_id"])
         if unmatched_count:
             st.caption(
-                f"{unmatched_count} ingrediens(er) utan koppling — välj vara eller lämna utan."
+                f"{unmatched_count} ingrediens(er) utan koppling — välj vara i höger kolumn."
             )
 
         for i, m in enumerate(matches):
@@ -93,36 +93,44 @@ def _render_import(items_db: dict):
             amt_str = f"{int(amt) if isinstance(amt, float) and amt == int(amt) else amt} {m['unit']}"
 
             col1, col2 = st.columns([5, 4])
+
             if m["matched_id"]:
+                # Matchad — visa namn + mängd, selectbox förvald (kan ändras)
                 matched_sv = items_db[m["matched_id"]]["name_sv"]
                 col1.markdown(
-                    f"<p style='margin:0;padding:6px 0;font-size:0.88rem;color:#2A2A22'>"
+                    f"<p style='margin:0;padding:3px 0;font-size:0.88rem;color:#2A2A22'>"
                     f"✓ {m['name']} — <em>{amt_str}</em></p>",
                     unsafe_allow_html=True,
                 )
-                col2.markdown(
-                    f"<p style='margin:0;padding:6px 0;font-size:0.88rem;"
-                    f"color:#9AA07A;font-style:italic'>→ {matched_sv}</p>",
-                    unsafe_allow_html=True,
+                default_idx = sv_options.index(matched_sv) if matched_sv in sv_options else 0
+                col2.selectbox(
+                    "",
+                    sv_options,
+                    index=default_idx,
+                    key=f"ing_sel_{i}",
+                    label_visibility="collapsed",
                 )
             else:
-                col1.markdown(
-                    f"<p style='margin:0;padding:6px 0;font-size:0.88rem;color:#2A2A22'>"
-                    f"⚠ {m['name']} — <em>{amt_str}</em></p>",
-                    unsafe_allow_html=True,
+                # Omatchad — redigerbart namnfält + selectbox
+                col1.text_input(
+                    "",
+                    value=m["name"],
+                    key=f"ing_name_{i}",
+                    label_visibility="collapsed",
                 )
                 col2.selectbox(
                     "",
                     sv_options,
+                    index=0,
                     key=f"ing_sel_{i}",
                     label_visibility="collapsed",
                 )
 
-        st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
 
         col_save, col_cancel = st.columns(2)
         if col_save.button("✓ Spara recept", use_container_width=True):
-            # Reverse-lookup: svenska namn → item_id
+            # Reverse-lookup: svenska namn → item_id; respektera alla overrides
             overrides = {}
             for i in range(len(matches)):
                 sel = st.session_state.get(f"ing_sel_{i}")
@@ -130,6 +138,10 @@ def _render_import(items_db: dict):
                     iid = sv_to_id.get(sel)
                     if iid:
                         overrides[i] = iid
+                elif not m["matched_id"]:
+                    # Spara det redigerade namnet som ID-slug om ingen koppling vald
+                    edited = st.session_state.get(f"ing_name_{i}", matches[i]["name"])
+                    matches[i] = {**matches[i], "name": edited}
             recipe_dict = importer.build_recipe_dict(raw, matches, overrides, url)
             save_recipe(recipe_dict)
             st.success(f"Receptet '{recipe_dict['title']}' sparat!")

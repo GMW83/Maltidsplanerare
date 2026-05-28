@@ -39,7 +39,13 @@ Regler:
 - amount är alltid ett tal (heltal eller decimal, aldrig sträng)
 - difficulty: 1 = lätt, 2 = medel, 3 = svår
 - Ingrediensnamn och instruktioner på svenska — översätt om originalet är på annat språk
-- tags: 2–5 korta beskrivande ord"""
+- tags: 2–5 korta beskrivande ord
+- VIKTIGT: Skriv RENA ingrediensnamn utan parenteser, underrubriker eller kontexthänvisningar.
+  FEL: "grädde (köttbullar)", "smör (att steka i)", "salt (sås)"
+  RÄTT: "grädde", "smör", "salt"
+- Om samma ingrediens förekommer i flera delar av receptet: slå ihop till EN rad med total mängd.
+  FEL: grädde 1 dl + grädde 0.75 dl + grädde 3 dl  (tre rader)
+  RÄTT: grädde 4.75 dl  (en rad, summan)"""
 
 
 def _client():
