@@ -2208,4 +2208,60 @@ items:
     category: kott_och_chark
     unit: g
     role: ingredient
-    synonyms: [kallrökt lax, varmrökt lax, gravad lax]
+    synonyms: [kallrökt lax]
+
+  - id: gravad_lax
+    name_sv: gravad lax
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [graved lax, gravlax]
+
+  - id: hot_smoked_salmon
+    name_sv: varmrökt lax
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [varmrökt laxfilé]
+
+  - id: cooked_salmon
+    name_sv: kokt lax
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [laxbitar kokt]
+
+  - id: fresh_shrimp
+    name_sv: räkor
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [färska räkor, skalade räkor]
+
+  - id: herring
+    name_sv: sill
+    category: kott_och_chark
+    unit: g
+    role: ingredient
+    synonyms: [strömming, färsk sill]
+
+  - id: scallops
+    name_sv: pilgrimsmusslor
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [pilgrimsmussla, frysta pilgrimsmusslor]
+
+  - id: frozen_king_prawns
+    name_sv: jätteräkor
+    category: frysta_varor
+    unit: g
+    role: ingredient
+    synonyms: [frysta jätteräkor, tigerräkor, räkor frysta]
+
+  - id: bearnaise_sauce
+    name_sv: hovmästarsås
+    category: konserver
+    unit: ml
+    role: ingredient
+    synonyms: [hovmästar, dillmajonnäs, gravlaxsås]
