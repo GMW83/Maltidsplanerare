@@ -76,7 +76,7 @@ def _render_import(items_db: dict):
             f"<div style='line-height:1.1;padding-bottom:2px;font-size:1rem;font-weight:700;color:#2A2A22'>{raw['title']}</div>"
             f"<div style='line-height:1.3;padding-bottom:6px;font-size:0.8rem;color:#7A7A6A'>{meta}</div>"
             f"<div style='line-height:1.3;font-size:0.88rem;font-weight:700;color:#2A2A22'>Ingredienser</div>"
-            f"<div style='height:24px'></div>",
+            f"<div style='height:21px'></div>",
             unsafe_allow_html=True,
         )
 
