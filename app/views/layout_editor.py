@@ -116,7 +116,7 @@ def render(items_db: dict):
 
     # ── Profilhantering ───────────────────────────────────────────────────────
     st.markdown("**Profil**")
-    st.markdown("<div style='height:24px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
     mgmt_col1, mgmt_col2, mgmt_col3, mgmt_col4 = st.columns([3, 1, 1, 1])
 
     new_name = mgmt_col1.text_input(
@@ -149,6 +149,7 @@ def render(items_db: dict):
 
     # ── Kategoriordning ───────────────────────────────────────────────────────
     st.markdown("**Kategoriordning** — dra för att ändra ordning")
+    st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
 
     cat_order = current_profile.get("category_order", shopping.CATEGORY_ORDER)
     # Visa kategorier som visningsnamn
@@ -168,6 +169,7 @@ def render(items_db: dict):
 
     # ── Varor per kategori ────────────────────────────────────────────────────
     st.markdown("**Varor per kategori** — dra varor mellan kategorier")
+    st.markdown("<div style='height:30px'></div>", unsafe_allow_html=True)
 
     containers, name_to_id = _build_containers(items_db, current_profile)
 
