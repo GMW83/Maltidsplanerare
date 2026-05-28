@@ -2265,3 +2265,56 @@ items:
     unit: ml
     role: ingredient
     synonyms: [hovmästar, dillmajonnäs, gravlaxsås]
+
+  # ---------------------------------------------------------------------------
+  # DRYCKER
+  # ---------------------------------------------------------------------------
+
+  - id: coffee
+    name_sv: kaffe
+    category: drycker
+    unit: g
+    role: pantry_staple
+    synonyms: [kaffebönor, malet kaffe, espresso]
+
+  - id: tea
+    name_sv: te
+    category: drycker
+    unit: pcs
+    role: pantry_staple
+    synonyms: [tepåsar, löste, natte te]
+
+  - id: hot_chocolate
+    name_sv: chokladdryck
+    category: drycker
+    unit: g
+    role: pantry_staple
+    synonyms: [kakao dryck, varm choklad, drickchoklad]
+
+  - id: oat_drink
+    name_sv: havredryck
+    category: drycker
+    unit: ml
+    role: ingredient
+    synonyms: [oatly, havre dryck]
+
+  - id: orange_juice
+    name_sv: apelsinjuice
+    category: drycker
+    unit: ml
+    role: ingredient
+    synonyms: [juice apelsin, oj]
+
+  - id: apple_juice
+    name_sv: äppeljuice
+    category: drycker
+    unit: ml
+    role: ingredient
+    synonyms: [juice äpple, äppeldryck]
+
+  - id: elderflower_cordial
+    name_sv: flädersaft
+    category: drycker
+    unit: ml
+    role: ingredient
+    synonyms: [fläder saft, fläderdryck]
