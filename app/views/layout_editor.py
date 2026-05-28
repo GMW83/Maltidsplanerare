@@ -116,6 +116,7 @@ def render(items_db: dict):
 
     # ── Profilhantering ───────────────────────────────────────────────────────
     st.markdown("**Profil**")
+    st.markdown("<div style='height:24px'></div>", unsafe_allow_html=True)
     mgmt_col1, mgmt_col2, mgmt_col3, mgmt_col4 = st.columns([3, 1, 1, 1])
 
     new_name = mgmt_col1.text_input(
