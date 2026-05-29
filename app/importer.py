@@ -81,6 +81,8 @@ def match_ingredients(ingredients: list[dict], items_db: dict) -> list[dict]:
     """
     Matcha extraherade ingredienser mot items_db {id: item}.
     Returnerar listan utökt med 'matched_id' (str|None) per post.
+    Använder enbart exakt matchning — ingen delsträngsmatchning — för att
+    undvika felaktiga kopplingar som salt→sardeller eller smör→hjärtsallad.
     """
     results = []
     for ing in ingredients:
@@ -88,14 +90,13 @@ def match_ingredients(ingredients: list[dict], items_db: dict) -> list[dict]:
         matched_id = None
 
         for item_id, item in items_db.items():
+            # Exakt namnmatch
             if item["name_sv"].lower() == name_lower:
                 matched_id = item_id
                 break
-            if name_lower in item["name_sv"].lower() or item["name_sv"].lower() in name_lower:
-                matched_id = item_id
-                break
+            # Exakt synonymmatch
             for syn in item.get("synonyms", []):
-                if syn.lower() == name_lower or name_lower in syn.lower():
+                if syn.lower() == name_lower:
                     matched_id = item_id
                     break
             if matched_id:
