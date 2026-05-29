@@ -240,7 +240,7 @@ def render(items_db: dict):
     )
 
     st.markdown(
-        "<div style='height:16px'></div>"
+        "<div style='height:8px'></div>"
         "<hr style='border-color:#D4DABC; margin:0'>"
         "<div style='height:16px'></div>",
         unsafe_allow_html=True,

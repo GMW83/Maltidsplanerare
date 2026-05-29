@@ -67,9 +67,9 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
     display: flex !important;
     align-items: center !important;
     gap: 8px !important;
-    padding: 1px 0 !important;
+    padding: 0 !important;
     cursor: pointer !important;
-    min-height: 22px !important;
+    min-height: 18px !important;
 }
 
 /* Texten i labeln — explicit synlig */
