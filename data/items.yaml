@@ -1599,6 +1599,20 @@ items:
     role: pantry_staple
     synonyms: [burgardressing, thousand island]
 
+  - id: lingonberry_jam
+    name_sv: rårörda lingon
+    category: konserver
+    unit: g
+    role: pantry_staple
+    synonyms: [lingonsylt, rårörd lingon]
+
+  - id: blueberry_jam
+    name_sv: blåbärssylt
+    category: konserver
+    unit: g
+    role: pantry_staple
+    synonyms: [blåbärssylt ekologisk]
+
   # ---------------------------------------------------------------------------
   # FRYSTA VAROR
   # ---------------------------------------------------------------------------

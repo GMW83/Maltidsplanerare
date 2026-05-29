@@ -101,15 +101,29 @@ def render():
     else:
         st.caption("Inga varor markerade — bocka i vad som behövs")
 
+    # ── Sökfält ─────────────────────────────────────────────────────────────
+    search = st.text_input(
+        "Sök vara",
+        placeholder="Filtrera listan…",
+        label_visibility="collapsed",
+        key="shopping_search",
+    ).strip().lower()
+
     # ── Varor per kategori ──────────────────────────────────────────────────
     for category in full_list:
+        items_to_show = (
+            [it for it in category["items"] if search in it["name_sv"].lower()]
+            if search else category["items"]
+        )
+        if not items_to_show:
+            continue
         # Header + spacer i samma element-container — undviker kollaps av separat spacer
         st.markdown(
             f"<p class='cat-header'>{category['category_name']}</p>"
             f"<div style='height:16px'></div>",
             unsafe_allow_html=True,
         )
-        for item in category["items"]:
+        for item in items_to_show:
             iid = item["id"]
             key = f"cb_{iid}"
             if key not in st.session_state:

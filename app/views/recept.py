@@ -94,17 +94,27 @@ def _render_import(items_db: dict):
             )
 
         for i, m in enumerate(matches):
-            amt = m["amount"]
-            amt_str = f"{int(amt) if isinstance(amt, float) and amt == int(amt) else amt} {m['unit']}"
+            amt = m.get("amount") or 0
+            try:
+                amt_f = float(amt)
+            except (TypeError, ValueError):
+                amt_f = 0.0
+            unit = (m.get("unit") or "").strip()
+            if amt_f > 0 and unit:
+                amt_val = int(amt_f) if amt_f == int(amt_f) else amt_f
+                amt_str = f"{amt_val} {unit}"
+            else:
+                amt_str = ""
 
             col1, col2 = st.columns([5, 4])
 
             if m["matched_id"]:
-                # Matchad — visa namn + mängd, selectbox förvald (kan ändras)
+                # Matchad — visa namn (+ mängd om känd), selectbox förvald
                 matched_sv = items_db[m["matched_id"]]["name_sv"]
+                qty_part = f" — <em>{amt_str}</em>" if amt_str else ""
                 col1.markdown(
                     f"<p style='margin:0;padding:3px 0;font-size:0.88rem;color:#2A2A22'>"
-                    f"✓ {m['name']} — <em>{amt_str}</em></p>",
+                    f"✓ {m['name']}{qty_part}</p>",
                     unsafe_allow_html=True,
                 )
                 default_idx = sv_options.index(matched_sv) if matched_sv in sv_options else 0
