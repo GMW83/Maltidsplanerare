@@ -269,26 +269,26 @@ def render():
     )
     st.markdown(steps_html, unsafe_allow_html=True)
 
+    # Tags, källa och buffert till ta-bort-knapp i ett block (undviker marginal-kollaps)
+    bottom = [
+        "<div style='height:10px'></div>",
+        "<hr style='border-color:#D4DABC; margin:0 0 6px 0'>",
+    ]
     if recipe.get("tags"):
         tags_str = " · ".join(recipe["tags"])
-        st.markdown(
-            f"<div style='height:10px'></div>"
-            f"<hr style='border-color:#D4DABC; margin:0 0 8px 0'>"
+        bottom.append(
             f"<div style='font-size:0.8rem; color:#AAAAAA; margin:0; "
-            f"visibility:visible; opacity:1'>{tags_str}</div>",
-            unsafe_allow_html=True,
+            f"visibility:visible; opacity:1'>{tags_str}</div>"
         )
-
     if meta.get("source_url"):
-        st.markdown(
-            f"<div style='font-size:0.75rem; color:#AAAAAA; margin-top:4px'>"
-            f"Källa: {meta['source_url']}</div>",
-            unsafe_allow_html=True,
+        bottom.append(
+            f"<div style='font-size:0.75rem; color:#AAAAAA; margin-top:12px'>"
+            f"Källa: {meta['source_url']}</div>"
         )
+    bottom.append("<div style='height:48px'></div>")
+    st.markdown("".join(bottom), unsafe_allow_html=True)
 
     # ── Ta bort recept ────────────────────────────────────────────────────
-    st.markdown("<div style='height:40px'></div>", unsafe_allow_html=True)
-    st.divider()
     recipe_id = recipe["recipe_id"]
 
     if st.session_state.get("confirm_delete") == recipe_id:
