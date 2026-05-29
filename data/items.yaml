@@ -2276,6 +2276,20 @@ items:
     role: ingredient
     synonyms: [krustade, pastaskal]
 
+  - id: bread
+    name_sv: bröd
+    category: brod_och_bakverk
+    unit: pcs
+    role: regular_purchase
+    synonyms: [vitt bröd, formfranska, lantbröd, matbröd]
+
+  - id: toast_bread
+    name_sv: rostbröd
+    category: brod_och_bakverk
+    unit: pcs
+    role: regular_purchase
+    synonyms: [toastbröd, toast, sandwichbröd]
+
   - id: frozen_puff_pastry
     name_sv: fryst smördeg
     category: frysta_varor
