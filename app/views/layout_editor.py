@@ -8,6 +8,14 @@ from app import shopping, store_profiles
 CATEGORY_NAMES = shopping.CATEGORY_NAMES
 
 
+def _is_mobile() -> bool:
+    try:
+        ua = st.context.headers.get("user-agent", "").lower()
+        return any(kw in ua for kw in ("mobile", "android", "iphone", "ipad", "ipod"))
+    except Exception:
+        return False
+
+
 def _build_name_to_id(items_db: dict) -> dict:
     name_counts: dict[str, int] = {}
     for item in items_db.values():
@@ -148,70 +156,73 @@ def render(items_db: dict):
     sorted_cat_display = sort_items(cat_display_list, key="cat_sorter")
     sorted_cat_ids = [cat_display_to_id.get(h, h) for h in sorted_cat_display]
 
-    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
-    st.divider()
-    st.markdown("<div style='height:40px'></div>", unsafe_allow_html=True)
+    if not _is_mobile():
+        st.markdown(
+            "<div style='height:20px'></div>"
+            "<hr style='border-color:#D4DABC; margin:0'>"
+            "<div style='height:40px'></div>"
+            "<strong>Kategorier</strong> — byt namn, lägg till och ta bort"
+            "<div style='height:16px'></div>",
+            unsafe_allow_html=True,
+        )
 
-    # ── Kategorier — byt namn, lägg till, ta bort ─────────────────────────────
-    st.markdown("**Kategorier** — byt namn, lägg till och ta bort")
-    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+    if not _is_mobile():
+        confirm_del_cat = st.session_state.get("confirm_del_cat")
 
-    confirm_del_cat = st.session_state.get("confirm_del_cat")
+        for cat_id in cat_order:
+            current_cat_name = category_names.get(cat_id) or CATEGORY_NAMES.get(cat_id, cat_id)
 
-    for cat_id in cat_order:
-        current_cat_name = category_names.get(cat_id) or CATEGORY_NAMES.get(cat_id, cat_id)
-
-        if confirm_del_cat == cat_id:
-            st.warning(
-                f"Ta bort **{current_cat_name}**? "
-                "Varor i kategorin återgår till sin standardkategori."
-            )
-            yes_col, no_col = st.columns(2)
-            if yes_col.button("Ja, ta bort", key=f"cat_del_yes_{cat_id}", use_container_width=True):
-                try:
-                    store_profiles.delete_category(current_profile_id, cat_id)
+            if confirm_del_cat == cat_id:
+                st.warning(
+                    f"Ta bort **{current_cat_name}**? "
+                    "Varor i kategorin återgår till sin standardkategori."
+                )
+                yes_col, no_col = st.columns(2)
+                if yes_col.button("Ja, ta bort", key=f"cat_del_yes_{cat_id}", use_container_width=True):
+                    try:
+                        store_profiles.delete_category(current_profile_id, cat_id)
+                        st.session_state.pop("confirm_del_cat", None)
+                    except ValueError as e:
+                        st.error(str(e))
+                    st.rerun()
+                if no_col.button("Avbryt", key=f"cat_del_no_{cat_id}", use_container_width=True):
                     st.session_state.pop("confirm_del_cat", None)
-                except ValueError as e:
-                    st.error(str(e))
-                st.rerun()
-            if no_col.button("Avbryt", key=f"cat_del_no_{cat_id}", use_container_width=True):
-                st.session_state.pop("confirm_del_cat", None)
-                st.rerun()
-        else:
-            col_name, col_save, col_del = st.columns([5, 2, 1])
-            edited_name = col_name.text_input(
+                    st.rerun()
+            else:
+                col_name, col_save, col_del = st.columns([5, 2, 1])
+                edited_name = col_name.text_input(
+                    "",
+                    value=current_cat_name,
+                    key=f"cat_name_{cat_id}",
+                    label_visibility="collapsed",
+                )
+                if col_save.button("Spara", key=f"cat_save_{cat_id}", use_container_width=True):
+                    if edited_name.strip():
+                        store_profiles.set_category_name(
+                            current_profile_id, cat_id, edited_name.strip()
+                        )
+                        st.rerun()
+                if col_del.button("✕", key=f"cat_del_{cat_id}", help="Ta bort kategori", use_container_width=True):
+                    st.session_state["confirm_del_cat"] = cat_id
+                    st.rerun()
+
+        st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+
+        with st.form("add_category_form", clear_on_submit=True):
+            form_col1, form_col2 = st.columns([4, 1])
+            new_cat_name = form_col1.text_input(
                 "",
-                value=current_cat_name,
-                key=f"cat_name_{cat_id}",
+                placeholder="Lägg till ny kategori…",
                 label_visibility="collapsed",
             )
-            if col_save.button("Spara", key=f"cat_save_{cat_id}", use_container_width=True):
-                if edited_name.strip():
-                    store_profiles.set_category_name(
-                        current_profile_id, cat_id, edited_name.strip()
-                    )
+            if form_col2.form_submit_button("＋"):
+                if new_cat_name.strip():
+                    store_profiles.add_category(current_profile_id, new_cat_name.strip())
                     st.rerun()
-            if col_del.button("✕", key=f"cat_del_{cat_id}", help="Ta bort kategori", use_container_width=True):
-                st.session_state["confirm_del_cat"] = cat_id
-                st.rerun()
 
-    st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
-
-    with st.form("add_category_form", clear_on_submit=True):
-        form_col1, form_col2 = st.columns([4, 1])
-        new_cat_name = form_col1.text_input(
-            "",
-            placeholder="Lägg till ny kategori…",
-            label_visibility="collapsed",
-        )
-        if form_col2.form_submit_button("＋"):
-            if new_cat_name.strip():
-                store_profiles.add_category(current_profile_id, new_cat_name.strip())
-                st.rerun()
-
-    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
-    st.divider()
-    st.markdown("<div style='height:40px'></div>", unsafe_allow_html=True)
+        st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+        st.divider()
+        st.markdown("<div style='height:40px'></div>", unsafe_allow_html=True)
 
     # ── Varor per kategori ────────────────────────────────────────────────────
     st.markdown("**Varor per kategori** — dra varor mellan kategorier")
