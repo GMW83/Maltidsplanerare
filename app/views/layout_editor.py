@@ -239,7 +239,12 @@ def render(items_db: dict):
         key="item_sorter",
     )
 
-    st.divider()
+    st.markdown(
+        "<div style='height:40px'></div>"
+        "<hr style='border-color:#D4DABC; margin:0'>"
+        "<div style='height:8px'></div>",
+        unsafe_allow_html=True,
+    )
 
     # ── Spara / Avbryt ────────────────────────────────────────────────────────
     save_col, cancel_col = st.columns([1, 1])
