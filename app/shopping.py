@@ -164,9 +164,11 @@ def get_full_list(profile: dict = None) -> list[dict]:
     if profile is not None:
         cat_order = profile.get("category_order", CATEGORY_ORDER)
         item_overrides = profile.get("item_overrides", {})
+        category_names_override = profile.get("category_names", {})
     else:
         cat_order = CATEGORY_ORDER
         item_overrides = {}
+        category_names_override = {}
 
     quantities = state.get("quantities", {})
 
@@ -190,7 +192,7 @@ def get_full_list(profile: dict = None) -> list[dict]:
     return [
         {
             "category_id":   cat_id,
-            "category_name": CATEGORY_NAMES.get(cat_id, cat_id),
+            "category_name": category_names_override.get(cat_id) or CATEGORY_NAMES.get(cat_id, cat_id),
             "items":         by_category[cat_id],
         }
         for cat_id in cat_order

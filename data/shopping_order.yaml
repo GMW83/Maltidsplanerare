@@ -16,3 +16,4 @@ profiles:
       - hushall
       - ovrigt
     item_overrides: {}
+    category_names: {}

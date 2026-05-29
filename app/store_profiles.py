@@ -29,6 +29,7 @@ _DEFAULT_DATA = {
             "name": "Standard",
             "category_order": DEFAULT_CATEGORY_ORDER[:],
             "item_overrides": {},
+            "category_names": {},
         }
     },
 }
@@ -105,6 +106,7 @@ def create(name: str) -> str:
         "name": name,
         "category_order": list(active_profile.get("category_order", DEFAULT_CATEGORY_ORDER)),
         "item_overrides": dict(active_profile.get("item_overrides", {})),
+        "category_names": dict(active_profile.get("category_names", {})),
     }
     save(data)
     return slug
@@ -146,4 +148,51 @@ def save_layout(
         raise ValueError(f"Profil '{profile_id}' finns inte.")
     data["profiles"][profile_id]["category_order"] = list(category_order)
     data["profiles"][profile_id]["item_overrides"] = dict(item_overrides)
+    save(data)
+
+
+def set_category_name(profile_id: str, cat_id: str, name: str) -> None:
+    """Sätt visningsnamn för en kategori i en profil."""
+    data = load()
+    if profile_id not in data.get("profiles", {}):
+        raise ValueError(f"Profil '{profile_id}' finns inte.")
+    data["profiles"][profile_id].setdefault("category_names", {})[cat_id] = name
+    save(data)
+
+
+def add_category(profile_id: str, name: str) -> str:
+    """Lägg till en ny anpassad kategori i en profil. Returnerar det nya cat_id."""
+    data = load()
+    if profile_id not in data.get("profiles", {}):
+        raise ValueError(f"Profil '{profile_id}' finns inte.")
+    prof = data["profiles"][profile_id]
+    base = f"custom_{_slugify(name)}"
+    cat_id = base
+    i = 2
+    while cat_id in prof.get("category_order", []):
+        cat_id = f"{base}_{i}"
+        i += 1
+    prof.setdefault("category_order", []).append(cat_id)
+    prof.setdefault("category_names", {})[cat_id] = name
+    save(data)
+    return cat_id
+
+
+def delete_category(profile_id: str, cat_id: str) -> None:
+    """Ta bort en kategori från en profil. Varor i kategorin återgår till sin standardkategori."""
+    data = load()
+    if profile_id not in data.get("profiles", {}):
+        raise ValueError(f"Profil '{profile_id}' finns inte.")
+    prof = data["profiles"][profile_id]
+    order = list(prof.get("category_order", []))
+    if len(order) <= 1:
+        raise ValueError("Kan inte ta bort den enda kategorin.")
+    if cat_id not in order:
+        raise ValueError(f"Kategori '{cat_id}' finns inte i profilen.")
+    order.remove(cat_id)
+    prof["category_order"] = order
+    prof.get("category_names", {}).pop(cat_id, None)
+    # Ta bort item_overrides som pekar på den borttagna kategorin
+    overrides = prof.get("item_overrides", {})
+    prof["item_overrides"] = {k: v for k, v in overrides.items() if v != cat_id}
     save(data)

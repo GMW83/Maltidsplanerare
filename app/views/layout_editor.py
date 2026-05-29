@@ -5,16 +5,10 @@ from streamlit_sortables import sort_items
 
 from app import shopping, store_profiles
 
-# Mappning från kategori-ID till visningsnamn (samma som shopping.py)
 CATEGORY_NAMES = shopping.CATEGORY_NAMES
 
 
 def _build_name_to_id(items_db: dict) -> dict:
-    """Bygg mapping från visningsnamn → item_id.
-
-    Om två varor har samma name_sv, lägg till (item_id) för att disambiguera.
-    """
-    # Hitta dubbletter
     name_counts: dict[str, int] = {}
     for item in items_db.values():
         n = item.get("name_sv", "")
@@ -28,20 +22,20 @@ def _build_name_to_id(items_db: dict) -> dict:
     return name_to_id
 
 
-def _build_containers(items_db: dict, profile: dict) -> tuple[list[dict], dict[str, str]]:
-    """Bygg container-lista för sort_items och en display_name → item_id mapping.
+def _build_containers(
+    items_db: dict, profile: dict
+) -> tuple[list[dict], dict[str, str], dict[str, str]]:
+    """Bygg container-lista för sort_items.
 
-    Returnerar:
-        containers: [{'header': category_display_name, 'items': [display_name, ...]}, ...]
-        name_to_id: {display_name: item_id}
+    Returnerar (containers, name_to_id, header_to_cat_id).
     """
     cat_order = profile.get("category_order", shopping.CATEGORY_ORDER)
     item_overrides = profile.get("item_overrides", {})
+    category_names = profile.get("category_names", {})
 
     name_to_id = _build_name_to_id(items_db)
     id_to_display = {v: k for k, v in name_to_id.items()}
 
-    # Gruppera items per kategori (med overrides)
     by_cat: dict[str, list[str]] = {}
     for item_id, item in items_db.items():
         if item.get("role") not in shopping.INCLUDED_ROLES:
@@ -53,22 +47,22 @@ def _build_containers(items_db: dict, profile: dict) -> tuple[list[dict], dict[s
     for cat in by_cat:
         by_cat[cat].sort()
 
-    # Bygg containers i rätt kategoriordning
-    # Ta med alla kategorier som finns i cat_order PLUS eventuella extra (override-kategorier)
     all_cats = list(cat_order)
     for cat in by_cat:
         if cat not in all_cats:
             all_cats.append(cat)
 
+    header_to_cat_id: dict[str, str] = {}
     containers = []
     for cat_id in all_cats:
-        items_in_cat = by_cat.get(cat_id, [])
+        display_name = category_names.get(cat_id) or CATEGORY_NAMES.get(cat_id, cat_id)
+        header_to_cat_id[display_name] = cat_id
         containers.append({
-            "header": CATEGORY_NAMES.get(cat_id, cat_id),
-            "items": items_in_cat,
+            "header": display_name,
+            "items": by_cat.get(cat_id, []),
         })
 
-    return containers, name_to_id
+    return containers, name_to_id, header_to_cat_id
 
 
 def _parse_result(
@@ -76,24 +70,14 @@ def _parse_result(
     name_to_id: dict,
     items_db: dict,
     sorted_cat_ids: list[str],
+    header_to_cat_id: dict[str, str],
 ) -> tuple[list[str], dict[str, str]]:
-    """Tolka sort_items-resultat tillbaka till category_order och item_overrides.
-
-    sorted_containers: [{'header': display_name, 'items': [...]}, ...]
-    sorted_cat_ids: kategori-ID:n i den ordning de sorterades
-    """
-    # Bygg header → cat_id mapping
-    header_to_id = {CATEGORY_NAMES.get(cid, cid): cid for cid in shopping.CATEGORY_ORDER}
-    # Lägg till okända kategorier från items_db
-    for item in items_db.values():
-        cat = item.get("category", "ovrigt")
-        header_to_id[CATEGORY_NAMES.get(cat, cat)] = cat
-
+    """Tolka sort_items-resultat tillbaka till category_order och item_overrides."""
     item_overrides: dict[str, str] = {}
 
     for container in sorted_containers:
         header = container.get("header", "")
-        cat_id = header_to_id.get(header, header)
+        cat_id = header_to_cat_id.get(header, header)
         for display_name in container.get("items", []):
             item_id = name_to_id.get(display_name)
             if item_id is None:
@@ -153,18 +137,77 @@ def render(items_db: dict):
     st.markdown("<div style='height:40px'></div>", unsafe_allow_html=True)
 
     cat_order = current_profile.get("category_order", shopping.CATEGORY_ORDER)
-    # Visa kategorier som visningsnamn
-    cat_display_list = [CATEGORY_NAMES.get(cid, cid) for cid in cat_order]
+    category_names = current_profile.get("category_names", {})
+
+    cat_display_list = [
+        category_names.get(cid) or CATEGORY_NAMES.get(cid, cid)
+        for cid in cat_order
+    ]
+    cat_display_to_id = dict(zip(cat_display_list, cat_order))
 
     sorted_cat_display = sort_items(cat_display_list, key="cat_sorter")
+    sorted_cat_ids = [cat_display_to_id.get(h, h) for h in sorted_cat_display]
 
-    # Bygg header→id mapping
-    header_to_id = {CATEGORY_NAMES.get(cid, cid): cid for cid in shopping.CATEGORY_ORDER}
-    for item in items_db.values():
-        cat = item.get("category", "ovrigt")
-        header_to_id.setdefault(CATEGORY_NAMES.get(cat, cat), cat)
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    st.divider()
+    st.markdown("<div style='height:40px'></div>", unsafe_allow_html=True)
 
-    sorted_cat_ids = [header_to_id.get(h, h) for h in sorted_cat_display]
+    # ── Kategorier — byt namn, lägg till, ta bort ─────────────────────────────
+    st.markdown("**Kategorier** — byt namn, lägg till och ta bort")
+    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+
+    confirm_del_cat = st.session_state.get("confirm_del_cat")
+
+    for cat_id in cat_order:
+        current_cat_name = category_names.get(cat_id) or CATEGORY_NAMES.get(cat_id, cat_id)
+
+        if confirm_del_cat == cat_id:
+            st.warning(
+                f"Ta bort **{current_cat_name}**? "
+                "Varor i kategorin återgår till sin standardkategori."
+            )
+            yes_col, no_col = st.columns(2)
+            if yes_col.button("Ja, ta bort", key=f"cat_del_yes_{cat_id}", use_container_width=True):
+                try:
+                    store_profiles.delete_category(current_profile_id, cat_id)
+                    st.session_state.pop("confirm_del_cat", None)
+                except ValueError as e:
+                    st.error(str(e))
+                st.rerun()
+            if no_col.button("Avbryt", key=f"cat_del_no_{cat_id}", use_container_width=True):
+                st.session_state.pop("confirm_del_cat", None)
+                st.rerun()
+        else:
+            col_name, col_save, col_del = st.columns([5, 2, 1])
+            edited_name = col_name.text_input(
+                "",
+                value=current_cat_name,
+                key=f"cat_name_{cat_id}",
+                label_visibility="collapsed",
+            )
+            if col_save.button("Spara", key=f"cat_save_{cat_id}", use_container_width=True):
+                if edited_name.strip():
+                    store_profiles.set_category_name(
+                        current_profile_id, cat_id, edited_name.strip()
+                    )
+                    st.rerun()
+            if col_del.button("✕", key=f"cat_del_{cat_id}", help="Ta bort kategori", use_container_width=True):
+                st.session_state["confirm_del_cat"] = cat_id
+                st.rerun()
+
+    st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
+
+    with st.form("add_category_form", clear_on_submit=True):
+        form_col1, form_col2 = st.columns([4, 1])
+        new_cat_name = form_col1.text_input(
+            "",
+            placeholder="Lägg till ny kategori…",
+            label_visibility="collapsed",
+        )
+        if form_col2.form_submit_button("＋"):
+            if new_cat_name.strip():
+                store_profiles.add_category(current_profile_id, new_cat_name.strip())
+                st.rerun()
 
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.divider()
@@ -174,11 +217,11 @@ def render(items_db: dict):
     st.markdown("**Varor per kategori** — dra varor mellan kategorier")
     st.markdown("<div style='height:40px'></div>", unsafe_allow_html=True)
 
-    containers, name_to_id = _build_containers(items_db, current_profile)
+    # Reload profile after potential immediate saves above
+    current_profile = store_profiles.load()["profiles"].get(current_profile_id, {})
 
-    # Filtrera bort tomma containers för tydlighetens skull
-    # (sort_items kräver minst ett element per container annars kan det krascha)
-    # Vi behåller ändå tomma containers men markerar dem
+    containers, name_to_id, header_to_cat_id = _build_containers(items_db, current_profile)
+
     sorted_containers = sort_items(
         containers,
         multi_containers=True,
@@ -196,6 +239,7 @@ def render(items_db: dict):
             name_to_id,
             items_db,
             sorted_cat_ids,
+            header_to_cat_id,
         )
         store_profiles.save_layout(current_profile_id, new_cat_order, new_overrides)
         st.session_state.edit_layout = False
