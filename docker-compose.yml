@@ -5,12 +5,8 @@ services:
       network: host
     container_name: maltidsplanerare
     restart: always
-    ports:
-      - "8501:8501"
+    network_mode: host
     volumes:
       - ./data:/app/data
     env_file:
       - .env
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
