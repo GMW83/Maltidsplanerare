@@ -272,7 +272,7 @@ def render():
     # Tags, källa och buffert till ta-bort-knapp i ett block (undviker marginal-kollaps)
     bottom = [
         "<div style='height:10px'></div>",
-        "<hr style='border-color:#D4DABC; margin:0 0 6px 0'>",
+        "<hr style='border-color:#D4DABC; margin:0 0 3px 0'>",
     ]
     if recipe.get("tags"):
         tags_str = " · ".join(recipe["tags"])
@@ -282,10 +282,10 @@ def render():
         )
     if meta.get("source_url"):
         bottom.append(
-            f"<div style='font-size:0.75rem; color:#AAAAAA; margin-top:12px'>"
+            f"<div style='font-size:0.75rem; color:#AAAAAA; margin-top:6px'>"
             f"Källa: {meta['source_url']}</div>"
         )
-    bottom.append("<div style='height:48px'></div>")
+    bottom.append("<div style='height:20px'></div>")
     st.markdown("".join(bottom), unsafe_allow_html=True)
 
     # ── Ta bort recept ────────────────────────────────────────────────────
