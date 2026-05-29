@@ -35,6 +35,7 @@ def _day_selector(selected_week_start: date) -> list[str]:
     is_current_week = selected_week_start == current_week_start()
 
     st.markdown("**Välj dagar:**")
+    st.markdown("<div style='height:32px'></div>", unsafe_allow_html=True)
     cols = st.columns(7)
     selected = []
 
