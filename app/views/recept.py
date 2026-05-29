@@ -287,7 +287,8 @@ def render():
         )
 
     # ── Ta bort recept ────────────────────────────────────────────────────
-    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:40px'></div>", unsafe_allow_html=True)
+    st.divider()
     recipe_id = recipe["recipe_id"]
 
     if st.session_state.get("confirm_delete") == recipe_id:
