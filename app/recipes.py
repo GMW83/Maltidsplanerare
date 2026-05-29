@@ -30,3 +30,10 @@ def save_recipe(recipe: dict) -> None:
     path = RECIPES_DIR / f"{recipe_id}.yaml"
     with open(path, "w", encoding="utf-8") as f:
         yaml.dump(recipe, f, allow_unicode=True, sort_keys=False)
+
+
+def delete_recipe(recipe_id: str) -> None:
+    """Ta bort ett recept permanent."""
+    path = RECIPES_DIR / f"{recipe_id}.yaml"
+    if path.exists():
+        path.unlink()

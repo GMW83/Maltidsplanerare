@@ -5,19 +5,26 @@ from pathlib import Path
 import streamlit as st
 import yaml
 
-from app.recipes import load_all_recipes, load_recipe, save_recipe
+from app.recipes import load_all_recipes, load_recipe, save_recipe, delete_recipe
 from app import shopping, importer
+from app.planner import current_week_start, week_start_for_offset, load_plan
 
 PLAN_PATH = Path(__file__).parent.parent.parent / "data" / "weekly_plan.yaml"
 
 _NO_LINK = "(ingen koppling)"
 
 
-def _load_plan() -> dict:
-    if PLAN_PATH.exists():
-        with open(PLAN_PATH, encoding="utf-8") as f:
-            return yaml.safe_load(f) or {}
-    return {}
+def _week_recipe_ids(offset: int) -> set[str]:
+    """Returnera recipe_id:n för den vecka som är offset veckor från nu."""
+    plan = load_plan()
+    ws = plan.get("week_start")
+    if isinstance(ws, str):
+        from datetime import date
+        ws = date.fromisoformat(ws)
+    target = week_start_for_offset(offset)
+    if ws == target and plan.get("meals"):
+        return {m["recipe_id"] for m in plan["meals"]}
+    return set()
 
 
 def _clear_import():
@@ -172,36 +179,65 @@ def render():
     st.title("Recept")
 
     items_db = shopping.load_items()
-
     _render_import(items_db)
 
     st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
 
-    # ── Receptvisare ──────────────────────────────────────────────────────
-    plan = _load_plan()
+    # ── Filterläge ────────────────────────────────────────────────────────
+    filter_mode = st.radio(
+        "Visa",
+        options=["alla", "denna_vecka", "nasta_vecka"],
+        format_func=lambda x: {
+            "alla":        "Alla recept",
+            "denna_vecka": "Denna vecka",
+            "nasta_vecka": "Nästa vecka",
+        }[x],
+        horizontal=True,
+        key="recipe_filter",
+        label_visibility="collapsed",
+    )
 
-    if plan.get("meals"):
-        recipe_options = {m["title"]: m["recipe_id"] for m in plan["meals"]}
-        st.caption("Veckans recept")
+    all_recipes = load_all_recipes()
+    search_str = ""
+
+    if filter_mode == "alla":
+        search_str = st.text_input(
+            "Sök recept",
+            placeholder="Filtrera recept…",
+            label_visibility="collapsed",
+            key="recipe_search",
+        ).strip().lower()
+        filtered = (
+            [r for r in all_recipes if search_str in r["title"].lower()]
+            if search_str else all_recipes
+        )
     else:
-        all_recipes = load_all_recipes()
-        recipe_options = {r["title"]: r["recipe_id"] for r in all_recipes}
-        st.caption("Alla recept")
+        offset = 0 if filter_mode == "denna_vecka" else 1
+        ids = _week_recipe_ids(offset)
+        filtered = [r for r in all_recipes if r["recipe_id"] in ids]
 
-    if not recipe_options:
-        st.info("Inga recept tillgängliga.")
+    if not filtered:
+        if filter_mode == "alla":
+            st.info(f"Inga recept matchar '{search_str}'." if search_str else "Inga recept finns.")
+        else:
+            label = "denna vecka" if filter_mode == "denna_vecka" else "nästa vecka"
+            st.info(f"Ingen meny planerad för {label}.")
         return
 
-    selected = st.selectbox(
+    recipe_options = {r["title"]: r["recipe_id"] for r in filtered}
+
+    selected_title = st.selectbox(
         "Välj recept",
         list(recipe_options.keys()),
         label_visibility="collapsed",
+        key="recipe_select",
     )
-    recipe = load_recipe(recipe_options[selected])
+    recipe = load_recipe(recipe_options[selected_title])
     if not recipe:
         st.error("Kunde inte ladda receptet.")
         return
 
+    # ── Receptdetaljer ────────────────────────────────────────────────────
     meta = recipe.get("metadata", {})
 
     st.header(recipe["title"])
@@ -215,9 +251,14 @@ def render():
     for ing in recipe.get("ingredients", []):
         item = items_db.get(ing["ingredient_id"])
         name = item["name_sv"] if item else ing["ingredient_id"].replace("_", " ")
-        amt = ing["amount"]
-        amt_str = f"{int(amt) if float(amt) == int(amt) else amt} {ing['unit']}"
-        st.markdown(f"- {name} — **{amt_str}**")
+        try:
+            amt_f = float(ing.get("amount") or 0)
+            amt_val = int(amt_f) if amt_f == int(amt_f) else amt_f
+            amt_str = f"{amt_val} {ing['unit']}" if amt_f > 0 else ""
+        except (TypeError, ValueError):
+            amt_str = ""
+        suffix = f" — **{amt_str}**" if amt_str else ""
+        st.markdown(f"- {name}{suffix}")
 
     st.subheader("Tillagning")
     steps_html = "".join(
@@ -244,3 +285,23 @@ def render():
             f"Källa: {meta['source_url']}</div>",
             unsafe_allow_html=True,
         )
+
+    # ── Ta bort recept ────────────────────────────────────────────────────
+    st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+    recipe_id = recipe["recipe_id"]
+
+    if st.session_state.get("confirm_delete") == recipe_id:
+        st.warning(f"Ta bort **{recipe['title']}**? Detta kan inte ångras.")
+        yes_col, no_col = st.columns(2)
+        if yes_col.button("Ja, ta bort", use_container_width=True):
+            delete_recipe(recipe_id)
+            st.session_state.pop("confirm_delete", None)
+            st.session_state.pop("recipe_select", None)
+            st.rerun()
+        if no_col.button("Avbryt", use_container_width=True):
+            st.session_state.pop("confirm_delete", None)
+            st.rerun()
+    else:
+        if st.button("Ta bort recept", use_container_width=True):
+            st.session_state["confirm_delete"] = recipe_id
+            st.rerun()
