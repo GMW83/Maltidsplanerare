@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.pyc
+.streamlit/secrets.toml
+
+# Användardata — hanteras lokalt på varje installation
+data/shopping_state.yaml
+data/weekly_plan.yaml
+data/settings.yaml
+data/shopping_order.yaml

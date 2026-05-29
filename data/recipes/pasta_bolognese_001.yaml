@@ -1,0 +1,79 @@
+recipe_id: pasta_bolognese_001
+title: Pasta Bolognese
+servings: 4
+
+ingredients:
+  - ingredient_id: pasta_spaghetti
+    amount: 400
+    unit: g
+  - ingredient_id: ground_beef
+    amount: 500
+    unit: g
+  - ingredient_id: yellow_onion
+    amount: 150
+    unit: g
+  - ingredient_id: garlic
+    amount: 3
+    unit: pcs
+  - ingredient_id: carrot
+    amount: 150
+    unit: g
+  - ingredient_id: crushed_tomatoes
+    amount: 400
+    unit: g
+  - ingredient_id: tomato_paste
+    amount: 30
+    unit: g
+  - ingredient_id: beef_stock
+    amount: 200
+    unit: ml
+  - ingredient_id: olive_oil
+    amount: 30
+    unit: ml
+  - ingredient_id: dried_oregano
+    amount: 2
+    unit: g
+  - ingredient_id: bay_leaf
+    amount: 2
+    unit: pcs
+  - ingredient_id: salt
+    amount: 5
+    unit: g
+  - ingredient_id: black_pepper
+    amount: 2
+    unit: g
+  - ingredient_id: parmesan
+    amount: 60
+    unit: g
+
+instructions:
+  - step: 1
+    text: Hacka lök, vitlök och morot fint.
+  - step: 2
+    text: Fräs lök och morot i olivolja på medelvärme i ca 5 minuter tills mjukt.
+  - step: 3
+    text: Tillsätt vitlök och fräs ytterligare 1 minut.
+  - step: 4
+    text: Höj värmen och tillsätt köttfärsen. Bryn under omrörning tills all färg försvunnit.
+  - step: 5
+    text: Rör ner tomatpuré och fräs 2 minuter.
+  - step: 6
+    text: Tillsätt krossade tomater, buljong, oregano och lagerblad. Sänk värmen.
+  - step: 7
+    text: Låt sjuda utan lock i minst 30 minuter. Smaka av med salt och peppar.
+  - step: 8
+    text: Koka pasta enligt förpackning. Servera med riven parmesan.
+
+tags:
+  - italienskt
+  - pasta
+  - köttfärs
+  - vardag
+  - barnvänligt
+
+metadata:
+  cook_time_minutes: 45
+  difficulty: 1
+  spice_level: 1
+  freezer_friendly: true
+  kid_friendly: true
