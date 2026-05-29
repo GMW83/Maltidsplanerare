@@ -131,7 +131,7 @@ def apply_meal_plan(plan: dict, household_size: int = 4) -> None:
         for ing in recipe.get("ingredients", []):
             item_id = ing["ingredient_id"]
             item = items_db.get(item_id)
-            if not (item and item.get("role") == "ingredient"):
+            if not (item and item.get("role") in INCLUDED_ROLES):
                 continue
             checked_set.add(item_id)
 
