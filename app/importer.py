@@ -7,6 +7,7 @@ import unicodedata
 from pathlib import Path
 
 import requests
+from bs4 import BeautifulSoup
 from dotenv import dotenv_values
 
 _env_path = Path(__file__).parent.parent / ".env"
@@ -17,7 +18,10 @@ import anthropic
 
 RECIPES_DIR = Path(__file__).parent.parent / "data" / "recipes"
 
-_SYSTEM = """Du är ett recept-extraheringsverktyg. Extrahera receptet från given HTML och returnera ENBART JSON (inga kodblock, ingen förklarande text):
+# Haiku används för extrahering — mekanisk struktureringsuppgift, behöver ej Sonnet
+_MODEL = "claude-haiku-4-5-20251001"
+
+_SYSTEM = """Du är ett recept-extraheringsverktyg. Extrahera receptet från given data och returnera ENBART JSON (inga kodblock, ingen förklarande text):
 
 {
   "title": "Receptnamn",
@@ -62,14 +66,57 @@ def fetch_url(url: str) -> str:
     return r.text
 
 
+def _extract_jsonld(html: str) -> dict | None:
+    """Försök hitta schema.org/Recipe som JSON-LD — ger minimalt tokenanvändning."""
+    soup = BeautifulSoup(html, "html.parser")
+    for tag in soup.find_all("script", type="application/ld+json"):
+        try:
+            data = json.loads(tag.string or "")
+            # Kan vara lista eller dict
+            if isinstance(data, list):
+                data = next((d for d in data if isinstance(d, dict) and d.get("@type") == "Recipe"), None)
+            if isinstance(data, dict):
+                if data.get("@type") == "Recipe":
+                    return data
+                # @graph-struktur
+                for item in data.get("@graph", []):
+                    if isinstance(item, dict) and item.get("@type") == "Recipe":
+                        return item
+        except (json.JSONDecodeError, AttributeError, TypeError):
+            continue
+    return None
+
+
+def _strip_html(html: str) -> str:
+    """Ta bort skräpelement och returnera ren recepttext — ~90% färre tokens än rå HTML."""
+    soup = BeautifulSoup(html, "html.parser")
+    for tag in soup(["script", "style", "nav", "footer", "header",
+                     "aside", "iframe", "noscript", "meta", "link"]):
+        tag.decompose()
+    text = soup.get_text(separator="\n", strip=True)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text[:12000]
+
+
 def extract_recipe(html: str, url: str) -> dict:
-    """Extrahera receptdata från HTML via Claude API."""
-    html_trimmed = html[:50000]
+    """Extrahera receptdata från HTML via Claude API (Haiku-modellen)."""
+    jsonld = _extract_jsonld(html)
+    if jsonld:
+        # Strukturerad data finns — minimalt anrop
+        content = (
+            f"URL: {url}\n\n"
+            f"Strukturerad receptdata (schema.org/Recipe):\n"
+            f"{json.dumps(jsonld, ensure_ascii=False)[:8000]}"
+        )
+    else:
+        # Fallback: rensad text i stället för rå HTML
+        content = f"URL: {url}\n\nReceptsida (rensad text):\n{_strip_html(html)}"
+
     msg = _client().messages.create(
-        model="claude-sonnet-4-6",
+        model=_MODEL,
         max_tokens=2048,
         system=_SYSTEM,
-        messages=[{"role": "user", "content": f"URL: {url}\n\nHTML:\n{html_trimmed}"}],
+        messages=[{"role": "user", "content": content}],
     )
     raw = msg.content[0].text.strip()
     raw = re.sub(r"^```(?:json)?\s*\n?", "", raw)
@@ -90,11 +137,9 @@ def match_ingredients(ingredients: list[dict], items_db: dict) -> list[dict]:
         matched_id = None
 
         for item_id, item in items_db.items():
-            # Exakt namnmatch
             if item["name_sv"].lower() == name_lower:
                 matched_id = item_id
                 break
-            # Exakt synonymmatch
             for syn in item.get("synonyms", []):
                 if syn.lower() == name_lower:
                     matched_id = item_id
