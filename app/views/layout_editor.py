@@ -4,16 +4,9 @@ import streamlit as st
 from streamlit_sortables import sort_items
 
 from app import shopping, store_profiles
+from app.utils import is_mobile as _is_mobile
 
 CATEGORY_NAMES = shopping.CATEGORY_NAMES
-
-
-def _is_mobile() -> bool:
-    try:
-        ua = st.context.headers.get("user-agent", "").lower()
-        return any(kw in ua for kw in ("mobile", "android", "iphone", "ipad", "ipod"))
-    except Exception:
-        return False
 
 
 def _build_name_to_id(items_db: dict) -> dict:

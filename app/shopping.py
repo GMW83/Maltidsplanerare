@@ -137,7 +137,7 @@ def apply_meal_plan(plan: dict, household_size: int = 4) -> None:
 
             raw_amount = ing.get("amount")
             raw_unit   = ing.get("unit", "")
-            if raw_amount and raw_unit:
+            if raw_amount is not None and raw_unit:
                 norm_amount, norm_unit = _normalize_unit(raw_amount * scale, raw_unit)
                 if item_id in quantities and quantities[item_id]["unit"] == norm_unit:
                     quantities[item_id]["amount"] += norm_amount

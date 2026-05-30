@@ -4,14 +4,17 @@ import streamlit as st
 
 from app import shopping, store_profiles
 from app.views import layout_editor
+from app.utils import is_mobile as _is_mobile
 
 
 def _init_session_state():
-    """Synka checkboxtillstånd från fil vid varje render — ger realtidsdelning."""
+    """Synka checkboxtillstånd från fil vid varje render — ger realtidsdelning.
+    items_db cachas i session state (ändras ej under körning), load_state läses färskt."""
+    if "items_db" not in st.session_state:
+        st.session_state["items_db"] = shopping.load_items()
     state = shopping.load_state()
     checked_set = set(state["checked"])
-    items_db = shopping.load_items()
-    for item_id in items_db:
+    for item_id in st.session_state["items_db"]:
         st.session_state[f"cb_{item_id}"] = item_id in checked_set
 
 
@@ -21,15 +24,6 @@ def _on_item_change(item_id: str):
 
 def _on_extra_change(idx: int):
     shopping.set_extra_checked(idx, st.session_state[f"cb_extra_{idx}"])
-
-
-def _is_mobile() -> bool:
-    """Returnera True om klienten verkar vara en mobil/surfplatta."""
-    try:
-        ua = st.context.headers.get("user-agent", "").lower()
-        return any(kw in ua for kw in ("mobile", "android", "iphone", "ipad", "ipod"))
-    except Exception:
-        return False
 
 
 def _render_profile_selector():
@@ -74,8 +68,7 @@ def render():
 
     # Visa layout-editor om edit-läge är aktivt
     if st.session_state.get("edit_layout"):
-        items_db = shopping.load_items()
-        layout_editor.render(items_db)
+        layout_editor.render(st.session_state["items_db"])
         return
 
     # Profilväljare
@@ -174,6 +167,9 @@ def render():
 
     if to_remove is not None:
         shopping.remove_extra(to_remove)
+        for k in list(st.session_state.keys()):
+            if k.startswith("cb_extra_"):
+                del st.session_state[k]
         st.rerun()
 
     # Lägg till ny extrapost

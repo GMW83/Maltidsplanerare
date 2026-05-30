@@ -7,18 +7,11 @@ import streamlit as st
 from app.recipes import load_all_recipes, load_recipe, save_recipe, delete_recipe
 from app import shopping, importer
 from app.planner import current_week_start, week_start_for_offset, load_plan
+from app.utils import is_mobile as _is_mobile
 
 PLAN_PATH = Path(__file__).parent.parent.parent / "data" / "weekly_plan.yaml"
 
 _NO_LINK = "(ingen koppling)"
-
-
-def _is_mobile() -> bool:
-    try:
-        ua = st.context.headers.get("user-agent", "").lower()
-        return any(kw in ua for kw in ("mobile", "android", "iphone", "ipad", "ipod"))
-    except Exception:
-        return False
 
 
 def _week_recipe_ids(offset: int) -> set[str]:
@@ -39,7 +32,7 @@ def _clear_import():
     for key in ("import_recipe", "import_matches", "import_url"):
         st.session_state.pop(key, None)
     for k in list(st.session_state.keys()):
-        if k.startswith("ing_sel_"):
+        if k.startswith("ing_sel_") or k.startswith("ing_name_"):
             del st.session_state[k]
 
 

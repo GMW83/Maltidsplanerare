@@ -66,19 +66,16 @@ def fetch_url(url: str) -> str:
     return r.text
 
 
-def _extract_jsonld(html: str) -> dict | None:
+def _extract_jsonld(soup: BeautifulSoup) -> dict | None:
     """Försök hitta schema.org/Recipe som JSON-LD — ger minimalt tokenanvändning."""
-    soup = BeautifulSoup(html, "html.parser")
     for tag in soup.find_all("script", type="application/ld+json"):
         try:
             data = json.loads(tag.string or "")
-            # Kan vara lista eller dict
             if isinstance(data, list):
                 data = next((d for d in data if isinstance(d, dict) and d.get("@type") == "Recipe"), None)
             if isinstance(data, dict):
                 if data.get("@type") == "Recipe":
                     return data
-                # @graph-struktur
                 for item in data.get("@graph", []):
                     if isinstance(item, dict) and item.get("@type") == "Recipe":
                         return item
@@ -87,9 +84,8 @@ def _extract_jsonld(html: str) -> dict | None:
     return None
 
 
-def _strip_html(html: str) -> str:
+def _strip_soup(soup: BeautifulSoup) -> str:
     """Ta bort skräpelement och returnera ren recepttext — ~90% färre tokens än rå HTML."""
-    soup = BeautifulSoup(html, "html.parser")
     for tag in soup(["script", "style", "nav", "footer", "header",
                      "aside", "iframe", "noscript", "meta", "link"]):
         tag.decompose()
@@ -100,17 +96,16 @@ def _strip_html(html: str) -> str:
 
 def extract_recipe(html: str, url: str) -> dict:
     """Extrahera receptdata från HTML via Claude API (Haiku-modellen)."""
-    jsonld = _extract_jsonld(html)
+    soup = BeautifulSoup(html, "html.parser")
+    jsonld = _extract_jsonld(soup)
     if jsonld:
-        # Strukturerad data finns — minimalt anrop
         content = (
             f"URL: {url}\n\n"
             f"Strukturerad receptdata (schema.org/Recipe):\n"
             f"{json.dumps(jsonld, ensure_ascii=False)[:8000]}"
         )
     else:
-        # Fallback: rensad text i stället för rå HTML
-        content = f"URL: {url}\n\nReceptsida (rensad text):\n{_strip_html(html)}"
+        content = f"URL: {url}\n\nReceptsida (rensad text):\n{_strip_soup(soup)}"
 
     msg = _client().messages.create(
         model=_MODEL,
