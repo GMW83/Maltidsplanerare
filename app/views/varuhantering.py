@@ -257,7 +257,9 @@ def _render_item_list() -> None:
             help="Redigera vara",
             type="primary" if iid == current_edit_id else "secondary",
         ):
-            _load_item_into_form(items_db[iid])
+            # Sätt pending-nyckel — widget-nycklarna sätts i render() innan
+            # formuläret renderas, annars klagar Streamlit på låsta nycklar
+            st.session_state["vh_pending_edit_id"] = iid
             st.session_state.pop(confirm_key, None)
             st.rerun()
         if col_del.button("✕", key=f"vh_del_{iid}", help="Ta bort vara"):
@@ -269,6 +271,14 @@ def _render_item_list() -> None:
 # ── Huvud-render ──────────────────────────────────────────────────────────────
 
 def render() -> None:
+    # Hantera pending edit-begäran INNAN några widgets skapas —
+    # Streamlit tillåter inte att widget-nycklar skrivs efter att widgeten renderats
+    pending = st.session_state.pop("vh_pending_edit_id", None)
+    if pending:
+        items_db_now = shopping.load_items()
+        if pending in items_db_now:
+            _load_item_into_form(items_db_now[pending])
+
     col_back, col_title = st.columns([1, 6])
     if col_back.button("← Tillbaka", key="vh_back"):
         st.session_state.pop("manage_items", None)
