@@ -3,7 +3,7 @@
 import streamlit as st
 
 from app import shopping, store_profiles
-from app.views import layout_editor
+from app.views import layout_editor, varuhantering
 from app.utils import is_mobile as _is_mobile
 
 
@@ -40,7 +40,7 @@ def _render_profile_selector():
     if mobile:
         sel_col = st.columns([1])[0]
     else:
-        sel_col, btn_col = st.columns([4, 1])
+        sel_col, btn_layout, btn_items = st.columns([4, 1, 1])
 
     selected_index = sel_col.selectbox(
         "Butiksprofil",
@@ -56,9 +56,13 @@ def _render_profile_selector():
         store_profiles.set_active(selected_id)
         st.rerun()
 
-    if not mobile and btn_col.button("Redigera layout", key="btn_edit_layout"):
-        st.session_state.edit_layout = True
-        st.rerun()
+    if not mobile:
+        if btn_layout.button("Redigera layout", key="btn_edit_layout"):
+            st.session_state.edit_layout = True
+            st.rerun()
+        if btn_items.button("Hantera varor", key="btn_manage_items"):
+            st.session_state.manage_items = True
+            st.rerun()
 
 
 def render():
@@ -66,9 +70,12 @@ def render():
 
     st.title("Handlingslista")
 
-    # Visa layout-editor om edit-läge är aktivt
     if st.session_state.get("edit_layout"):
         layout_editor.render(st.session_state["items_db"])
+        return
+
+    if st.session_state.get("manage_items"):
+        varuhantering.render()
         return
 
     # Profilväljare
