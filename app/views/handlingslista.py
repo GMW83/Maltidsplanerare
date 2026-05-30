@@ -37,12 +37,7 @@ def _render_profile_selector():
 
     mobile = _is_mobile()
 
-    if mobile:
-        sel_col = st.columns([1])[0]
-    else:
-        sel_col, btn_layout, btn_items = st.columns([4, 1, 1])
-
-    selected_index = sel_col.selectbox(
+    st.selectbox(
         "Butiksprofil",
         options=range(len(profile_ids)),
         format_func=lambda i: profile_names[i],
@@ -51,16 +46,17 @@ def _render_profile_selector():
         label_visibility="collapsed",
     )
 
-    selected_id = profile_ids[selected_index]
+    selected_id = profile_ids[st.session_state["profile_selector"]]
     if selected_id != current_id:
         store_profiles.set_active(selected_id)
         st.rerun()
 
     if not mobile:
-        if btn_layout.button("Redigera layout", key="btn_edit_layout"):
+        btn_col1, btn_col2 = st.columns(2)
+        if btn_col1.button("Redigera layout", key="btn_edit_layout", use_container_width=True):
             st.session_state.edit_layout = True
             st.rerun()
-        if btn_items.button("Hantera varor", key="btn_manage_items"):
+        if btn_col2.button("Hantera varor", key="btn_manage_items", use_container_width=True):
             st.session_state.manage_items = True
             st.rerun()
 
