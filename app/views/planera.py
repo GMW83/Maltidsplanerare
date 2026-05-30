@@ -165,12 +165,16 @@ def render():
             "meals": draft["meals"],
         }
         save_plan(plan_to_save)
-        shopping.apply_meal_plan(draft, household_size=int(household_size))
+        unmatched = shopping.apply_meal_plan(draft, household_size=int(household_size))
         # Återställ shopping session state
         for key in list(st.session_state.keys()):
             if key.startswith("cb_"):
                 del st.session_state[key]
-        st.session_state.shopping_loaded = False
         st.session_state.plan_draft = {}
         st.success("Veckoplan sparad och handlingslista uppdaterad!")
+        if unmatched:
+            st.info(
+                f"**{len(unmatched)} ingrediens(er) saknas i varudatabasen** och har lagts till "
+                f"under 'Extra denna vecka' med beräknad mängd: {', '.join(unmatched)}"
+            )
         st.rerun()
