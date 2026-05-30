@@ -101,6 +101,17 @@ def render():
     else:
         st.caption("Inga varor markerade — bocka i vad som behövs")
 
+    # Knapp för att rensa mängder på urcheckade varor
+    has_unchecked_with_qty = any(
+        not item["checked"] and item.get("quantity")
+        for cat in full_list
+        for item in cat["items"]
+    )
+    if has_unchecked_with_qty:
+        if st.button("Rensa mängder på urcheckade", key="btn_clear_qty"):
+            shopping.clear_quantities_for_unchecked()
+            st.rerun()
+
     # ── Sökfält ─────────────────────────────────────────────────────────────
     search = st.text_input(
         "Sök vara",
@@ -129,10 +140,14 @@ def render():
             if key not in st.session_state:
                 st.session_state[key] = item["checked"]
             qty = item.get("quantity")
-            label = (
-                f"{item['name_sv']}  —  {shopping.format_quantity(qty['amount'], qty['unit'])}"
-                if qty else item["name_sv"]
-            )
+            if qty:
+                qty_str = shopping.format_quantity(qty["amount"], qty["unit"])
+                if item["checked"]:
+                    label = f"{item['name_sv']}  —  {qty_str}"
+                else:
+                    label = f"{item['name_sv']}  —  :gray[~~{qty_str}~~]"
+            else:
+                label = item["name_sv"]
             st.checkbox(
                 label,
                 key=key,

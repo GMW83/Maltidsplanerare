@@ -213,6 +213,14 @@ def set_item_checked(item_id: str, checked: bool) -> None:
     save_state(state)
 
 
+def clear_quantities_for_unchecked() -> None:
+    """Ta bort mängder för alla urcheckade varor. Ibockade varors mängder bevaras."""
+    state = load_state()
+    checked_set = set(state["checked"])
+    state["quantities"] = {k: v for k, v in state.get("quantities", {}).items() if k in checked_set}
+    save_state(state)
+
+
 # ── Extraposter ───────────────────────────────────────────────────────────────
 
 def add_extra(text: str) -> None:
