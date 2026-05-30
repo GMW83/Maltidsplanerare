@@ -7,17 +7,12 @@ from app.views import layout_editor
 
 
 def _init_session_state():
-    """Läs tillstånd från fil och initiera session state (en gång per session)."""
-    if st.session_state.get("shopping_loaded"):
-        return
+    """Synka checkboxtillstånd från fil vid varje render — ger realtidsdelning."""
     state = shopping.load_state()
     checked_set = set(state["checked"])
     items_db = shopping.load_items()
     for item_id in items_db:
-        key = f"cb_{item_id}"
-        if key not in st.session_state:
-            st.session_state[key] = item_id in checked_set
-    st.session_state.shopping_loaded = True
+        st.session_state[f"cb_{item_id}"] = item_id in checked_set
 
 
 def _on_item_change(item_id: str):
