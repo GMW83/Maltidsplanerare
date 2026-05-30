@@ -180,11 +180,15 @@ def build_recipe_dict(raw: dict, matches: list[dict], overrides: dict, url: str)
     ingredients = []
     for i, m in enumerate(matches):
         ingredient_id = overrides.get(i) or m["matched_id"] or _name_to_id(m["name"])
-        ingredients.append({
+        entry: dict = {
             "ingredient_id": ingredient_id,
             "amount": _safe_amount(m["amount"]),
             "unit": m["unit"],
-        })
+        }
+        # Bevara originalnamnet (med å/ä/ö) för omatchade ingredienser
+        if not overrides.get(i) and not m["matched_id"]:
+            entry["display_name"] = m["name"]
+        ingredients.append(entry)
 
     return {
         "recipe_id": build_recipe_id(raw["title"]),

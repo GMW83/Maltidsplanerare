@@ -173,6 +173,7 @@ def _init_edit_state(recipe: dict):
             "ingredient_id": ing["ingredient_id"],
             "amount": float(ing.get("amount") or 0),
             "unit": str(ing.get("unit") or ""),
+            "display_name": ing.get("display_name"),
         }
         for ing in recipe.get("ingredients", [])
     ]
@@ -233,7 +234,7 @@ def _render_edit(recipe: dict, items_db: dict):
     ing_to_delete = None
 
     for i, ing in enumerate(ings):
-        current_name = id_to_sv.get(ing["ingredient_id"], ing["ingredient_id"].replace("_", " "))
+        current_name = id_to_sv.get(ing["ingredient_id"]) or ing.get("display_name") or ing["ingredient_id"].replace("_", " ")
         if current_name in sv_options:
             options = sv_options
             default_idx = sv_options.index(current_name)
@@ -302,6 +303,7 @@ def _render_edit(recipe: dict, items_db: dict):
                     "ingredient_id": ing["ingredient_id"],
                     "amount": ing["amount"],
                     "unit": ing["unit"],
+                    **({"display_name": ing["display_name"]} if ing.get("display_name") else {}),
                 }
                 for ing in st.session_state["edit_ingredients"]
             ],
@@ -411,7 +413,7 @@ def render():
     st.subheader("Ingredienser")
     for ing in recipe.get("ingredients", []):
         item = items_db.get(ing["ingredient_id"])
-        name = item["name_sv"] if item else ing["ingredient_id"].replace("_", " ")
+        name = item["name_sv"] if item else (ing.get("display_name") or ing["ingredient_id"].replace("_", " "))
         try:
             amt_f = float(ing.get("amount") or 0)
             amt_val = int(amt_f) if amt_f == int(amt_f) else amt_f

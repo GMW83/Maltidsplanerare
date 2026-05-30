@@ -32,6 +32,38 @@ def name_exists(name_sv: str) -> bool:
     return any(item["name_sv"].lower() == name_sv.lower().strip() for item in data.get("items", []))
 
 
+def name_exists_excluding(name_sv: str, exclude_id: str) -> bool:
+    data = _load_raw()
+    return any(
+        item["name_sv"].lower() == name_sv.lower().strip() and item["id"] != exclude_id
+        for item in data.get("items", [])
+    )
+
+
+def update_item(
+    item_id: str,
+    name_sv: str,
+    category: str,
+    unit: str,
+    role: str,
+    synonyms: list[str] | None = None,
+) -> None:
+    """Uppdatera befintlig vara i items.yaml."""
+    data = _load_raw()
+    for item in data.get("items", []):
+        if item["id"] == item_id:
+            item["name_sv"]  = name_sv.strip()
+            item["category"] = category
+            item["unit"]     = unit
+            item["role"]     = role
+            if synonyms:
+                item["synonyms"] = [s.strip() for s in synonyms if s.strip()]
+            else:
+                item.pop("synonyms", None)
+            break
+    _save_raw(data)
+
+
 def generate_id(name: str) -> str:
     """Returnera ett ledigt snake_case-ID baserat på namnet."""
     base = _to_id(name)

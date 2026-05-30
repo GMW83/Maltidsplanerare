@@ -139,16 +139,20 @@ def apply_meal_plan(plan: dict, household_size: int = 4) -> list[str]:
 
             if item is None:
                 # Inte i varudatabasen — samla skalad mängd för extras
+                if item_id not in unmatched_qty:
+                    # Spara display_name (med å/ä/ö) om det finns, annars fallback på ID
+                    display = ing.get("display_name") or item_id.replace("_", " ")
+                    unmatched_qty[item_id] = {"display_name": display}
                 raw_amount = ing.get("amount")
                 raw_unit = ing.get("unit", "")
                 if raw_amount is not None and raw_unit:
                     norm_amount, norm_unit = _normalize_unit(raw_amount * scale, raw_unit)
-                    if item_id in unmatched_qty and unmatched_qty[item_id].get("unit") == norm_unit:
-                        unmatched_qty[item_id]["amount"] += norm_amount
+                    existing = unmatched_qty[item_id]
+                    if existing.get("unit") == norm_unit:
+                        existing["amount"] = existing.get("amount", 0) + norm_amount
                     else:
-                        unmatched_qty[item_id] = {"amount": norm_amount, "unit": norm_unit}
-                elif item_id not in unmatched_qty:
-                    unmatched_qty[item_id] = {}
+                        existing["amount"] = norm_amount
+                        existing["unit"] = norm_unit
                 continue
 
             if not (item.get("role") in INCLUDED_ROLES):
@@ -169,10 +173,10 @@ def apply_meal_plan(plan: dict, household_size: int = 4) -> list[str]:
     existing_names = {e["text"].split(" — ")[0].lower() for e in extras}
     added_names: list[str] = []
     for item_id, qty in unmatched_qty.items():
-        name = item_id.replace("_", " ")
+        name = qty.get("display_name") or item_id.replace("_", " ")
         if name.lower() in existing_names:
             continue
-        if qty:
+        if qty.get("amount") and qty.get("unit"):
             text = f"{name} — {format_quantity(qty['amount'], qty['unit'])}"
         else:
             text = name
