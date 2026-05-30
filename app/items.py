@@ -27,6 +27,11 @@ def _save_raw(data: dict) -> None:
         yaml.dump(data, f, allow_unicode=True, sort_keys=False)
 
 
+def name_exists(name_sv: str) -> bool:
+    data = _load_raw()
+    return any(item["name_sv"].lower() == name_sv.lower().strip() for item in data.get("items", []))
+
+
 def generate_id(name: str) -> str:
     """Returnera ett ledigt snake_case-ID baserat på namnet."""
     base = _to_id(name)
