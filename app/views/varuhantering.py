@@ -37,8 +37,8 @@ def _load_item_into_form(item: dict) -> None:
 
 
 def _clear_form() -> None:
-    for k in ["vh_edit_id", "vh_name", "vh_synonyms"]:
-        st.session_state.pop(k, None)
+    st.session_state["vh_pending_clear"] = True
+    st.session_state.pop("vh_edit_id", None)
 
 
 # ── Formulär (lägg till / redigera) ──────────────────────────────────────────
@@ -278,6 +278,13 @@ def render() -> None:
         items_db_now = shopping.load_items()
         if pending in items_db_now:
             _load_item_into_form(items_db_now[pending])
+
+    if st.session_state.pop("vh_pending_clear", False):
+        st.session_state["vh_name"]     = ""
+        st.session_state["vh_synonyms"] = ""
+        st.session_state["vh_cat"]      = 0
+        st.session_state["vh_unit"]     = 0
+        st.session_state["vh_role"]     = 0
 
     col_back, col_title = st.columns([1, 6])
     if col_back.button("← Tillbaka", key="vh_back"):
