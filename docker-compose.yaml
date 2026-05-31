@@ -1,10 +1,11 @@
 services:
   maltidsplanerare:
-    build: .
+    build:
+      context: .
+      network: host
     container_name: maltidsplanerare
-    restart: unless-stopped
-    ports:
-      - "8501:8501"
+    restart: always
+    network_mode: host
     volumes:
       - ./data:/app/data
     env_file:

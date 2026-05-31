@@ -94,10 +94,10 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
     color-scheme: light !important;
 }
 
-/* Dark-mode override: visual box-span utan att sätta dimensioner (ingen layout-påverkan) */
+/* Dark-mode override: bara border-stil — background lämnas till BaseWeb/accent-color
+   så att ibockad-tillståndet (olivgrön bakgrund + vit bock) syns korrekt i mörkt OS-läge */
 @media (prefers-color-scheme: dark) {
     [data-testid="stCheckbox"] [data-baseweb="checkbox"] > span {
-        background-color: white !important;
         border-color: #9AA07A !important;
         border-width: 1.5px !important;
         border-style: solid !important;

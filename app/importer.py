@@ -7,6 +7,7 @@ import unicodedata
 from pathlib import Path
 
 import requests
+from bs4 import BeautifulSoup
 from dotenv import dotenv_values
 
 _env_path = Path(__file__).parent.parent / ".env"
@@ -17,7 +18,10 @@ import anthropic
 
 RECIPES_DIR = Path(__file__).parent.parent / "data" / "recipes"
 
-_SYSTEM = """Du är ett recept-extraheringsverktyg. Extrahera receptet från given HTML och returnera ENBART JSON (inga kodblock, ingen förklarande text):
+# Haiku används för extrahering — mekanisk struktureringsuppgift, behöver ej Sonnet
+_MODEL = "claude-haiku-4-5-20251001"
+
+_SYSTEM = """Du är ett recept-extraheringsverktyg. Extrahera receptet från given data och returnera ENBART JSON (inga kodblock, ingen förklarande text):
 
 {
   "title": "Receptnamn",
@@ -62,14 +66,52 @@ def fetch_url(url: str) -> str:
     return r.text
 
 
+def _extract_jsonld(soup: BeautifulSoup) -> dict | None:
+    """Försök hitta schema.org/Recipe som JSON-LD — ger minimalt tokenanvändning."""
+    for tag in soup.find_all("script", type="application/ld+json"):
+        try:
+            data = json.loads(tag.string or "")
+            if isinstance(data, list):
+                data = next((d for d in data if isinstance(d, dict) and d.get("@type") == "Recipe"), None)
+            if isinstance(data, dict):
+                if data.get("@type") == "Recipe":
+                    return data
+                for item in data.get("@graph", []):
+                    if isinstance(item, dict) and item.get("@type") == "Recipe":
+                        return item
+        except (json.JSONDecodeError, AttributeError, TypeError):
+            continue
+    return None
+
+
+def _strip_soup(soup: BeautifulSoup) -> str:
+    """Ta bort skräpelement och returnera ren recepttext — ~90% färre tokens än rå HTML."""
+    for tag in soup(["script", "style", "nav", "footer", "header",
+                     "aside", "iframe", "noscript", "meta", "link"]):
+        tag.decompose()
+    text = soup.get_text(separator="\n", strip=True)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text[:12000]
+
+
 def extract_recipe(html: str, url: str) -> dict:
-    """Extrahera receptdata från HTML via Claude API."""
-    html_trimmed = html[:50000]
+    """Extrahera receptdata från HTML via Claude API (Haiku-modellen)."""
+    soup = BeautifulSoup(html, "html.parser")
+    jsonld = _extract_jsonld(soup)
+    if jsonld:
+        content = (
+            f"URL: {url}\n\n"
+            f"Strukturerad receptdata (schema.org/Recipe):\n"
+            f"{json.dumps(jsonld, ensure_ascii=False)[:8000]}"
+        )
+    else:
+        content = f"URL: {url}\n\nReceptsida (rensad text):\n{_strip_soup(soup)}"
+
     msg = _client().messages.create(
-        model="claude-sonnet-4-6",
+        model=_MODEL,
         max_tokens=2048,
         system=_SYSTEM,
-        messages=[{"role": "user", "content": f"URL: {url}\n\nHTML:\n{html_trimmed}"}],
+        messages=[{"role": "user", "content": content}],
     )
     raw = msg.content[0].text.strip()
     raw = re.sub(r"^```(?:json)?\s*\n?", "", raw)
@@ -90,11 +132,9 @@ def match_ingredients(ingredients: list[dict], items_db: dict) -> list[dict]:
         matched_id = None
 
         for item_id, item in items_db.items():
-            # Exakt namnmatch
             if item["name_sv"].lower() == name_lower:
                 matched_id = item_id
                 break
-            # Exakt synonymmatch
             for syn in item.get("synonyms", []):
                 if syn.lower() == name_lower:
                     matched_id = item_id
@@ -140,11 +180,15 @@ def build_recipe_dict(raw: dict, matches: list[dict], overrides: dict, url: str)
     ingredients = []
     for i, m in enumerate(matches):
         ingredient_id = overrides.get(i) or m["matched_id"] or _name_to_id(m["name"])
-        ingredients.append({
+        entry: dict = {
             "ingredient_id": ingredient_id,
             "amount": _safe_amount(m["amount"]),
             "unit": m["unit"],
-        })
+        }
+        # Bevara originalnamnet (med å/ä/ö) för omatchade ingredienser
+        if not overrides.get(i) and not m["matched_id"]:
+            entry["display_name"] = m["name"]
+        ingredients.append(entry)
 
     return {
         "recipe_id": build_recipe_id(raw["title"]),

@@ -114,11 +114,16 @@ def _load_recipe(recipe_id: str) -> dict | None:
 
 # ── Menyplanering → handlingslista ───────────────────────────────────────────
 
-def apply_meal_plan(plan: dict, household_size: int = 4) -> None:
-    """Bocka i ingredienser från godkänd meny och beräkna inköpsmängder."""
+def apply_meal_plan(plan: dict, household_size: int = 4) -> list[str]:
+    """Bocka i ingredienser från godkänd meny och beräkna inköpsmängder.
+
+    Returnerar lista med läsbara namn på ingredienser som saknas i varudatabasen
+    och därför lagts till automatiskt under 'Extra denna vecka'.
+    """
     state = load_state()
     checked_set = set(state["checked"])
     quantities: dict[str, dict] = {}   # räknas om från noll vid varje ny plan
+    unmatched_qty: dict[str, dict] = {}  # ingredient_id → {amount, unit} för ej matchade
     items_db = load_items()
 
     for meal in plan.get("meals", []):
@@ -131,22 +136,59 @@ def apply_meal_plan(plan: dict, household_size: int = 4) -> None:
         for ing in recipe.get("ingredients", []):
             item_id = ing["ingredient_id"]
             item = items_db.get(item_id)
-            if not (item and item.get("role") in INCLUDED_ROLES):
+
+            if item is None:
+                # Inte i varudatabasen — samla skalad mängd för extras
+                if item_id not in unmatched_qty:
+                    # Spara display_name (med å/ä/ö) om det finns, annars fallback på ID
+                    display = ing.get("display_name") or item_id.replace("_", " ")
+                    unmatched_qty[item_id] = {"display_name": display}
+                raw_amount = ing.get("amount")
+                raw_unit = ing.get("unit", "")
+                if raw_amount is not None and raw_unit:
+                    norm_amount, norm_unit = _normalize_unit(raw_amount * scale, raw_unit)
+                    existing = unmatched_qty[item_id]
+                    if existing.get("unit") == norm_unit:
+                        existing["amount"] = existing.get("amount", 0) + norm_amount
+                    else:
+                        existing["amount"] = norm_amount
+                        existing["unit"] = norm_unit
+                continue
+
+            if not (item.get("role") in INCLUDED_ROLES):
                 continue
             checked_set.add(item_id)
 
             raw_amount = ing.get("amount")
             raw_unit   = ing.get("unit", "")
-            if raw_amount and raw_unit:
+            if raw_amount is not None and raw_unit:
                 norm_amount, norm_unit = _normalize_unit(raw_amount * scale, raw_unit)
                 if item_id in quantities and quantities[item_id]["unit"] == norm_unit:
                     quantities[item_id]["amount"] += norm_amount
                 else:
                     quantities[item_id] = {"amount": norm_amount, "unit": norm_unit}
 
+    # Lägg till omatchade i extras (dedup på namn, summerade mängder)
+    extras = state.get("extras", [])
+    existing_names = {e["text"].split(" — ")[0].lower() for e in extras}
+    added_names: list[str] = []
+    for item_id, qty in unmatched_qty.items():
+        name = qty.get("display_name") or item_id.replace("_", " ")
+        if name.lower() in existing_names:
+            continue
+        if qty.get("amount") and qty.get("unit"):
+            text = f"{name} — {format_quantity(qty['amount'], qty['unit'])}"
+        else:
+            text = name
+        extras.append({"text": text, "checked": True})
+        existing_names.add(name.lower())
+        added_names.append(name)
+
     state["checked"]    = list(checked_set)
     state["quantities"] = quantities
+    state["extras"]     = extras
     save_state(state)
+    return added_names
 
 
 # ── Fullständig lista ─────────────────────────────────────────────────────────
@@ -210,6 +252,14 @@ def set_item_checked(item_id: str, checked: bool) -> None:
     else:
         checked_set.discard(item_id)
     state["checked"] = list(checked_set)
+    save_state(state)
+
+
+def clear_quantities_for_unchecked() -> None:
+    """Ta bort mängder för alla urcheckade varor. Ibockade varors mängder bevaras."""
+    state = load_state()
+    checked_set = set(state["checked"])
+    state["quantities"] = {k: v for k, v in state.get("quantities", {}).items() if k in checked_set}
     save_state(state)
 
 
