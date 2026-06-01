@@ -40,7 +40,11 @@ def load_plan() -> dict:
         return {"week_start": None, "meals": []}
     with open(PLAN_PATH, encoding="utf-8") as f:
         data = yaml.safe_load(f) or {}
-    return {"week_start": data.get("week_start"), "meals": list(data.get("meals") or [])}
+    return {
+        "week_start":     data.get("week_start"),
+        "meals":          list(data.get("meals") or []),
+        "household_size": int(data.get("household_size") or 4),
+    }
 
 
 def save_plan(plan: dict) -> None:
