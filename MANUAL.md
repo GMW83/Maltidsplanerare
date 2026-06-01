@@ -13,8 +13,9 @@
 5. [Recept](#5-recept)
 6. [Varuhantering](#6-varuhantering)
 7. [Säkerhetskopiera din data](#7-säkerhetskopiera-din-data)
-8. [Uppdatera appen](#8-uppdatera-appen)
-9. [Felsökning](#9-felsökning)
+8. [Spara NAS-anpassningar till git](#8-spara-nas-anpassningar-till-git)
+9. [Uppdatera appen](#9-uppdatera-appen)
+10. [Felsökning](#10-felsökning)
 
 ---
 
@@ -237,7 +238,154 @@ ls backups/$DATUM/recipes/ | wc -l   # Antal recept
 
 ---
 
-## 8. Uppdatera appen
+## 8. Spara NAS-anpassningar till git
+
+NAS:en är produktionsmiljön där alla verkliga ändringar sker — varor läggs till via Varuhantering, recept importeras via appen, befintliga recept redigeras. Dessa ändringar sparas i filer på disk men hamnar inte automatiskt i git. Utan ett aktivt steg kan en `git pull` skriva över dem.
+
+Det här avsnittet förklarar vilka filer som berörs, hur du sparar dem, och vad som är best practice.
+
+### 8.1 Vad som behöver sparas — och vad som är automatiskt säkert
+
+| Fil / mapp | Spårad av git? | Risk vid `git pull` | Åtgärd |
+|---|---|---|---|
+| `data/items.yaml` | Ja | Kan skrivas över eller ge konflikt | Committa innan `git pull` |
+| `data/recipes/*.yaml` (nya) | Nej — ej kända av git | Ingen — `git pull` tar aldrig bort otrackade filer | Rekommenderas ändå att committa |
+| `data/recipes/*.yaml` (redigerade) | Ja, om originalet fanns i repot | Kan skrivas över om repot också ändrat filen | Committa innan `git pull` |
+| `data/settings.yaml` | Nej — i `.gitignore` | Ingen — git rör aldrig denna fil | Ingenting krävs |
+| `data/shopping_state.yaml` | Nej — i `.gitignore` | Ingen | Ingenting krävs |
+| `data/weekly_plan.yaml` | Nej — i `.gitignore` | Ingen | Ingenting krävs |
+
+**Slutsats:** Det enda du aktivt behöver hantera är `data/items.yaml` och `data/recipes/`.
+
+---
+
+### 8.2 De tre alternativen
+
+#### Alternativ A — Committa inför varje uppdatering (rekommenderat för de flesta)
+
+Du committar NAS-data precis innan du hämtar ny kod. Enkelt, kräver inget extra upplägg.
+
+```bash
+cd /volume1/docker/maltidsplanerare
+git add data/items.yaml data/recipes/
+git commit -m "NAS: varor och recept $(date +%Y-%m-%d)"
+git pull origin main
+```
+
+**Fördelar:** Enkelt. Inga extra verktyg.  
+**Nackdelar:** Glömmer du steget före `git pull` riskerar du en konflikt.
+
+---
+
+#### Alternativ B — Committa direkt när du gjort ändringar
+
+Du committar varje gång du avslutat en session i appen — lagt till varor, importerat recept eller redigerat ett recept.
+
+```bash
+cd /volume1/docker/maltidsplanerare
+git add data/items.yaml data/recipes/
+git commit -m "Lade till: havregryn, kokosmjölk"
+git push origin main
+```
+
+**Fördelar:** Git-historiken reflekterar vad som faktiskt ändrades och när. Enkelt att se tillbaka.  
+**Nackdelar:** Kräver disciplin — SSH-inloggning varje gång.
+
+---
+
+#### Alternativ C — Automatisera med ett script
+
+Skapa ett script som committar och pushar all data-förändring. Kör det manuellt när du vill, eller schemalägg det via Synologys Task Scheduler.
+
+```bash
+# Skapa scriptet
+cat > /volume1/docker/maltidsplanerare/scripts/spara_data.sh << 'EOF'
+#!/bin/bash
+set -e
+cd /volume1/docker/maltidsplanerare
+git config --global --add safe.directory /volume1/docker/maltidsplanerare
+
+# Committa bara om något faktiskt ändrats
+if ! git diff --quiet data/items.yaml data/recipes/; then
+    git add data/items.yaml data/recipes/
+    git commit -m "Auto: NAS-data $(date '+%Y-%m-%d %H:%M')"
+    git push origin main
+    echo "Data sparad till git."
+else
+    echo "Inga ändringar att spara."
+fi
+EOF
+chmod +x /volume1/docker/maltidsplanerare/scripts/spara_data.sh
+```
+
+Kör scriptet:
+
+```bash
+bash /volume1/docker/maltidsplanerare/scripts/spara_data.sh
+```
+
+**Schemalägg i Synology Task Scheduler:** Kontrollpanelen → Uppgiftsschemaläggaren → Skapa → Schemalagd uppgift → Kör scriptet t.ex. varje natt kl 03:00.
+
+**Fördelar:** Helt automatiskt. Inget att glömma.  
+**Nackdelar:** Push till GitHub kräver att NAS:en har nätverksåtkomst och att git-autentisering är konfigurerad (SSH-nyckel eller token).
+
+---
+
+### 8.3 Konflikter i items.yaml — hur de uppstår och löses
+
+En konflikt uppstår om **både** repot (via en PC-commit eller koduppdatering) och NAS:en har ändrat `items.yaml` sedan senaste sync. Git rapporterar det så här:
+
+```
+CONFLICT (content): Merge conflict in data/items.yaml
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+Filen innehåller då markeringar:
+
+```yaml
+<<<<<<< HEAD
+- id: silverlok
+  name_sv: silverlök
+=======
+- id: schalottenlok
+  name_sv: schalottenlök
+>>>>>>> origin/main
+```
+
+**Lös det genom att välja en strategi:**
+
+```bash
+# Strategi 1: Behåll NAS-versionen (dina lokala varor, ignorera repots ändring)
+git checkout --ours data/items.yaml
+git add data/items.yaml
+git commit -m "Bevarade NAS-version av items.yaml"
+
+# Strategi 2: Ta in repots version (skriv över med repoversionen)
+git checkout --theirs data/items.yaml
+git add data/items.yaml
+git commit -m "Tog in repots items.yaml"
+
+# Strategi 3: Redigera filen manuellt och slå ihop det bästa från båda
+nano data/items.yaml   # ta bort konfliktmarkeringarna, behåll båda varorna
+git add data/items.yaml
+git commit -m "Manuellt löst konflikt i items.yaml"
+```
+
+> **Bästa valet i de flesta situationer är Strategi 1** — dina lokala varor är det primära. Eventuellt nya varor från repot kan du lägga till via Varuhantering-gränssnittet efteråt.
+
+---
+
+### 8.4 Best practice — sammanfattning
+
+1. **Committa alltid NAS-data innan `git pull`** — gör det till en rutin, inte ett undantag.
+2. **Committa direkt efter session** om du jobbat mycket i Varuhantering eller importerat flera recept.
+3. **Använd backup som säkerhetsnät** (avsnitt 7) — om något ändå går fel finns filerna lokalt.
+4. **Välj Alternativ C (automatiserat script)** om du vill slippa tänka på det.
+5. **Vid konflikt — välj `--ours`** om du inte vet vilket alternativ som är rätt. Det bevarar alltid NAS-data.
+
+---
+
+## 9. Uppdatera appen — steg för steg
 
 Uppdateringar görs i tre steg: (1) merga på GitHub, (2) hämta kod till NAS, (3) bygga om Docker.
 
@@ -327,7 +475,7 @@ Kontrollera snabbt i appen:
 
 ---
 
-## 9. Felsökning
+## 10. Felsökning
 
 ### Appen svarar inte / kan inte nås
 
@@ -455,19 +603,25 @@ Tryck på valfritt element i appen (t.ex. bocka av en vara) för att trigga en r
 ssh admin@192.168.50.210
 cd /volume1/docker/maltidsplanerare
 
-# 2. Backup
+# 2. Spara NAS-anpassningar till git (ALLTID innan git pull)
+git add data/items.yaml data/recipes/
+git commit -m "NAS: varor och recept $(date +%Y-%m-%d)"
+git push origin main
+
+# 3. Backup (extra säkerhetsnät)
 DATUM=$(date +%Y%m%d)
 mkdir -p backups/$DATUM
 cp data/items.yaml backups/$DATUM/
 cp -r data/recipes/ backups/$DATUM/
 
-# 3. Hämta ny kod (efter merge på GitHub)
+# 4. Hämta ny kod (efter merge på GitHub)
 git pull origin main
+# Vid konflikt i items.yaml: git checkout --ours data/items.yaml && git add data/items.yaml && git commit -m "Bevarade NAS-data"
 
-# 4. Bygg om och starta
+# 5. Bygg om och starta
 sudo docker compose build && sudo docker compose up -d
 
-# 5. Verifiera
+# 6. Verifiera
 sudo docker ps | grep maltidsplanerare
 ```
 
