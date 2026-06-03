@@ -209,10 +209,11 @@ Innan varje uppdatering bör du säkerhetskopiera dina datafiler. Här är en sa
 | Fil | Innehåll | Hanteras av git? |
 |---|---|---|
 | `data/items.yaml` | Varudatabasen | **Ja** — kan påverkas av uppdatering |
-| `data/recipes/*.yaml` | Alla recept | **Ja** — dina importerade recept är nya filer, ogiltiga för git |
+| `data/recipes/*.yaml` | Alla recept | **Ja** — dina importerade recept är nya filer, ogiltigförklarade av git |
+| `data/shopping_order.yaml` | Profiler och egna kategorier | Nej — ignoreras av git, aldrig i fara |
 | `data/shopping_state.yaml` | Bockningsstatus | Nej — ignoreras av git, aldrig i fara |
 | `data/weekly_plan.yaml` | Aktuell veckomeny | Nej — ignoreras av git |
-| `data/settings.yaml` | Butiksprofiler | Nej — ignoreras av git |
+| `data/settings.yaml` | Inställningar (hushållsstorlek m.m.) | Nej — ignoreras av git |
 
 ### 7.1 Manuell säkerhetskopiering
 
@@ -251,6 +252,7 @@ Det här avsnittet förklarar vilka filer som berörs, hur du sparar dem, och va
 | `data/items.yaml` | Ja | Kan skrivas över eller ge konflikt | Committa innan `git pull` |
 | `data/recipes/*.yaml` (nya) | Nej — ej kända av git | Ingen — `git pull` tar aldrig bort otrackade filer | Rekommenderas ändå att committa |
 | `data/recipes/*.yaml` (redigerade) | Ja, om originalet fanns i repot | Kan skrivas över om repot också ändrat filen | Committa innan `git pull` |
+| `data/shopping_order.yaml` | Nej — i `.gitignore` | Ingen — profiler och kategorier bevaras alltid | Ingenting krävs |
 | `data/settings.yaml` | Nej — i `.gitignore` | Ingen — git rör aldrig denna fil | Ingenting krävs |
 | `data/shopping_state.yaml` | Nej — i `.gitignore` | Ingen | Ingenting krävs |
 | `data/weekly_plan.yaml` | Nej — i `.gitignore` | Ingen | Ingenting krävs |
