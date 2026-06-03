@@ -8,3 +8,4 @@ textColor = "#2A2A22"
 headless = true
 enableCORS = false
 enableXsrfProtection = false
+enableStaticServing = true

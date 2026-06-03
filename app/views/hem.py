@@ -57,3 +57,11 @@ def render():
                 """,
                 unsafe_allow_html=True,
             )
+
+    st.markdown(
+        "<div style='text-align:center; margin-top:32px'>"
+        "<a href='/app/static/manual.html' target='_blank' "
+        "style='color:#6B7C3E; font-size:0.82rem; text-decoration:none;'>"
+        "📖 Användarmanual</a></div>",
+        unsafe_allow_html=True,
+    )

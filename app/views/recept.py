@@ -14,7 +14,8 @@ PLAN_PATH = Path(__file__).parent.parent.parent / "data" / "weekly_plan.yaml"
 _NO_LINK = "(ingen koppling)"
 
 
-def _week_recipe_ids(offset: int) -> set[str]:
+def _week_plan_info(offset: int) -> tuple[set[str], int]:
+    """Returnera (recipe_ids, household_size) för vecka +offset."""
     plan = load_plan()
     ws = plan.get("week_start")
     if isinstance(ws, str):
@@ -22,8 +23,9 @@ def _week_recipe_ids(offset: int) -> set[str]:
         ws = date.fromisoformat(ws)
     target = week_start_for_offset(offset)
     if ws == target and plan.get("meals"):
-        return {m["recipe_id"] for m in plan["meals"]}
-    return set()
+        ids = {m["recipe_id"] for m in plan["meals"]}
+        return ids, plan.get("household_size", 4)
+    return set(), 4
 
 
 # ── Import ────────────────────────────────────────────────────────────────────
@@ -357,6 +359,7 @@ def render():
 
     all_recipes = load_all_recipes()
     search_str = ""
+    week_household_size = None
 
     if filter_mode == "alla":
         search_str = st.text_input(
@@ -371,7 +374,7 @@ def render():
         )
     else:
         offset = 0 if filter_mode == "denna_vecka" else 1
-        ids = _week_recipe_ids(offset)
+        ids, week_household_size = _week_plan_info(offset)
         filtered = [r for r in all_recipes if r["recipe_id"] in ids]
 
     if not filtered:
@@ -405,18 +408,29 @@ def render():
 
     st.header(recipe["title"])
 
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Portioner", recipe.get("servings", "?"))
-    col2.metric("Tid", f"{meta.get('cook_time_minutes', '?')} min")
-    col3.metric("Svårighetsgrad", f"{meta.get('difficulty', '?')}/3")
+    orig_servings = recipe.get("servings") or 4
+    if week_household_size and week_household_size != orig_servings:
+        scale = week_household_size / orig_servings
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Portioner", week_household_size,
+                    delta=f"originalet {orig_servings} port",
+                    delta_color="off")
+        col2.metric("Tid", f"{meta.get('cook_time_minutes', '?')} min")
+        col3.metric("Svårighetsgrad", f"{meta.get('difficulty', '?')}/3")
+    else:
+        scale = 1.0
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Portioner", orig_servings)
+        col2.metric("Tid", f"{meta.get('cook_time_minutes', '?')} min")
+        col3.metric("Svårighetsgrad", f"{meta.get('difficulty', '?')}/3")
 
     st.subheader("Ingredienser")
     for ing in recipe.get("ingredients", []):
         item = items_db.get(ing["ingredient_id"])
         name = item["name_sv"] if item else (ing.get("display_name") or ing["ingredient_id"].replace("_", " "))
         try:
-            amt_f = float(ing.get("amount") or 0)
-            amt_val = int(amt_f) if amt_f == int(amt_f) else amt_f
+            amt_f = float(ing.get("amount") or 0) * scale
+            amt_val = int(amt_f) if amt_f == int(amt_f) else round(amt_f, 1)
             amt_str = f"{amt_val} {ing['unit']}" if amt_f > 0 else ""
         except (TypeError, ValueError):
             amt_str = ""

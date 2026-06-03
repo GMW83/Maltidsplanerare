@@ -178,6 +178,19 @@ def add_category(profile_id: str, name: str) -> str:
     return cat_id
 
 
+def set_item_override(profile_id: str, item_id: str, category_id: str | None) -> None:
+    """Sätt eller ta bort (om None) kategori-override för en vara i profilen."""
+    data = load()
+    if profile_id not in data.get("profiles", {}):
+        raise ValueError(f"Profil '{profile_id}' finns inte.")
+    overrides = data["profiles"][profile_id].setdefault("item_overrides", {})
+    if category_id is None:
+        overrides.pop(item_id, None)
+    else:
+        overrides[item_id] = category_id
+    save(data)
+
+
 def delete_category(profile_id: str, cat_id: str) -> None:
     """Ta bort en kategori från en profil. Varor i kategorin återgår till sin standardkategori."""
     data = load()

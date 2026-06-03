@@ -161,8 +161,9 @@ def render():
     if st.button("✓  Godkänn och spara veckoplan", type="primary", use_container_width=True):
         week_start_str = st.session_state.get("draft_week_start") or this_week.isoformat()
         plan_to_save = {
-            "week_start": date.fromisoformat(week_start_str),
-            "meals": draft["meals"],
+            "week_start":     date.fromisoformat(week_start_str),
+            "meals":          draft["meals"],
+            "household_size": int(household_size),
         }
         save_plan(plan_to_save)
         unmatched = shopping.apply_meal_plan(draft, household_size=int(household_size))

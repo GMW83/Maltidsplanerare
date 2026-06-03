@@ -2,7 +2,7 @@
 
 import streamlit as st
 
-from app import items as items_mod, shopping
+from app import items as items_mod, shopping, store_profiles
 
 CATEGORY_NAMES = shopping.CATEGORY_NAMES
 
@@ -19,6 +19,46 @@ _PAGE_SIZE = 50
 
 def _invalidate_items_cache() -> None:
     st.session_state.pop("items_db", None)
+    for k in list(st.session_state.keys()):
+        if k.startswith("il_cat_") or k.startswith("il_role_"):
+            del st.session_state[k]
+
+
+def _make_cat_saver(item: dict, cat_ids: list) -> callable:
+    def _save():
+        new_cat = cat_ids[st.session_state[f"il_cat_{item['id']}"]]
+        pid = store_profiles.active_id()
+        if new_cat.startswith("custom_"):
+            # Profilegen kategori — spara som override, ändra inte items.yaml
+            store_profiles.set_item_override(pid, item["id"], new_cat)
+        else:
+            # Global kategori — uppdatera items.yaml och ta bort eventuell override
+            items_mod.update_item(
+                item_id=item["id"],
+                name_sv=item["name_sv"],
+                category=new_cat,
+                unit=item.get("unit", "g"),
+                role=item.get("role", "ingredient"),
+                synonyms=item.get("synonyms"),
+            )
+            store_profiles.set_item_override(pid, item["id"], None)
+        _invalidate_items_cache()
+    return _save
+
+
+def _make_role_saver(item: dict) -> callable:
+    def _save():
+        new_role = _ROLE_IDS[st.session_state[f"il_role_{item['id']}"]]
+        items_mod.update_item(
+            item_id=item["id"],
+            name_sv=item["name_sv"],
+            category=item.get("category", "ovrigt"),
+            unit=item.get("unit", "g"),
+            role=new_role,
+            synonyms=item.get("synonyms"),
+        )
+        _invalidate_items_cache()
+    return _save
 
 
 def _load_item_into_form(item: dict) -> None:
@@ -233,24 +273,51 @@ def _render_item_list() -> None:
     # ── Varulista ─────────────────────────────────────────────────────────────
     current_edit_id = st.session_state.get("vh_edit_id")
 
-    for item in page_items:
-        iid  = item["id"]
-        cat  = CATEGORY_NAMES.get(item.get("category", ""), item.get("category", ""))
-        role = _ROLE_LABELS.get(item.get("role", ""), item.get("role", "")).split(" — ")[0]
+    # Bygg kombinerad kategorilista: globala + aktiv profils egna kategorier
+    global_cat_ids = list(CATEGORY_NAMES.keys())
+    active_profile = store_profiles.active()
+    profile_cat_names = active_profile.get("category_names", {})
+    profile_overrides = active_profile.get("item_overrides", {})
 
-        col_name, col_cat, col_role, col_edit, col_del = st.columns([4, 3, 3, 1, 1])
+    all_cat_ids   = global_cat_ids[:]
+    all_cat_names = dict(CATEGORY_NAMES)
+    for cat_id, cat_name in profile_cat_names.items():
+        if cat_id not in all_cat_names:
+            all_cat_ids.append(cat_id)
+            all_cat_names[cat_id] = cat_name
+
+    for item in page_items:
+        iid = item["id"]
+
+        # Visa profilens override om den finns, annars varans egna kategori
+        effective_cat = profile_overrides.get(iid) or item.get("category", all_cat_ids[0])
+        cat_idx       = all_cat_ids.index(effective_cat) if effective_cat in all_cat_ids else 0
+        current_role  = item.get("role", _ROLE_IDS[0])
+        role_idx      = _ROLE_IDS.index(current_role) if current_role in _ROLE_IDS else 0
+
+        col_name, col_cat, col_role, col_edit, col_del = st.columns([3, 3, 3, 1, 1])
         col_name.markdown(
             f"**{item['name_sv']}**  \n"
             f"<span style='font-size:0.75rem;color:#9A9A8A'>`{iid}`</span>",
             unsafe_allow_html=True,
         )
-        col_cat.markdown(
-            f"<span style='font-size:0.82rem;color:#7A7A6A'>{cat}</span>",
-            unsafe_allow_html=True,
+        col_cat.selectbox(
+            "",
+            options=range(len(all_cat_ids)),
+            format_func=lambda i: all_cat_names[all_cat_ids[i]],
+            index=cat_idx,
+            key=f"il_cat_{iid}",
+            on_change=_make_cat_saver(item, all_cat_ids),
+            label_visibility="collapsed",
         )
-        col_role.markdown(
-            f"<span style='font-size:0.82rem;color:#7A7A6A'>{role}</span>",
-            unsafe_allow_html=True,
+        col_role.selectbox(
+            "",
+            options=range(len(_ROLE_IDS)),
+            format_func=lambda i: _ROLE_LABELS[_ROLE_IDS[i]].split(" — ")[0],
+            index=role_idx,
+            key=f"il_role_{iid}",
+            on_change=_make_role_saver(item),
+            label_visibility="collapsed",
         )
         if col_edit.button(
             "✎", key=f"vh_edit_{iid}",
