@@ -2,7 +2,7 @@
 
 import streamlit as st
 
-from app import items as items_mod, shopping
+from app import items as items_mod, shopping, store_profiles
 
 CATEGORY_NAMES = shopping.CATEGORY_NAMES
 
@@ -27,14 +27,21 @@ def _invalidate_items_cache() -> None:
 def _make_cat_saver(item: dict, cat_ids: list) -> callable:
     def _save():
         new_cat = cat_ids[st.session_state[f"il_cat_{item['id']}"]]
-        items_mod.update_item(
-            item_id=item["id"],
-            name_sv=item["name_sv"],
-            category=new_cat,
-            unit=item.get("unit", "g"),
-            role=item.get("role", "ingredient"),
-            synonyms=item.get("synonyms"),
-        )
+        pid = store_profiles.active_id()
+        if new_cat.startswith("custom_"):
+            # Profilegen kategori — spara som override, ändra inte items.yaml
+            store_profiles.set_item_override(pid, item["id"], new_cat)
+        else:
+            # Global kategori — uppdatera items.yaml och ta bort eventuell override
+            items_mod.update_item(
+                item_id=item["id"],
+                name_sv=item["name_sv"],
+                category=new_cat,
+                unit=item.get("unit", "g"),
+                role=item.get("role", "ingredient"),
+                synonyms=item.get("synonyms"),
+            )
+            store_profiles.set_item_override(pid, item["id"], None)
         _invalidate_items_cache()
     return _save
 
@@ -266,16 +273,27 @@ def _render_item_list() -> None:
     # ── Varulista ─────────────────────────────────────────────────────────────
     current_edit_id = st.session_state.get("vh_edit_id")
 
-    cat_ids    = list(CATEGORY_NAMES.keys())
-    cat_labels = [CATEGORY_NAMES[c] for c in cat_ids]
+    # Bygg kombinerad kategorilista: globala + aktiv profils egna kategorier
+    global_cat_ids = list(CATEGORY_NAMES.keys())
+    active_profile = store_profiles.active()
+    profile_cat_names = active_profile.get("category_names", {})
+    profile_overrides = active_profile.get("item_overrides", {})
+
+    all_cat_ids   = global_cat_ids[:]
+    all_cat_names = dict(CATEGORY_NAMES)
+    for cat_id, cat_name in profile_cat_names.items():
+        if cat_id not in all_cat_names:
+            all_cat_ids.append(cat_id)
+            all_cat_names[cat_id] = cat_name
 
     for item in page_items:
         iid = item["id"]
 
-        current_cat  = item.get("category", cat_ids[0])
-        cat_idx      = cat_ids.index(current_cat) if current_cat in cat_ids else 0
-        current_role = item.get("role", _ROLE_IDS[0])
-        role_idx     = _ROLE_IDS.index(current_role) if current_role in _ROLE_IDS else 0
+        # Visa profilens override om den finns, annars varans egna kategori
+        effective_cat = profile_overrides.get(iid) or item.get("category", all_cat_ids[0])
+        cat_idx       = all_cat_ids.index(effective_cat) if effective_cat in all_cat_ids else 0
+        current_role  = item.get("role", _ROLE_IDS[0])
+        role_idx      = _ROLE_IDS.index(current_role) if current_role in _ROLE_IDS else 0
 
         col_name, col_cat, col_role, col_edit, col_del = st.columns([3, 3, 3, 1, 1])
         col_name.markdown(
@@ -285,11 +303,11 @@ def _render_item_list() -> None:
         )
         col_cat.selectbox(
             "",
-            options=range(len(cat_ids)),
-            format_func=lambda i: cat_labels[i],
+            options=range(len(all_cat_ids)),
+            format_func=lambda i: all_cat_names[all_cat_ids[i]],
             index=cat_idx,
             key=f"il_cat_{iid}",
-            on_change=_make_cat_saver(item, cat_ids),
+            on_change=_make_cat_saver(item, all_cat_ids),
             label_visibility="collapsed",
         )
         col_role.selectbox(
