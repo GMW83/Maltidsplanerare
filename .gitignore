@@ -4,6 +4,8 @@ __pycache__/
 .streamlit/secrets.toml
 
 # Användardata — hanteras lokalt på varje installation
+data/items.yaml
+data/recipes/
 data/shopping_state.yaml
 data/weekly_plan.yaml
 data/settings.yaml
