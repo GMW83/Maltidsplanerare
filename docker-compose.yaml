@@ -8,5 +8,6 @@ services:
     network_mode: host
     volumes:
       - ./data:/app/data
+      - ./app/static:/app/app/static
     env_file:
       - .env
