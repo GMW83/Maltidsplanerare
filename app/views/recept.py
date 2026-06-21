@@ -109,10 +109,10 @@ def _render_import(items_db: dict):
                     unsafe_allow_html=True,
                 )
                 default_idx = sv_options.index(matched_sv) if matched_sv in sv_options else 0
-                col2.selectbox("", sv_options, index=default_idx, key=f"ing_sel_{i}", label_visibility="collapsed")
+                col2.selectbox("Koppla ingrediens", sv_options, index=default_idx, key=f"ing_sel_{i}", label_visibility="collapsed")
             else:
-                col1.text_input("", value=m["name"], key=f"ing_name_{i}", label_visibility="collapsed")
-                col2.selectbox("", sv_options, index=0, key=f"ing_sel_{i}", label_visibility="collapsed")
+                col1.text_input("Ingrediensnamn", value=m["name"], key=f"ing_name_{i}", label_visibility="collapsed")
+                col2.selectbox("Koppla ingrediens", sv_options, index=0, key=f"ing_sel_{i}", label_visibility="collapsed")
 
         st.markdown("<div style='height:6px'></div>", unsafe_allow_html=True)
 
@@ -235,9 +235,9 @@ def _render_edit(recipe: dict, items_db: dict):
             default_idx = 0
 
         col_ing, col_amt, col_unit, col_del = st.columns([5, 2, 2, 1])
-        col_ing.selectbox("", options, index=default_idx, key=f"ei_ing_sel_{i}", label_visibility="collapsed")
-        col_amt.number_input("", value=ing["amount"], min_value=0.0, step=0.5, key=f"ei_ing_amt_{i}", label_visibility="collapsed")
-        col_unit.text_input("", value=ing["unit"], key=f"ei_ing_unit_{i}", label_visibility="collapsed")
+        col_ing.selectbox("Ingrediens", options, index=default_idx, key=f"ei_ing_sel_{i}", label_visibility="collapsed")
+        col_amt.number_input("Mängd", value=ing["amount"], min_value=0.0, step=0.5, key=f"ei_ing_amt_{i}", label_visibility="collapsed")
+        col_unit.text_input("Enhet", value=ing["unit"], key=f"ei_ing_unit_{i}", label_visibility="collapsed")
         if col_del.button("✕", key=f"ei_ing_del_{i}", use_container_width=True):
             ing_to_delete = i
 
@@ -264,7 +264,7 @@ def _render_edit(recipe: dict, items_db: dict):
         hdr_col.markdown(f"**Steg {i + 1}**")
         if del_col.button("✕", key=f"ei_step_del_{i}", use_container_width=True):
             step_to_delete = i
-        st.text_area("", value=step["text"], key=f"ei_step_{i}", label_visibility="collapsed", height=80)
+        st.text_area(f"Steg {i + 1}", value=step["text"], key=f"ei_step_{i}", label_visibility="collapsed", height=80)
 
     if step_to_delete is not None:
         _sync_widgets_to_lists(items_db)
