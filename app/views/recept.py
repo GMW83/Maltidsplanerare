@@ -1,30 +1,20 @@
 """Receptvisare, URL-import och redigering — mobilanpassad visning, desktop-redigering."""
 
-from pathlib import Path
-
 import streamlit as st
 
 from app.recipes import load_all_recipes, load_recipe, save_recipe, delete_recipe
 from app import shopping, importer
-from app.planner import current_week_start, week_start_for_offset, load_plan
+from app.planner import week_start_for_offset, load_plan
 from app.utils import is_mobile as _is_mobile
-
-PLAN_PATH = Path(__file__).parent.parent.parent / "data" / "weekly_plan.yaml"
 
 _NO_LINK = "(ingen koppling)"
 
 
 def _week_plan_info(offset: int) -> tuple[set[str], int]:
     """Returnera (recipe_ids, household_size) för vecka +offset."""
-    plan = load_plan()
-    ws = plan.get("week_start")
-    if isinstance(ws, str):
-        from datetime import date
-        ws = date.fromisoformat(ws)
-    target = week_start_for_offset(offset)
-    if ws == target and plan.get("meals"):
-        ids = {m["recipe_id"] for m in plan["meals"]}
-        return ids, plan.get("household_size", 4)
+    plan = load_plan(week_start_for_offset(offset))
+    if plan.get("meals"):
+        return {m["recipe_id"] for m in plan["meals"]}, plan.get("household_size", 4)
     return set(), 4
 
 

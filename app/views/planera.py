@@ -9,7 +9,6 @@ from app import shopping
 from app.planner import (
     current_week_start,
     generate_weekly_plan,
-    is_plan_current,
     load_plan,
     save_plan,
     suggest_replacement,
@@ -81,11 +80,8 @@ def render():
     selected_week = week_options[week_index]
 
     # Varna om en plan redan finns för vald vecka
-    existing = load_plan()
-    existing_ws = existing.get("week_start")
-    if isinstance(existing_ws, str):
-        existing_ws = date.fromisoformat(existing_ws)
-    if existing_ws == selected_week and existing.get("meals"):
+    existing = load_plan(selected_week)
+    if existing.get("meals"):
         st.warning(
             f"En plan finns redan för v. {selected_week.isocalendar()[1]}. "
             "Om du godkänner ett nytt förslag skrivs den befintliga över."
@@ -160,13 +156,11 @@ def render():
     st.divider()
     if st.button("✓  Godkänn och spara veckoplan", type="primary", use_container_width=True):
         week_start_str = st.session_state.get("draft_week_start") or this_week.isoformat()
-        plan_to_save = {
-            "week_start":     date.fromisoformat(week_start_str),
-            "meals":          draft["meals"],
-            "household_size": int(household_size),
-        }
-        save_plan(plan_to_save)
-        unmatched = shopping.apply_meal_plan(draft, household_size=int(household_size))
+        week_start_to_save = date.fromisoformat(week_start_str)
+        save_plan(week_start_to_save, draft["meals"], household_size=int(household_size))
+        unmatched = shopping.apply_meal_plan(
+            draft, household_size=int(household_size), week_start=week_start_to_save
+        )
         # Återställ shopping session state
         for key in list(st.session_state.keys()):
             if key.startswith("cb_"):
