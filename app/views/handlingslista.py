@@ -178,7 +178,7 @@ def render():
     # Lägg till ny extrapost
     with st.form("ny_extra", clear_on_submit=True):
         col1, col2 = st.columns([4, 1])
-        ny_text = col1.text_input("", placeholder="Lägg till vara…", label_visibility="collapsed")
+        ny_text = col1.text_input("Lägg till vara", placeholder="Lägg till vara…", label_visibility="collapsed")
         submitted = col2.form_submit_button("＋")
         if submitted and ny_text.strip():
             shopping.add_extra(ny_text)

@@ -8,13 +8,14 @@
 
 1. [Översikt](#1-översikt)
 2. [Öppna appen](#2-öppna-appen)
-3. [Planera veckan](#3-planera-veckan)
-4. [Handlingslistan](#4-handlingslistan)
-5. [Recept](#5-recept)
-6. [Varuhantering](#6-varuhantering)
-7. [Säkerhetskopiera din data](#7-säkerhetskopiera-din-data)
-8. [Uppdatera appen](#8-uppdatera-appen)
-9. [Felsökning](#9-felsökning)
+3. [Startsidan](#3-startsidan)
+4. [Planera veckan](#4-planera-veckan)
+5. [Handlingslistan](#5-handlingslistan)
+6. [Recept](#6-recept)
+7. [Varuhantering](#7-varuhantering)
+8. [Säkerhetskopiera din data](#8-säkerhetskopiera-din-data)
+9. [Uppdatera appen](#9-uppdatera-appen)
+10. [Felsökning](#10-felsökning)
 
 ---
 
@@ -54,11 +55,38 @@ Inga inloggningsuppgifter krävs. Appen är tillgänglig så länge NAS:en är i
 
 ---
 
-## 3. Planera veckan
+## 3. Startsidan
 
-### 3.1 Skriv vad du vill ha
+Fliken **🏠 Hem** är det första du ser. Här visas den planerade menyn för en vald vecka.
 
-Gå till fliken **Planera**. Skriv en fritext i inmatningsfältet och beskriv vad du är sugen på, vad du har hemma, eller hur veckan ser ut. Exempel:
+### 3.1 Välj vecka
+
+Överst finns en väljare med **Denna vecka** och **Nästa vecka**. Byt mellan dem för att se respektive veckas planerade middagar. Standard är denna vecka.
+
+### 3.2 Visad meny
+
+- Är veckan planerad visas alla middagar som kort (dag + rätt).
+- Är veckan inte planerad visas *"Ingen meny planerad"* — gå då till fliken **Planera**.
+
+Längst ner finns även en länk till denna användarmanual.
+
+---
+
+## 4. Planera veckan
+
+### 4.1 Välj vecka att planera
+
+Gå till fliken **📅 Planera**. Överst väljer du **Planera för: Denna vecka** eller **Nästa vecka**. Du kan planera båda veckorna — de sparas var för sig och skriver inte över varandra.
+
+> Om en plan redan finns för den valda veckan visas en varning om att den skrivs över om du godkänner ett nytt förslag.
+
+### 4.2 Välj dagar
+
+Under **Välj dagar** bockar du i vilka veckodagar (mån–sön) som ska planeras. För innevarande vecka är redan passerade dagar avstängda så att du bara planerar framåt.
+
+### 4.3 Skriv vad du vill ha
+
+Skriv en fritext och beskriv vad du är sugen på, vad du har hemma, eller hur veckan ser ut. Exempel:
 
 - *"Något asiatiskt och något med kyckling, vi har ris hemma"*
 - *"Lite enklare den här veckan, max 30 min per middag"*
@@ -66,68 +94,74 @@ Gå till fliken **Planera**. Skriv en fritext i inmatningsfältet och beskriv va
 
 Du kan även ange hur många portioner som ska planeras för (standard: 4).
 
-### 3.2 Generera förslag
+### 4.4 Generera förslag
 
-Klicka **Generera meny**. AI:n (Claude) tar fram ett veckomenysförslag med 5–7 middagar. Förslaget visas med recept, ingredienser och tillagningstid.
+Klicka **Generera förslag**. AI:n (Claude) tar fram ett menysförslag för de valda dagarna. Förslaget visas med en rätt per dag.
 
 > Generering tar vanligtvis 10–20 sekunder.
 
-### 3.3 Godkänn eller generera om
+### 4.5 Justera, godkänn eller generera om
 
-Läs igenom förslaget. Du har två val:
+Läs igenom förslaget. Du kan:
 
-- **Godkänn menyn** — Handlingslistan fylls automatiskt i med alla ingredienser du behöver köpa. Mängder beräknas utifrån antal portioner.
-- **Generera nytt förslag** — Ny begäran skickas till AI:n med samma fritext.
+- **Byta ut en enskild rätt** — klicka på **↺** bredvid en dag så föreslår AI:n ett alternativ för just den dagen.
+- **Generera ett helt nytt förslag** — klicka **Generera förslag** igen.
+- **Godkänna** — klicka **✓ Godkänn och spara veckoplan**. Veckoplanen sparas och handlingslistan fylls automatiskt i med alla ingredienser du behöver köpa. Mängder beräknas utifrån antal portioner.
 
-### 3.4 Omatchade ingredienser
+### 4.6 Omatchade ingredienser
 
 Om ett recept innehåller en ingrediens som inte finns i varudatabasen (items.yaml) läggs den automatiskt till under **Extra denna vecka** i handlingslistan. Du ser ett meddelande om vilka som lades till.
 
 > **Tips:** Lägg till ingrediensen permanent i Varuhantering så matchas den automatiskt nästa gång.
 
+### 4.7 Flera veckor och automatiskt veckoskifte
+
+Denna vecka och nästa vecka lagras separat och påverkar inte varandra. När en ny vecka börjar (på måndagen) blir **"nästa vecka" automatiskt "denna vecka"** — du behöver inte göra något manuellt. Sedan kan du planera en ny nästa vecka igen.
+
 ---
 
-## 4. Handlingslistan
+## 5. Handlingslistan
 
-### 4.1 Navigera till listan
+### 5.1 Navigera till listan
 
-Klicka på **Handlingslista** i navigeringen. Listan är uppdelad efter butiksavdelningar (Frukt och grönt, Kött och chark, etc.) i den ordning du rör dig genom butiken.
+Klicka på **🛒 Lista** i navigeringen. Listan är uppdelad efter butiksavdelningar (Frukt och grönt, Kött och chark, etc.) i den ordning du rör dig genom butiken.
 
-### 4.2 Bocka av varor
+### 5.2 Bocka av varor
 
 Klicka i rutan bredvid en vara för att bocka av den. Ibockade varor visas med genomstruken text. Statusen sparas automatiskt — du kan stänga webbläsaren och öppna igen utan att förlora vad du bockat av.
 
 > **Delad lista:** Två personer kan använda listan samtidigt på var sin enhet. Förändringar syns när man interagerar med appen nästa gång (t.ex. bockar av något).
 
-### 4.3 Mängder
+### 5.3 Mängder
 
 När en meny godkänts visas beräknade mängder bredvid varorna (t.ex. *600 g*, *3 dl*). Mängder för urcheckade varor visas med ~~genomstruken~~ grå text.
 
-**Rensa mängder:** Knappen *Rensa mängder på urcheckade* tar bort mängdinformationen för varor du inte bockat i — utan att påverka ibockade varors mängder.
+**Flera veckor adderas:** Planerar du både denna och nästa vecka summeras mängderna i listan — finns samma ingrediens i båda veckornas recept visas den totala mängden.
 
-### 4.4 Extra varor
+**Rensa mängder:** Knappen *Rensa mängder på urcheckade* (visas när det finns urcheckade varor med mängd) tar bort mängdinformationen för varor du inte bockat i — utan att påverka ibockade varors mängder.
 
-Under **Extra denna vecka** lägger du till engångsköp som inte finns i standardlistan (t.ex. *presenter*, *rengöringsmedel*). Skriv i textfältet och tryck Enter.
+### 5.4 Extra varor
 
-### 4.5 Butiksprofile
+Under **Extra denna vecka** lägger du till engångsköp som inte finns i standardlistan (t.ex. *presenter*, *rengöringsmedel*). Skriv i textfältet och tryck på **＋**.
+
+### 5.5 Butiksprofil
 
 Om du handlar i olika butiker med olika avdelningsordning kan du välja profil i rullgardinsmenyn längst upp. Profiler skapar du och redigerar via **Redigera layout** (visas bara på dator).
 
-### 4.6 Rensa listan
-
-Knappen **Rensa bockat** tar bort bockningen på alla varor och nollställer listan inför nästa vecka.
-
 ---
 
-## 5. Recept
+## 6. Recept
 
-### 5.1 Bläddra bland recept
+### 6.1 Bläddra bland recept
 
-Gå till fliken **Recept**. Alla recept visas som kort med titel, tillagningstid och svårighet. Klicka på ett recept för att se det i sin helhet — ingredienser, steg-för-steg-instruktioner och taggar.
+Gå till fliken **📖 Recept**. Överst finns en filterrad: **Alla recept**, **Denna vecka** och **Nästa vecka**.
 
-Recepten är mobilanpassade och läsbara direkt i telefonens webbläsare.
+- **Alla recept** — visar samtliga recept och ett sökfält för att filtrera på titel.
+- **Denna vecka** / **Nästa vecka** — visar bara recepten i den valda veckans planerade meny. Saknas en plan visas *"Ingen meny planerad för …"*.
 
-### 5.2 Importera recept via URL
+Välj ett recept i listan för att se det i sin helhet — ingredienser, steg-för-steg-instruktioner och taggar. Recepten är mobilanpassade och läsbara direkt i telefonens webbläsare.
+
+### 6.2 Importera recept via URL
 
 På dator syns knappen **Importera recept**. Klistra in webbadressen till ett recept (t.ex. från ICA, Arla, Tasteline) och klicka **Hämta**. Appen:
 
@@ -139,11 +173,11 @@ På dator syns knappen **Importera recept**. Klistra in webbadressen till ett re
 
 > **Kostnad:** Receptimport använder Claude Haiku-modellen, ca 0,001–0,003 USD per recept.
 
-### 5.3 Koppla ingredienser
+### 6.3 Koppla ingredienser
 
 Under importen kan du manuellt välja vilken vara i databasen som varje ingrediens motsvarar — eller godkänna den automatiska matchningen. Ingredienser utan koppling läggs till som fritext under Extra när recepet används.
 
-### 5.4 Redigera recept
+### 6.4 Redigera recept
 
 På dator visas knappen **Redigera** på varje recept. Du kan ändra:
 - Titel, portioner, tillagningstid, svårighet, taggar
@@ -152,17 +186,17 @@ På dator visas knappen **Redigera** på varje recept. Du kan ändra:
 
 Klicka **Spara** för att bekräfta. Ändringar sparas direkt i receptfilen på NAS:en.
 
-### 5.5 Ta bort recept
+### 6.5 Ta bort recept
 
 Knappen **Ta bort** på ett recept ber om bekräftelse innan receptet raderas. Åtgärden kan inte ångras.
 
 ---
 
-## 6. Varuhantering
+## 7. Varuhantering
 
 Varuhantering nås via knappen **Hantera varor** på handlingsliste-sidan (visas bara på dator). Här hanterar du varudatabasen — de varor som kan matchas mot receptingredienser och visas i handlingslistan.
 
-### 6.1 Lägga till en vara
+### 7.1 Lägga till en vara
 
 Fyll i formuläret längst upp:
 
@@ -185,23 +219,23 @@ Fyll i formuläret längst upp:
 
 ID genereras automatiskt från namnet och visas som förhandsgranskning.
 
-### 6.2 Redigera en vara
+### 7.2 Redigera en vara
 
 Klicka på **✎** bredvid en vara i listan. Formuläret fylls i med varans nuvarande värden. Ändra det du vill och klicka **Spara ändringar**. Klicka **Avbryt** för att lämna utan att spara — formuläret töms.
 
 > **OBS:** Varans ID kan inte ändras efter att den skapats — det används som referens i alla recept.
 
-### 6.3 Ta bort en vara
+### 7.3 Ta bort en vara
 
 Klicka på **✕** bredvid en vara. Om varan används i ett eller flera recept visas en varning med receptnamnen — borttagning blockeras tills du tagit bort varan ur recepten. Annars visas en bekräftelsedialog.
 
-### 6.4 Söka och filtrera
+### 7.4 Söka och filtrera
 
 Använd sökfältet och filtren för kategori och roll för att hitta specifika varor. Listan visar 50 varor per sida och pagineras vid behov.
 
 ---
 
-## 7. Säkerhetskopiera din data
+## 8. Säkerhetskopiera din data
 
 All din data — varor, recept, profiler, handlingslista — lagras i `data/`-mappen på NAS:en och ignoreras helt av git. Det betyder att `git pull` aldrig kan skriva över eller ta bort din data.
 
@@ -216,7 +250,7 @@ All din data — varor, recept, profiler, handlingslista — lagras i `data/`-ma
 
 Backup rekommenderas ändå inför uppdateringar — som skydd mot mänskliga misstag.
 
-### 7.1 Manuell säkerhetskopiering
+### 8.1 Manuell säkerhetskopiering
 
 SSH:a in på NAS:en och kör:
 
@@ -230,14 +264,14 @@ cp -r data/ backups/$DATUM/
 echo "Backup skapad: backups/$DATUM"
 ```
 
-### 7.2 Verifiera backup
+### 8.2 Verifiera backup
 
 ```bash
 ls -lh backups/$DATUM/
 ls backups/$DATUM/recipes/ | wc -l   # Antal recept
 ```
 
-### 7.3 Flytta data till ny maskin
+### 8.3 Flytta data till ny maskin
 
 Eftersom all data ligger i `data/`-mappen är det enkelt att flytta:
 
@@ -248,7 +282,7 @@ scp -r admin@192.168.50.210:/volume1/docker/maltidsplanerare/data/ ./data/
 
 ---
 
-## 8. Uppdatera appen — steg för steg
+## 9. Uppdatera appen — steg för steg
 
 Uppdateringar görs i tre steg: (1) merga på GitHub, (2) hämta kod till NAS, (3) bygga om Docker. Din data påverkas inte.
 
@@ -267,7 +301,7 @@ ssh admin@192.168.50.210
 cd /volume1/docker/maltidsplanerare
 ```
 
-Säkerhetskopiera om du vill (se avsnitt 7.1), sedan:
+Säkerhetskopiera om du vill (se avsnitt 8.1), sedan:
 
 ```bash
 git pull origin main
@@ -313,7 +347,7 @@ Kontrollera snabbt i appen:
 
 ---
 
-## 9. Felsökning
+## 10. Felsökning
 
 ### Appen svarar inte / kan inte nås
 
@@ -401,6 +435,15 @@ sudo docker compose restart
 
 Ersätt `YYYYMMDD` med datumet för din senaste backup.
 
+**Återställ ur git-historiken (om du saknar backup):** Om filerna nyligen var spårade i git men raderats (t.ex. efter en `git reset --hard` eller en merge som tog bort dem) ligger de oftast kvar i historiken. Hämta tillbaka dem från commiten du stod på innan de försvann:
+
+```bash
+# Ersätt <commit> med hashen du stod på före raderingen (syns i git reflog)
+git checkout <commit> -- data/
+git reset HEAD data/      # avstagea — datafilerna ska förbli ignorerade
+sudo docker compose restart
+```
+
 ---
 
 ### Varningsmeddelande: `buildx: failed to read current commit information`
@@ -443,7 +486,7 @@ sudo docker ps | grep maltidsplanerare
 
 ---
 
-*Senast uppdaterad: maj 2026*
+*Senast uppdaterad: juni 2026*
 
 ---
 

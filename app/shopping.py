@@ -1,8 +1,11 @@
 """Handlingslista — fullständig lista med persistent tillstånd."""
 
+from datetime import date
 from pathlib import Path
 
 import yaml
+
+from app.planner import current_week_start
 
 # ── Enhetskonvertering ────────────────────────────────────────────────────────
 
@@ -81,13 +84,13 @@ INCLUDED_ROLES = {"ingredient", "pantry_staple", "regular_purchase"}
 
 def load_state() -> dict:
     if not STATE_PATH.exists():
-        return {"checked": [], "extras": [], "quantities": {}}
+        return {"checked": [], "extras": [], "quantities_by_week": {}}
     with open(STATE_PATH, encoding="utf-8") as f:
         state = yaml.safe_load(f) or {}
     return {
-        "checked":    list(state.get("checked")    or []),
-        "extras":     list(state.get("extras")     or []),
-        "quantities": dict(state.get("quantities") or {}),
+        "checked":            list(state.get("checked")            or []),
+        "extras":             list(state.get("extras")             or []),
+        "quantities_by_week": dict(state.get("quantities_by_week") or {}),
     }
 
 
@@ -114,15 +117,17 @@ def _load_recipe(recipe_id: str) -> dict | None:
 
 # ── Menyplanering → handlingslista ───────────────────────────────────────────
 
-def apply_meal_plan(plan: dict, household_size: int = 4) -> list[str]:
+def apply_meal_plan(plan: dict, household_size: int = 4, week_start: date = None) -> list[str]:
     """Bocka i ingredienser från godkänd meny och beräkna inköpsmängder.
 
+    Mängderna lagras i en hink per vecka (quantities_by_week), så att flera
+    veckors planer kan bidra till listan samtidigt utan att skriva över varandra.
     Returnerar lista med läsbara namn på ingredienser som saknas i varudatabasen
     och därför lagts till automatiskt under 'Extra denna vecka'.
     """
     state = load_state()
     checked_set = set(state["checked"])
-    quantities: dict[str, dict] = {}   # räknas om från noll vid varje ny plan
+    quantities: dict[str, dict] = {}   # denna veckas hink, räknas om från noll
     unmatched_qty: dict[str, dict] = {}  # ingredient_id → {amount, unit} för ej matchade
     items_db = load_items()
 
@@ -184,11 +189,30 @@ def apply_meal_plan(plan: dict, household_size: int = 4) -> list[str]:
         existing_names.add(name.lower())
         added_names.append(name)
 
-    state["checked"]    = list(checked_set)
-    state["quantities"] = quantities
-    state["extras"]     = extras
+    week_key = (week_start or current_week_start()).isoformat()
+    qbw = state.get("quantities_by_week", {})
+    qbw[week_key] = quantities
+    cws = current_week_start()
+    for k in [k for k in qbw if date.fromisoformat(k) < cws]:
+        del qbw[k]
+
+    state["checked"]            = list(checked_set)
+    state["quantities_by_week"] = qbw
+    state["extras"]             = extras
     save_state(state)
     return added_names
+
+
+def _flatten_quantities(qbw: dict) -> dict:
+    """Summera alla veckors hinkar till en total per item_id, för visning."""
+    total: dict[str, dict] = {}
+    for bucket in qbw.values():
+        for item_id, qty in bucket.items():
+            if item_id in total and total[item_id]["unit"] == qty["unit"]:
+                total[item_id]["amount"] += qty["amount"]
+            else:
+                total[item_id] = dict(qty)
+    return total
 
 
 # ── Fullständig lista ─────────────────────────────────────────────────────────
@@ -212,7 +236,7 @@ def get_full_list(profile: dict = None) -> list[dict]:
         item_overrides = {}
         category_names_override = {}
 
-    quantities = state.get("quantities", {})
+    quantities = _flatten_quantities(state.get("quantities_by_week", {}))
 
     by_category: dict[str, list] = {}
     for item_id, item in items_db.items():
@@ -259,7 +283,11 @@ def clear_quantities_for_unchecked() -> None:
     """Ta bort mängder för alla urcheckade varor. Ibockade varors mängder bevaras."""
     state = load_state()
     checked_set = set(state["checked"])
-    state["quantities"] = {k: v for k, v in state.get("quantities", {}).items() if k in checked_set}
+    qbw = state.get("quantities_by_week", {})
+    state["quantities_by_week"] = {
+        wk: {k: v for k, v in bucket.items() if k in checked_set}
+        for wk, bucket in qbw.items()
+    }
     save_state(state)
 
 
