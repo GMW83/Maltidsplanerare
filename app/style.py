@@ -65,6 +65,25 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
     border-radius: 6px !important;
 }
 
+/* ── Extravaru-rader: håll ✕ / ＋ på samma rad även på mobil ──
+   Streamlits kolumner ligger i en flex-container med flex-wrap: wrap och en
+   minsta kolumnbredd; på smal skärm bryts därför sista kolumnen till egen rad. */
+[class*="st-key-extra_row_"] [data-testid="stHorizontalBlock"],
+[class*="st-key-extra_add_row"] [data-testid="stHorizontalBlock"] {
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
+[class*="st-key-extra_row_"] [data-testid="stColumn"],
+[class*="st-key-extra_add_row"] [data-testid="stColumn"] {
+    min-width: 0 !important;
+}
+[class*="st-key-extra_row_"] [data-testid="stColumn"]:last-child,
+[class*="st-key-extra_add_row"] [data-testid="stColumn"]:last-child {
+    flex: 0 0 40px !important;
+    min-width: 40px !important;
+}
+
 /* ═══════════════════════════════════════════════════
    CHECKBOXAR — tunn olivgrön border, fungerar på mobil
    ═══════════════════════════════════════════════════ */

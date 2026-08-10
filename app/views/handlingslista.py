@@ -203,18 +203,20 @@ def render():
     # Visa befintliga extras
     to_remove = None
     for idx, extra in visible_extras:
-        col1, col2 = st.columns([5, 1])
-        key = f"cb_extra_{idx}"
-        if key not in st.session_state:
-            st.session_state[key] = extra.get("checked", True)
-        col1.checkbox(
-            extra["text"],
-            key=key,
-            on_change=_on_extra_change,
-            args=(idx,),
-        )
-        if col2.button("✕", key=f"del_extra_{idx}", help="Ta bort"):
-            to_remove = idx
+        # Namngiven container ger CSS-krok så raden inte bryts på mobil
+        with st.container(key=f"extra_row_{idx}"):
+            col1, col2 = st.columns([8, 1], vertical_alignment="center")
+            key = f"cb_extra_{idx}"
+            if key not in st.session_state:
+                st.session_state[key] = extra.get("checked", True)
+            col1.checkbox(
+                extra["text"],
+                key=key,
+                on_change=_on_extra_change,
+                args=(idx,),
+            )
+            if col2.button("✕", key=f"del_extra_{idx}", help="Ta bort"):
+                to_remove = idx
 
     if to_remove is not None:
         shopping.remove_extra(to_remove)
@@ -225,9 +227,10 @@ def render():
 
     # Lägg till ny extrapost
     with st.form("ny_extra", clear_on_submit=True):
-        col1, col2 = st.columns([4, 1])
-        ny_text = col1.text_input("Lägg till vara", placeholder="Lägg till vara…", label_visibility="collapsed")
-        submitted = col2.form_submit_button("＋")
+        with st.container(key="extra_add_row"):
+            col1, col2 = st.columns([8, 1], vertical_alignment="center")
+            ny_text = col1.text_input("Lägg till vara", placeholder="Lägg till vara…", label_visibility="collapsed")
+            submitted = col2.form_submit_button("＋")
         if submitted and ny_text.strip():
             shopping.add_extra(ny_text)
             st.rerun()
