@@ -307,7 +307,9 @@ Säkerhetskopiera om du vill (se avsnitt 8.1), sedan:
 git pull origin main
 ```
 
-Din data i `data/`-mappen påverkas inte av pull:en.
+Din data i `data/`-mappen påverkas inte av pull:en. Git-kommandon körs som `admin` — inget `sudo` behövs.
+
+> Får du `Your local changes would be overwritten by merge` beror det nästan alltid på DSM:s filrättigheter. Se avsnitt 10, och kör engångsfixen `git config core.fileMode false`.
 
 #### Om det är första gången du kör git pull (ny installation)
 
@@ -319,6 +321,7 @@ git config --global --add safe.directory /volume1/docker/maltidsplanerare
 git init
 git remote add origin https://github.com/GMW83/Maltidsplanerare.git
 git fetch origin main
+git config core.fileMode false   # DSM sätter exekveringsbit — annars strular varje pull
 
 # Säkerhetskopiera INNAN du kör detta
 git reset --hard origin/main
@@ -379,6 +382,41 @@ Kör med `sudo`:
 ```bash
 sudo docker compose build && sudo docker compose up -d
 ```
+
+> **Bara Docker-kommandon behöver `sudo`.** Alla git-kommandon (`git pull`, `git config`, `git status` m.fl.) körs som vanlig `admin`-användare. Kör du git med `sudo` skapas filer som ägs av root, vilket orsakar nya rättighetsproblem — undvik det.
+
+---
+
+### `Your local changes would be overwritten by merge` vid `git pull`
+
+Typiskt på Synology. Kontrollera först vad som faktiskt skiljer:
+
+```bash
+git diff --stat
+git diff app/style.py | head -20
+```
+
+Ser du `0 insertions(+), 0 deletions(-)` på alla filer, och diffen bara visar rader som dessa:
+
+```
+old mode 100644
+new mode 100755
+```
+
+…är det **inte** dina ändringar. DSM sätter exekveringsbiten (`755`) på filer i delade mappar, och git spårar den biten — därför ser git varenda fil som ändrad trots att innehållet är identiskt.
+
+**Permanent lösning — kör en gång:**
+
+```bash
+cd /volume1/docker/maltidsplanerare
+git config core.fileMode false
+```
+
+Git struntar därefter i exekveringsbiten i det här repot, och `git pull` fungerar normalt i fortsättningen. Inget innehåll går förlorat, eftersom skillnaden bara var rättigheter. Kommandot kräver inte `sudo`.
+
+Visar diffen däremot **verkliga kodrader**, har någon ändrat filerna på NAS:en. Ta reda på vad innan du kastar ändringarna.
+
+> **Nödutväg:** `git fetch origin main && git reset --hard origin/main` tvingar koden att matcha GitHub. Det är säkert eftersom `data/` är gitignorerad och ospårad — men det åtgärdar bara symptomet, så gör hellre `core.fileMode`-fixen ovan.
 
 ---
 
