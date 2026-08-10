@@ -26,6 +26,23 @@ def _on_extra_change(idx: int):
     shopping.set_extra_checked(idx, st.session_state[f"cb_extra_{idx}"])
 
 
+def _on_show_only_change():
+    """Ta en ögonblicksbild när filtret slås på, rensa när det slås av.
+
+    Ögonblicksbilden gör att en vara man bockar av i butiken ligger kvar i listan
+    tills filtret stängs av — annars försvinner den under fingret.
+    """
+    if st.session_state.get("show_only_needed"):
+        state = shopping.load_state()
+        st.session_state["shop_snap_items"] = set(state["checked"])
+        st.session_state["shop_snap_extras"] = {
+            e["text"] for e in state.get("extras", []) if e.get("checked")
+        }
+    else:
+        st.session_state.pop("shop_snap_items", None)
+        st.session_state.pop("shop_snap_extras", None)
+
+
 def _render_profile_selector():
     """Rendera kompakt profilväljare med knapp för att öppna layout-editorn."""
     profiles = store_profiles.all_profiles()
@@ -92,6 +109,15 @@ def render():
     else:
         st.caption("Inga varor markerade — bocka i vad som behövs")
 
+    # ── Filter: visa endast det som ska handlas ──────────────────────────────
+    show_only = st.checkbox(
+        "Visa endast varor att handla",
+        key="show_only_needed",
+        on_change=_on_show_only_change,
+    )
+    snap_items = st.session_state.get("shop_snap_items", set())
+    snap_extras = st.session_state.get("shop_snap_extras", set())
+
     # Knapp för att rensa mängder på urcheckade varor
     has_unchecked_with_qty = any(
         not item["checked"] and item.get("quantity")
@@ -105,20 +131,36 @@ def render():
 
     # ── Sökfält ─────────────────────────────────────────────────────────────
     search = st.text_input(
-        "Sök vara",
-        placeholder="Filtrera listan…",
+        "Sök i listan",
+        placeholder="Sök i listan…",
         label_visibility="collapsed",
         key="shopping_search",
     ).strip().lower()
 
+    def _item_visible(item: dict) -> bool:
+        if search and search not in item["name_sv"].lower():
+            return False
+        if show_only and not (item["checked"] or item["id"] in snap_items):
+            return False
+        return True
+
+    def _extra_visible(extra: dict) -> bool:
+        if search and search not in extra["text"].lower():
+            return False
+        if show_only and not (extra.get("checked") or extra["text"] in snap_extras):
+            return False
+        return True
+
+    # Ursprungsindex måste bevaras — remove_extra() och cb_extra_-nycklarna bygger på det
+    visible_extras = [(idx, e) for idx, e in enumerate(extras) if _extra_visible(e)]
+    any_item_visible = False
+
     # ── Varor per kategori ──────────────────────────────────────────────────
     for category in full_list:
-        items_to_show = (
-            [it for it in category["items"] if search in it["name_sv"].lower()]
-            if search else category["items"]
-        )
+        items_to_show = [it for it in category["items"] if _item_visible(it)]
         if not items_to_show:
             continue
+        any_item_visible = True
         # Header + spacer i samma element-container — undviker kollaps av separat spacer
         st.markdown(
             f"<p class='cat-header'>{category['category_name']}</p>"
@@ -146,6 +188,12 @@ def render():
                 args=(iid,),
             )
 
+    if not any_item_visible and not visible_extras:
+        if show_only:
+            st.info("Inga varor att handla.")
+        elif search:
+            st.info(f"Inga varor matchar '{search}'.")
+
     # ── Extraposter ─────────────────────────────────────────────────────────
     st.markdown(
         "<p class='cat-header'>Extra denna vecka</p>"
@@ -154,7 +202,7 @@ def render():
     )
     # Visa befintliga extras
     to_remove = None
-    for idx, extra in enumerate(extras):
+    for idx, extra in visible_extras:
         col1, col2 = st.columns([5, 1])
         key = f"cb_extra_{idx}"
         if key not in st.session_state:
