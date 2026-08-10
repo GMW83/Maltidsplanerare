@@ -47,6 +47,24 @@ h3 { color: #4A6020 !important; font-size: 1.1rem !important; }
     padding: 0.7rem 1.4rem !important;
 }
 
+/* ── Kompakta ✕-knappar (ta bort-rader) ──
+   Nycklarna är dynamiska (del_extra_0, del_extra_1, …) därför attributselektor.
+   width/min-width krävs eftersom vissa anropas med use_container_width=True. */
+[class*="st-key-del_extra_"] button,
+[class*="st-key-ei_ing_del_"] button,
+[class*="st-key-ei_step_del_"] button,
+[class*="st-key-vh_del_"] button,
+[class*="st-key-cat_del_"] button {
+    padding: 0 !important;
+    width: 24px !important;
+    min-width: 24px !important;
+    height: 24px !important;
+    min-height: 24px !important;
+    font-size: 0.75rem !important;
+    line-height: 1 !important;
+    border-radius: 6px !important;
+}
+
 /* ═══════════════════════════════════════════════════
    CHECKBOXAR — tunn olivgrön border, fungerar på mobil
    ═══════════════════════════════════════════════════ */
